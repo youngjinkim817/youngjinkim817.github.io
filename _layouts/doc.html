@@ -1,0 +1,15 @@
+---
+layout: default
+---
+{% assign cat = site.course_categories | where: "id", page.category | first %}
+<nav class="crumb"><a href="{{ '/' | relative_url }}">Home</a> / <a href="{{ '/workshop/' | relative_url }}">Workshop</a> / {{ cat.name }}</nav>
+<article>
+  <header class="course-head">
+    <div class="card-head"><img class="cat-icon" src="{{ cat.icon | relative_url }}" alt=""><span>{{ cat.name }}</span>{% if page.duration_ko %}<span class="badge">⏱ <span class="l-ko">{{ page.duration_ko }}</span><span class="l-en">{{ page.duration_en }}</span></span>{% endif %}</div>
+    <h1><span class="l-ko">{{ page.title_ko }}</span><span class="l-en">{{ page.title_en }}</span></h1>
+    <p class="lead"><span class="l-ko">{{ page.summary_ko }}</span><span class="l-en">{{ page.summary_en }}</span></p>
+    <div class="tags">{% for t in page.tags %}<a class="tag" href="{{ '/tags/' | relative_url }}#{{ t | slugify }}">{{ t }}</a>{% endfor %}</div>
+  </header>
+  <div class="prose">{{ content }}</div>
+</article>
+{% include pager.html %}

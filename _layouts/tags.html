@@ -1,0 +1,28 @@
+---
+layout: default
+---
+{% assign a = site.pages | where: "layout", "course" %}
+{% assign b = site.pages | where: "layout", "doc" %}
+{% assign items = a | concat: b | sort: "date" | reverse %}
+{% assign all = "" | split: "" %}
+{% for p in items %}{% assign all = all | concat: p.tags %}{% endfor %}
+{% assign all = all | uniq | sort %}
+<header class="page-head">
+  <h1><span class="l-ko">{{ page.title_ko }}</span><span class="l-en">{{ page.title_en }}</span></h1>
+  <p class="lead"><span class="l-ko">{{ page.summary_ko }}</span><span class="l-en">{{ page.summary_en }}</span></p>
+</header>
+<div class="chips">
+  <button class="chip" data-tag="" data-slug=""><span class="l-ko">전체</span><span class="l-en">All</span></button>
+  {% for t in all %}<button class="chip" data-tag="{{ t }}" data-slug="{{ t | slugify }}">{{ t }}</button>{% endfor %}
+</div>
+<ul class="post-list">
+  {% for p in items %}
+  <li data-tags="{{ p.tags | join: '|' }}"><a href="{{ p.url | relative_url }}">
+    <time>{% if p.layout == "course" %}Course{% else %}Lab{% endif %}</time>
+    <div>
+      <h3><span class="l-ko">{{ p.title_ko }}</span><span class="l-en">{{ p.title_en }}</span></h3>
+      <div class="tags">{% for t in p.tags %}<span class="tag">{{ t }}</span>{% endfor %}</div>
+    </div>
+  </a></li>
+  {% endfor %}
+</ul>

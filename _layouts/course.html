@@ -1,0 +1,26 @@
+---
+layout: default
+---
+{% assign cat = site.course_categories | where: "id", page.category | first %}
+<nav class="crumb"><a href="{{ '/' | relative_url }}">Home</a> / <a href="{{ '/courses/' | relative_url }}">Courses</a> / {{ cat.name }}</nav>
+<article>
+  <header class="course-head">
+    <div class="card-head"><img class="cat-icon" src="{{ cat.icon | relative_url }}" alt=""><span>{{ cat.name }}</span></div>
+    <h1><span class="l-ko">{{ page.title_ko }}</span><span class="l-en">{{ page.title_en }}</span></h1>
+    <p class="lead"><span class="l-ko">{{ page.summary_ko }}</span><span class="l-en">{{ page.summary_en }}</span></p>
+    <dl class="facts">
+      <div><dt><span class="l-ko">기간</span><span class="l-en">Duration</span></dt><dd><span class="l-ko">{{ page.duration_ko }}</span><span class="l-en">{{ page.duration_en }}</span></dd></div>
+      <div><dt><span class="l-ko">난이도</span><span class="l-en">Level</span></dt><dd>{{ page.level }}</dd></div>
+      <div><dt><span class="l-ko">진행 방식</span><span class="l-en">Format</span></dt><dd><span class="l-ko">{{ page.format_ko }}</span><span class="l-en">{{ page.format_en }}</span></dd></div>
+      <div><dt><span class="l-ko">대상</span><span class="l-en">Audience</span></dt><dd><span class="l-ko">{{ page.audience_ko }}</span><span class="l-en">{{ page.audience_en }}</span></dd></div>
+    </dl>
+    <div class="tags">{% for t in page.tags %}<a class="tag" href="{{ '/tags/' | relative_url }}#{{ t | slugify }}">{{ t }}</a>{% endfor %}</div>
+    {% if page.repo %}<p><a class="btn ghost" href="{{ page.repo }}">GitHub <span class="l-ko">실습 코드</span><span class="l-en">lab code</span> ↗</a></p>{% endif %}
+  </header>
+  {% if page.report %}
+  <iframe class="report" src="{{ page.report | relative_url }}" title="{{ page.title_ko }}"></iframe>
+  {% else %}
+  <div class="prose">{{ content }}</div>
+  {% endif %}
+</article>
+{% include pager.html %}

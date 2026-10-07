@@ -1,0 +1,8 @@
+{% assign items = site.pages | where: "layout", page.layout | sort: "date" %}
+{% assign idx = -1 %}
+{% for c in items %}{% if c.url == page.url %}{% assign idx = forloop.index0 %}{% endif %}{% endfor %}
+{% assign pi = idx | minus: 1 %}{% assign ni = idx | plus: 1 %}
+<nav class="pager">
+  {% if idx > 0 %}{% assign p = items[pi] %}<a class="prev" href="{{ p.url | relative_url }}"><small><span class="l-ko">← 이전</span><span class="l-en">← Previous</span></small><span class="l-ko">{{ p.title_ko }}</span><span class="l-en">{{ p.title_en }}</span></a>{% endif %}
+  {% if ni < items.size %}{% assign n = items[ni] %}<a class="next" href="{{ n.url | relative_url }}"><small><span class="l-ko">다음 →</span><span class="l-en">Next →</span></small><span class="l-ko">{{ n.title_ko }}</span><span class="l-en">{{ n.title_en }}</span></a>{% endif %}
+</nav>

@@ -1,0 +1,55 @@
+# 사이트 설정 — 카테고리를 추가하려면 course_categories에 항목을 추가하세요
+title: Youngjin Kim
+description: AWS Technical Trainer · 강의 과정과 핸즈온 실습 가이드
+url: https://youngjinkim817.github.io
+baseurl: ''
+lang: ko
+timezone: Asia/Seoul
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+author:
+  name_ko: 김영진
+  name_en: Youngjin Kim
+  role: AWS Technical Trainer
+  github: youngjinkim817
+hero:
+  eyebrow: AWS Technical Trainer · Youngjin Kim
+  title_ko: 배우고, 만들고, 함께 나눕니다
+  title_en: Learn, build, and share
+  lead_ko: 제가 강의하는 과정의 소개와 핸즈온 실습 가이드를 모았습니다. 강의실에서 다룬 내용을 언제든 다시 보고 따라 해 보세요.
+  lead_en: Course overviews and hands-on lab guides from the classes I teach. Revisit what we covered in class and follow along anytime.
+nav:
+- id: home
+  url: /
+  ko: 홈
+  en: Home
+- id: courses
+  url: /courses/
+  ko: 강의 과정
+  en: Courses
+- id: workshop
+  url: /workshop/
+  ko: 워크숍
+  en: Workshop
+- id: tags
+  url: /tags/
+  ko: 태그
+  en: Tags
+- id: about
+  url: /about/
+  ko: 소개
+  en: About
+course_categories:
+- id: agentcore
+  name: Amazon Bedrock AgentCore
+  desc_ko: AI 에이전트를 안전하게 배포하고 운영하는 방법
+  desc_en: Deploy and operate AI agents securely at scale
+  icon: /assets/icons/agentcore.svg
+exclude:
+- README.md
+- Gemfile
+- Gemfile.lock
+- vendor
+- .jekyll-cache

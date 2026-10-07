@@ -1,0 +1,14 @@
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">YJ</span><span>{{ site.title }}</span></a>
+    <nav class="nav">
+      {% for item in site.nav %}
+      <a href="{{ item.url | relative_url }}" class="{% if page.url == item.url or page.section == item.id %}active{% endif %}"><span class="l-ko">{{ item.ko }}</span><span class="l-en">{{ item.en }}</span></a>
+      {% endfor %}
+    </nav>
+    <div class="toggles">
+      <button id="lang-toggle" class="tbtn" aria-label="Language"><span class="l-ko">EN</span><span class="l-en">KO</span></button>
+      <button id="theme-toggle" class="tbtn" aria-label="Theme">◐</button>
+    </div>
+  </div>
+</header>

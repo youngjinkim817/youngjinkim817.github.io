@@ -1,0 +1,56 @@
+---
+layout: default
+---
+{% assign courses = site.pages | where: "layout", "course" | sort: "date" | reverse %}
+<section class="hero">
+  <p class="eyebrow">{{ site.hero.eyebrow }}</p>
+  <h1><span class="l-ko">{{ site.hero.title_ko }}</span><span class="l-en">{{ site.hero.title_en }}</span></h1>
+  <p class="lead"><span class="l-ko">{{ site.hero.lead_ko }}</span><span class="l-en">{{ site.hero.lead_en }}</span></p>
+  <div class="hero-cta">
+    <a class="btn" href="{{ '/courses/' | relative_url }}"><span class="l-ko">강의 과정 보기</span><span class="l-en">Browse courses</span> →</a>
+    <a class="btn ghost" href="{{ '/workshop/' | relative_url }}"><span class="l-ko">핸즈온 워크숍</span><span class="l-en">Hands-on workshop</span></a>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2><span class="l-ko">최신 과정</span><span class="l-en">Latest courses</span></h2>
+    <a href="{{ '/courses/' | relative_url }}"><span class="l-ko">모든 과정</span><span class="l-en">All courses</span> →</a>
+  </div>
+  <div class="cards">
+    {% for c in courses limit: 4 %}{% include course-card.html c=c %}{% endfor %}
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><h2><span class="l-ko">카테고리</span><span class="l-en">Categories</span></h2></div>
+  <div class="cats">
+    {% for cat in site.course_categories %}
+    {% assign n = courses | where: "category", cat.id | size %}
+    <a class="cat" href="{{ '/courses/' | relative_url }}#{{ cat.id }}">
+      <img src="{{ cat.icon | relative_url }}" alt="">
+      <div><b>{{ cat.name }}</b><small><span class="l-ko">{{ cat.desc_ko }}</span><span class="l-en">{{ cat.desc_en }}</span> · {{ n }}</small></div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <h2><span class="l-ko">전체 과정</span><span class="l-en">All courses</span></h2>
+    <span class="count"><span class="l-ko">전체 {{ courses.size }}개 · 최신순</span><span class="l-en">{{ courses.size }} total · newest first</span></span>
+  </div>
+  <ul class="post-list">
+    {% for c in courses %}
+    <li><a href="{{ c.url | relative_url }}">
+      <time>{{ c.date | date: "%Y.%m.%d" }}</time>
+      <div>
+        <h3><span class="l-ko">{{ c.title_ko }}</span><span class="l-en">{{ c.title_en }}</span></h3>
+        <p><span class="l-ko">{{ c.summary_ko }}</span><span class="l-en">{{ c.summary_en }}</span></p>
+        <div class="tags">{% for t in c.tags %}<span class="tag">{{ t }}</span>{% endfor %}</div>
+      </div>
+    </a></li>
+    {% endfor %}
+  </ul>
+</section>
+{{ content }}

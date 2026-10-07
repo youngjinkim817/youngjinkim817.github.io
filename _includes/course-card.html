@@ -1,0 +1,12 @@
+{% assign c = include.c %}
+{% assign cat = site.course_categories | where: "id", c.category | first %}
+<a class="card" href="{{ c.url | relative_url }}">
+  <div class="card-head">
+    <img class="cat-icon" src="{{ cat.icon | relative_url }}" alt="">
+    <span>{{ cat.name }}</span>
+    {% if c.level %}<span class="badge">{{ c.level }}</span>{% endif %}
+  </div>
+  <h3><span class="l-ko">{{ c.title_ko }}</span><span class="l-en">{{ c.title_en }}</span></h3>
+  <p><span class="l-ko">{{ c.summary_ko }}</span><span class="l-en">{{ c.summary_en }}</span></p>
+  <div class="meta">{{ c.date | date: "%Y.%m.%d" }} · <span class="l-ko">{{ c.duration_ko }}</span><span class="l-en">{{ c.duration_en }}</span> · <span class="l-ko">보기</span><span class="l-en">View</span> →</div>
+</a>

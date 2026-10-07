@@ -1,0 +1,29 @@
+---
+layout: default
+---
+{% assign items = site.pages | where: "layout", page.list_of | sort: "date" | reverse %}
+<header class="page-head">
+  <h1><span class="l-ko">{{ page.title_ko }}</span><span class="l-en">{{ page.title_en }}</span></h1>
+  <p class="lead"><span class="l-ko">{{ page.summary_ko }}</span><span class="l-en">{{ page.summary_en }}</span></p>
+</header>
+{% for cat in site.course_categories %}
+{% assign group = items | where: "category", cat.id %}
+{% if group.size > 0 %}
+<section class="cat-block" id="{{ cat.id }}">
+  <h2><img class="cat-icon" src="{{ cat.icon | relative_url }}" alt="">{{ cat.name }} <span class="count">{{ group.size }}</span></h2>
+  <ul class="post-list">
+    {% for c in group %}
+    <li><a href="{{ c.url | relative_url }}">
+      <time>{{ c.date | date: "%Y.%m.%d" }}</time>
+      <div>
+        <h3><span class="l-ko">{{ c.title_ko }}</span><span class="l-en">{{ c.title_en }}</span></h3>
+        <p><span class="l-ko">{{ c.summary_ko }}</span><span class="l-en">{{ c.summary_en }}</span></p>
+        <div class="tags">{% for t in c.tags %}<span class="tag">{{ t }}</span>{% endfor %}</div>
+      </div>
+    </a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endfor %}
+{{ content }}

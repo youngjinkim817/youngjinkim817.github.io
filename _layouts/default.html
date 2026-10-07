@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title_ko %}{{ page.title_ko }} | {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ page.summary_ko | default: site.description }}">
+  <link rel="icon" href="{{ '/assets/icons/agentcore.svg' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <script>
+    (function () {
+      var d = document.documentElement, t, l;
+      try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      d.dataset.theme = t;
+      if (l === 'en') { d.classList.add('lang-en'); d.lang = 'en'; }
+    })();
+  </script>
+</head>
+<body>
+  {% include topbar.html %}
+  <main class="wrap">
+    {{ content }}
+  </main>
+  {% include footer.html %}
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>
