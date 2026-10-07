@@ -14,15 +14,9 @@ summary_en: Sharing the experience of learning and building through AWS classes 
 
 AWS Technical Trainer 김영진입니다. 파트너와 고객이 AWS를 깊이 이해하고 직접 만들어 볼 수 있도록 강의와 핸즈온 실습을 진행하고 있어요.
 
-## 담당 과정
-
-- AWS Partner Certification Readiness (APCR)
-- AWS Partner Tailored ILT
-- Amazon Bedrock AgentCore 핸즈온 워크숍
-- 대학 AI 부트캠프
 
 ## 연락처
-
+- Email : yjkim@amazon.com
 - GitHub: [youngjinkim817](https://github.com/youngjinkim817)
 
 </div>
@@ -30,10 +24,11 @@ AWS Technical Trainer 김영진입니다. 파트너와 고객이 AWS를 깊이 �
 
 ## Hello 👋
 
-I'm Youngjin Kim, an AWS Technical Trainer. I run classes and hands-on labs that help partners and customers understand AWS deeply and build with it.
+I'm Youngjin Kim, an AWS Partner Trainer. I run classes and hands-on labs that help partners and customers understand AWS deeply and build with it.
 
 ## Contact
 
+- Email :yjkim@amazon.com 
 - GitHub: [youngjinkim817](https://github.com/youngjinkim817)
 
 </div>
