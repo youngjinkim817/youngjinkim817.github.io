@@ -1,1 +1,342 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모듈 1 · 책임 있는 AI 기초 — Generative AI Essentials on AWS</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --panel:#ffffff; --ink:#1a2233; --muted:#5b6678;
+    --line:#e3e7ef; --accent:#ff9900; --accent2:#2457d6; --sidebar:#0f1830;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    line-height:1.6;}
+  a{color:var(--accent2);text-decoration:none;}
+  /* ===== 상단 바 ===== */
+  .topbar{display:flex;align-items:center;gap:14px;padding:10px 20px;background:var(--sidebar);color:#fff;position:sticky;top:0;z-index:30;}
+  .topbar .back{color:#aeb8d0;font-size:13px;white-space:nowrap;}
+  .topbar .back:hover{color:#fff;}
+  .topbar h1{font-size:15px;margin:0;font-weight:600;}
+  .topbar .course{margin-left:auto;color:#8f9ab4;font-size:12px;}
+  /* ===== 상단 고정 PDF ===== */
+  .pdfwrap{position:sticky;top:44px;z-index:20;background:#1b2236;border-bottom:3px solid var(--accent);}
+  .pdfbar{display:flex;align-items:center;gap:12px;padding:6px 16px;color:#cfd6e6;font-size:12px;}
+  .pdfbar .lbl{font-weight:600;color:#fff;}
+  .pdfbar .hint{margin-left:auto;color:#8f9ab4;}
+  #pdfScroll{height:46vh;overflow-y:auto;overflow-x:hidden;background:#0d1322;
+    display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 0;
+    -webkit-user-select:none;user-select:none;scroll-behavior:smooth;}
+  #pdfScroll canvas{max-width:94%;box-shadow:0 2px 14px rgba(0,0,0,.4);border-radius:4px;background:#fff;}
+  #pdfScroll .loading{color:#8f9ab4;font-size:13px;padding:30px;}
+  /* ===== 본문: 좌 TOC + 우 설명 ===== */
+  .main{display:grid;grid-template-columns:260px 1fr;gap:0;max-width:1200px;margin:0 auto;}
+  .toc{position:sticky;top:calc(44px + 46vh + 34px);align-self:start;height:calc(100vh - (44px + 46vh + 34px));
+    overflow-y:auto;padding:22px 10px 40px 20px;border-right:1px solid var(--line);}
+  .toc h3{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;}
+  .toc ul{list-style:none;margin:0;padding:0;}
+  .toc li{margin:1px 0;}
+  .toc a{display:block;padding:7px 12px;border-radius:8px;color:var(--ink);font-size:13.5px;border-left:3px solid transparent;}
+  .toc a:hover{background:#eef1f8;}
+  .toc a.active{background:#fff4e3;border-left-color:var(--accent);color:#8a4b00;font-weight:600;}
+  .content{padding:26px 32px 60vh;min-width:0;}
+  .block{scroll-margin-top:calc(44px + 46vh + 24px);padding:18px 0 10px;border-bottom:1px solid var(--line);}
+  .block:last-child{border-bottom:0;}
+  .content h2{font-size:21px;margin:.2em 0 .6em;color:#15213b;}
+  .content h3{font-size:15px;margin:1em 0 .4em;color:#243a66;}
+  .content p{margin:.5em 0;}
+  .content ul,.content ol{margin:.4em 0 .8em;padding-left:1.3em;}
+  .content li{margin:.28em 0;}
+  table{border-collapse:collapse;width:100%;margin:.6em 0;font-size:13.5px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#f0f3fa;font-weight:600;}
+  .key{background:#fff8ee;border:1px solid #ffe4bd;border-radius:10px;padding:12px 14px;margin:.9em 0;}
+  .note{background:#eef5ff;border:1px solid #cfe0ff;border-radius:10px;padding:10px 14px;margin:.8em 0;font-size:13.5px;color:#2b3a57;}
+  .grid8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:.8em 0;}
+  .grid8 span{background:#0f1830;color:#fff;border-radius:8px;padding:12px 10px;text-align:center;font-size:13px;font-weight:600;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:.6em 0;}
+  .two h3{margin-top:0;}
+  .ans{color:#1f8a4c;font-weight:600;}
+  @media (max-width:860px){
+    .main{grid-template-columns:1fr;}
+    .toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);}
+    .grid8{grid-template-columns:repeat(2,1fr);}
+    .two{grid-template-columns:1fr;}
+    #pdfScroll{height:38vh;}
+  }
+</style>
+</head>
+<body oncontextmenu="return false">
+  <div class="topbar">
+    <a class="back" href="/courses/genai-essentials/">← 과정으로</a>
+    <h1>모듈 1 · 책임 있는 AI 기초</h1>
+    <span class="course">Generative AI Essentials on AWS</span>
+  </div>
+
+  <!-- 상단 고정 PDF (스크롤 전용 · 다운로드/복사 비활성) -->
+  <div class="pdfwrap">
+    <div class="pdfbar"><span class="lbl">📄 모듈 슬라이드</span>
+      <span class="hint">스크롤하여 전체 슬라이드를 넘겨 보세요 · 다운로드·복사 비활성</span></div>
+    <div id="pdfScroll"><div class="loading">슬라이드를 불러오는 중…</div></div>
+  </div>
+
+  <!-- 본문: 좌 목차 + 우 설명 -->
+  <div class="main">
+    <nav class="toc">
+      <h3>이 모듈에서 다룰 내용</h3>
+      <ul>
+      <li><a href="#obj" data-target="obj">학습 목표</a></li>
+      <li><a href="#evo" data-target="evo">AI의 진화: 기존 → 생성형</a></li>
+      <li><a href="#dims" data-target="dims">책임 있는 AI의 8가지 차원</a></li>
+      <li><a href="#fair" data-target="fair">① 공정성</a></li>
+      <li><a href="#safe" data-target="safe">② 안전성</a></li>
+      <li><a href="#priv" data-target="priv">③ 개인정보보호·보안 & 제어가능성</a></li>
+      <li><a href="#gov" data-target="gov">④ 거버넌스</a></li>
+      <li><a href="#expl" data-target="expl">⑤ 설명가능성·투명성·진실성/견고성</a></li>
+      <li><a href="#life" data-target="life">수명주기 전반의 책임 있는 AI</a></li>
+      <li><a href="#tools" data-target="tools">AWS의 책임 있는 AI 도구</a></li>
+      <li><a href="#org" data-target="org">투명성 & 조직 차원 지원</a></li>
+      <li><a href="#quiz" data-target="quiz">지식 확인</a></li>
+      </ul>
+    </nav>
+    <div class="content">
+    <section id="obj" class="block">
+
+<h2>학습 목표</h2>
+<p>모듈 1은 과정 전체의 <b>윤리·거버넌스 토대</b>를 놓습니다. 두 가지 목표가 있습니다.</p>
+<ul>
+  <li><b>책임 있는 AI의 8가지 핵심 요소</b>를 설명할 수 있다.</li>
+  <li>책임 있는 AI 원칙에 대한 <b>AWS의 노력</b>을 설명할 수 있다.</li>
+</ul>
+<p class="note">이 두 목표는 뒤의 모든 모듈을 관통합니다. 특히 <b>모듈 5(Bedrock Guardrails)</b>와 <b>모듈 7(보안·거버넌스)</b>에서 실제 기술 구현으로 다시 등장합니다.</p>
+
+    </section>
+    <section id="evo" class="block">
+
+<h2>AI의 진화: 기존 방식에서 생성형으로</h2>
+<p>AI는 다섯 시대를 거치며 발전했고, 각 시대는 이전을 <b>대체한 것이 아니라 축적·확장</b>했습니다.</p>
+<table>
+  <thead><tr><th>시대</th><th>시기</th><th>핵심</th></tr></thead>
+  <tbody>
+    <tr><td>규칙 기반 AI</td><td>1950s</td><td>하드코딩된 규칙·전문가 시스템으로 분류</td></tr>
+    <tr><td>기계학습</td><td>2010s</td><td>데이터에서 패턴 학습(수동 특성 추출)</td></tr>
+    <tr><td>딥러닝</td><td>2012+</td><td>신경망이 비정형 데이터에서 직접 학습(비전·음성)</td></tr>
+    <tr><td>생성형 AI</td><td>2020s</td><td>새로운 콘텐츠 생성(텍스트·이미지·오디오·비디오)</td></tr>
+    <tr><td>에이전틱 AI</td><td>최신</td><td>추론 + 도구 사용 + 자율 행동(다단계 태스크)</td></tr>
+  </tbody>
+</table>
+<p class="key"><b>핵심:</b> 기능이 누적되었기 때문에 <b>거버넌스 복잡성도 함께 쌓입니다.</b> 그래서 전체 스택에서 책임 있는 AI가 중요해집니다.</p>
+
+    </section>
+    <section id="dims" class="block">
+
+<h2>책임 있는 AI의 8가지 차원</h2>
+<p><b>AWS Well-Architected Responsible AI Lens</b>를 바탕으로, 이점을 극대화하고 위험을 최소화하기 위한 8가지 차원을 정의합니다.</p>
+<div class="grid8">
+  <span>1. 공정성</span><span>2. 설명가능성</span><span>3. 개인정보보호·보안</span><span>4. 안전성</span>
+  <span>5. 제어가능성</span><span>6. 진실성·견고성</span><span>7. 거버넌스</span><span>8. 투명성</span>
+</div>
+<p class="key"><b>핵심:</b> 어느 한 차원만으로는 충분하지 않습니다. 건물이 안전·화재·접근을 모두 갖춰야 하듯, 8가지 차원이 <b>함께 작동</b>해야 합니다.</p>
+
+    </section>
+    <section id="fair" class="block">
+
+<h2>① 공정성 — 편견 및 차별 피하기</h2>
+<p>편향이 <b>데이터에서 출력으로</b> 흐르는 3단계를 봅니다.</p>
+<ol>
+  <li><b>과거 데이터</b> — 예: 10년치 채용 결정에 이미 편향이 들어있음</li>
+  <li><b>모델 학습</b> — 모델이 그 편향 패턴을 그대로 내면화</li>
+  <li><b>편향된 출력</b> — 기술적으로는 정상처럼 보이지만 차별적 결과 생성</li>
+</ol>
+<p class="key"><b>핵심:</b> 편향은 <b>과거 데이터를 통해 유입</b>되므로 표준 기술 검증으로는 안 잡힙니다. 모델 수명주기 전반에 걸쳐 <b>지속적인 공정성 감사</b>가 필요합니다.</p>
+
+    </section>
+    <section id="safe" class="block">
+
+<h2>② 안전성 — 유해 출력 방지</h2>
+<p>3가지 위험을 각각의 완화 조치와 짝지어 다룹니다.</p>
+<table>
+  <thead><tr><th>위험</th><th>완화 조치</th></tr></thead>
+  <tbody>
+    <tr><td>유해 콘텐츠(모욕·폭력·부적절)</td><td><b>콘텐츠 필터</b> — 사용자 전달 전 검사</td></tr>
+    <tr><td>위험한 지침(유해 활동 유도)</td><td><b>컨텍스트 근거</b> — 검증된 소스 자료에 응답을 매핑</td></tr>
+    <tr><td>잘못된 정보(할루시네이션)</td><td><b>인적 검토</b> — 특히 고위험 출력에 인간 감독</td></tr>
+  </tbody>
+</table>
+<p class="key"><b>핵심:</b> 각 완화 조치는 두루뭉술한 예방책이 아니라 <b>특정 위험 범주를 직접 겨냥</b>하는 방어 프레임워크입니다.</p>
+
+    </section>
+    <section id="priv" class="block">
+
+<h2>③ 개인정보보호·보안 & 제어가능성</h2>
+<p>두 차원을 함께 봅니다. 왼쪽은 <b>데이터 보호</b>, 오른쪽은 <b>인간 개입</b>입니다.</p>
+<div class="two">
+  <div>
+    <h3>개인정보보호·보안 (4)</h3>
+    <ul>
+      <li><b>데이터 암호화</b> — 저장·전송 데이터 보호</li>
+      <li><b>액세스 제어</b> — 권한 있는 사용자/시스템만</li>
+      <li><b>데이터 최소화</b> — 목적에 필요한 만큼만 수집</li>
+      <li><b>개인정보보호 기법</b> — 차등 프라이버시·익명화</li>
+    </ul>
+  </div>
+  <div>
+    <h3>제어가능성 (3)</h3>
+    <ul>
+      <li><b>모니터링 대시보드</b> — 실시간 가시성</li>
+      <li><b>재정의</b> — 인간이 AI 행동을 수정·중단</li>
+      <li><b>피드백 루프</b> — 인간 수정 내용을 반영해 개선</li>
+    </ul>
+  </div>
+</div>
+<p class="key"><b>핵심:</b> 개인정보보호·보안은 <b>데이터를 보호</b>하고, 제어가능성은 시스템이 예기치 않게 작동할 때 <b>인간이 개입</b>할 수 있게 합니다.</p>
+
+    </section>
+    <section id="gov" class="block">
+
+<h2>④ 거버넌스 — 조직 차원의 책임</h2>
+<p>선언적 원칙을 <b>집행 가능한 조직 관행</b>으로 바꾸는 3계층 구조입니다.</p>
+<ul>
+  <li><b>정책</b> — AI 행동을 규제하는 표준(허용 가능한 용도 정의)</li>
+  <li><b>책임성</b> — AI 시스템 결과를 책임지는 소유자 지정</li>
+  <li><b>검토</b> — 고위험 애플리케이션에 대한 주기적 검토·감사 추적</li>
+</ul>
+<p class="key"><b>핵심:</b> 거버넌스는 규정 준수를 <b>측정·할당 가능</b>하게 만들어, 나머지 책임 있는 AI 차원을 실제로 집행합니다.</p>
+
+    </section>
+    <section id="expl" class="block">
+
+<h2>⑤ 설명가능성 · 투명성 · 진실성/견고성</h2>
+<p>8차원을 완성하는 마지막 3개 차원입니다.</p>
+<ul>
+  <li><b>설명가능성</b> — "AI가 이 출력을 생성한 이유는?" 높으면 의사결정 트리, 낮으면 신경망. 대출 거절 시 "신용 이력 부족" 같은 근거 제공.</li>
+  <li><b>투명성</b> — "사용자가 알아야 할 것은?" AI 기반임을 밝히고, 지식의 한계를 인정하며, 명확한 기대치를 설정.</li>
+  <li><b>진실성 및 견고성</b> — 적대적 입력(예: 보호장치를 우회하려는 <b>프롬프트 인젝션</b>)에도 정확하고 안정적으로 작동.</li>
+</ul>
+<p class="key"><b>핵심:</b> 이 3차원이 앞서 다룬 공정성·안전성·개인정보보호·제어가능성·거버넌스와 결합해 <b>8차원 프레임워크</b>를 완성합니다.</p>
+
+    </section>
+    <section id="life" class="block">
+
+<h2>AI 시스템 수명주기 전반의 책임 있는 AI</h2>
+<p>8가지 차원은 <b>설계 → 개발 → 운영</b> 세 단계에 걸쳐 적용됩니다. (AWS Well-Architected Responsible AI Lens)</p>
+<ul>
+  <li><b>설계</b> — 사용 사례, 이점·위험, 출시 기준 정의</li>
+  <li><b>개발</b> — 시스템 계획, 평가·테스트, 출시</li>
+  <li><b>운영</b> — 배포 후 지속 모니터링</li>
+</ul>
+<p class="key"><b>핵심:</b> 책임 있는 AI는 <b>배포 후 체크리스트가 아닙니다.</b> 초기 사용 사례 정의부터 프로덕션 운영까지 모든 단계에서 신중한 조치가 필요합니다.</p>
+
+    </section>
+    <section id="tools" class="block">
+
+<h2>AWS의 책임 있는 AI 원칙 및 도구</h2>
+<p>단일 안전장치가 아니라, 수명주기 단계별로 서로 보완하는 4가지 도구입니다.</p>
+<table>
+  <thead><tr><th>도구</th><th>역할</th><th>단계</th></tr></thead>
+  <tbody>
+    <tr><td><b>SageMaker Clarify</b></td><td>학습 데이터·모델의 편향 탐지, SHAP 기반 설명</td><td>개발</td></tr>
+    <tr><td><b>Guardrails for Amazon Bedrock</b></td><td>콘텐츠 필터·금지 주제·PII 삭제·근거 검사</td><td>배포</td></tr>
+    <tr><td><b>SageMaker Model Monitor</b></td><td>시간 경과 데이터 품질·드리프트 추적(지속 모니터링)</td><td>운영</td></tr>
+    <tr><td><b>SageMaker Model Cards</b></td><td>표준화된 모델 문서(위험 등급·사용·평가 정보)</td><td>전 단계</td></tr>
+  </tbody>
+</table>
+<p class="key"><b>핵심:</b> 각 도구는 훈련부터 배포 후까지 <b>서로 다른 단계</b>를 담당합니다. 예를 들어 Bedrock Guardrails는 안전성·제어가능성·거버넌스를 함께 강화합니다.</p>
+
+    </section>
+    <section id="org" class="block">
+
+<h2>투명성 & 조직 차원 지원</h2>
+<p>병렬적이면서 상호 보완적인 두 축으로 <b>공동 책임 모델</b>로 수렴합니다.</p>
+<div class="two">
+  <div>
+    <h3>투명성 관행 (AWS)</h3>
+    <ul>
+      <li><b>AI Service Cards</b> — 서비스별 사용 사례·제한·설계 선택을 공개 문서화(Rekognition, Textract 등)</li>
+      <li>고객은 <b>Model Cards</b>로 자체 모델을 문서화</li>
+    </ul>
+  </div>
+  <div>
+    <h3>조직 차원 지원</h3>
+    <ul>
+      <li><b>NIST AI RMF</b>, <b>ISO/IEC 42001</b> — 글로벌 규정 준수 프레임워크</li>
+      <li><b>AWS AI Ready</b> — 무료 AI 교육 이니셔티브</li>
+    </ul>
+  </div>
+</div>
+<p class="key"><b>핵심:</b> AWS 도구는 규정 준수를 <b>지원하지만 보장하지는 않습니다.</b> 조직의 전문 지식과 결합되어야 책임 있는 AI 프로그램이 완성됩니다.</p>
+
+    </section>
+    <section id="quiz" class="block">
+
+<h2>지식 확인</h2>
+<p>모듈 1의 핵심을 2개 문항으로 점검합니다. (슬라이드 상단 PDF의 17~20쪽 참고)</p>
+<ol>
+  <li>책임 있는 AI의 8가지 차원 중 "편향이 과거 데이터를 통해 유입되므로 지속 감사가 필요한" 차원은? <span class="ans">→ 공정성</span></li>
+  <li>학습 데이터·모델의 편향을 탐지하고 SHAP 설명을 제공하는 AWS 서비스는? <span class="ans">→ Amazon SageMaker Clarify</span></li>
+</ol>
+<p class="note">실제 수업에서는 PDF의 퀴즈 슬라이드를 먼저 보여주고, 수강생 답을 받은 뒤 정답 슬라이드로 넘어가세요.</p>
+
+    </section>
+    </div>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  // ---------- 상단 PDF 렌더링 (canvas = 복사 불가, 툴바 없음 = 다운로드 UI 없음) ----------
+  var PDF_URL = "/assets/decks/genai-essentials/M1_InstructorDeck.pdf";
+  (function(){
+    if(!window.pdfjsLib){ document.getElementById('pdfScroll').innerHTML='<div class="loading">PDF 라이브러리를 불러오지 못했습니다.</div>'; return; }
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    var box = document.getElementById('pdfScroll');
+    pdfjsLib.getDocument(PDF_URL).promise.then(function(pdf){
+      box.innerHTML='';
+      var scale = 1.4;
+      function renderPage(n){
+        pdf.getPage(n).then(function(page){
+          var vp = page.getViewport({scale:scale});
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          var ratio = window.devicePixelRatio||1;
+          canvas.width = vp.width*ratio; canvas.height = vp.height*ratio;
+          canvas.style.width='100%'; canvas.style.maxWidth=(vp.width)+'px';
+          ctx.scale(ratio,ratio);
+          box.appendChild(canvas);
+          page.render({canvasContext:ctx, viewport:vp});
+          if(n<pdf.numPages) renderPage(n+1);
+        });
+      }
+      renderPage(1);
+    }).catch(function(e){
+      box.innerHTML='<div class="loading">슬라이드를 불러오지 못했습니다. (업로드 후 사이트에서 정상 동작합니다)</div>';
+    });
+  })();
+
+  // ---------- 좌측 목차 활성 표시 + 스크롤 스파이 ----------
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('data-target')] = a; });
+  var blocks = links.map(function(a){ return document.getElementById(a.getAttribute('data-target')); });
+
+  function setActive(id){
+    links.forEach(function(a){ a.classList.toggle('active', a.getAttribute('data-target')===id); });
+  }
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting) setActive(en.target.id); });
+  }, {rootMargin:"-45% 0px -50% 0px", threshold:0});
+  blocks.forEach(function(b){ if(b) obs.observe(b); });
+
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var el = document.getElementById(a.getAttribute('data-target'));
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      setActive(a.getAttribute('data-target'));
+    });
+  });
+  if(links[0]) setActive(links[0].getAttribute('data-target'));
+</script>
+</body>
+</html>
 
