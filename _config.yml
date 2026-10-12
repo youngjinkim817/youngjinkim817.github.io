@@ -18,8 +18,6 @@ hero:
   eyebrow: AWS Technical Trainer · Youngjin Kim
   title_ko: 배우고, 만들고, 함께 나눕니다
   title_en: Learn, build, and share
-  lead_ko: 제가 강의하는 과정의 소개와 핸즈온 실습 가이드를 모았습니다. 강의실에서 다룬 내용을 언제든 다시 보고 따라 해 보세요.
-  lead_en: Course overviews and hands-on lab guides from the classes I teach. Revisit what we covered in class and follow along anytime.
 nav:
 - id: home
   url: /
