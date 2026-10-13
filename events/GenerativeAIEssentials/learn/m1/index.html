@@ -42,6 +42,23 @@
   .pager a.next{text-align:right;margin-left:auto;}
   @media(max-width:560px){.layout{grid-template-columns:1fr;}aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border);}main{padding:24px 18px 56px;}}
 
+  /* ── 섹션 진행 현황 ── */
+  .prog-box{margin-bottom:24px;padding:14px 10px 12px;border-bottom:1px solid var(--border);}
+  .prog-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .prog-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);}
+  .prog-count{font-size:12px;font-weight:600;color:var(--t1);}
+  .prog-bar-wrap{height:4px;background:var(--bg-soft);border-radius:2px;overflow:hidden;margin-bottom:14px;}
+  .prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--brand1),var(--brand2));border-radius:2px;transition:width .35s ease;}
+  .sec-list{display:flex;flex-direction:column;gap:4px;}
+  .sec-item{display:flex;align-items:center;gap:9px;padding:5px 2px;font-size:13px;color:var(--t2);}
+  .sec-item.active{color:var(--t1);font-weight:600;}
+  .sec-item.done{color:var(--t2);}
+  .sec-dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700;transition:all .2s;}
+  .sec-item.done .sec-dot{background:var(--brand1);border-color:var(--brand1);color:#fff;}
+  .sec-item.active .sec-dot{background:transparent;border-color:var(--brand1);color:var(--brand1);}
+  .sec-item.pending .sec-dot{background:transparent;border-color:var(--border);color:transparent;}
+  .sec-slides{margin-left:auto;font-size:11px;color:var(--t2);white-space:nowrap;}
+
 /* ── 슬라이드 뷰어 CSS ── */
 
 
@@ -69,13 +86,6 @@ main{max-width:900px;margin:0 auto;padding:24px 20px 120px;width:100%;}
 .kp{display:flex;gap:10px;align-items:flex-start;}
 .kpd{width:7px;height:7px;border-radius:50%;background:var(--brand2);flex-shrink:0;margin-top:8px;}
 .kpt{font-size:16px;line-height:1.65;}
-.inst{background:rgba(230,81,0,.05);border-left:3px solid var(--brand2);border-radius:0 8px 8px 0;padding:10px 14px;}
-.instl{font-size:12px;font-weight:700;color:var(--brand2);margin-bottom:4px;}
-.instt{font-size:15px;color:var(--t2);line-height:1.7;}
-/* 강사 노트 (항시 표시) */
-.inst{background:rgba(230,81,0,.05);border-left:3px solid var(--brand2);border-radius:0 8px 8px 0;padding:10px 14px;}
-.instl{font-size:12px;font-weight:700;color:var(--brand2);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
-.instt{font-size:15px;color:var(--t2);line-height:1.7;}
 /* 하단 고정 네비게이션 바 */
 .sticknav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:var(--bg2);border-top:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 -4px 20px rgba(0,0,0,.06);}
 .sticknav button{background:var(--bg3);border:1px solid var(--border);color:var(--t1);padding:8px 20px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;font-family:inherit;transition:all .15s;}
@@ -250,6 +260,15 @@ html.dark .qzfb.wfb{color:#ef9a9a;}
   </header>
   <div class="layout">
     <aside>
+      <!-- 섹션 진행 현황 -->
+      <div class="prog-box" id="progBox">
+        <div class="prog-header">
+          <span class="prog-label">학습 진행</span>
+          <span class="prog-count" id="progCount">1 / 20</span>
+        </div>
+        <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progFill" style="width:5%"></div></div>
+        <div class="sec-list" id="secList"></div>
+      </div>
       <div class="navgrp"><div class="navgrp-t">모듈</div>
         <a class="navitem active" href="../m1/">모듈 1. 책임 있는 AI</a>
         <a class="navitem" href="../m2/">모듈 2. 생성형 AI 소개</a>
@@ -410,15 +429,53 @@ function getVis(i){
 function getNotes(i){
   var n=SM[i].n;
   var kps=n.kp?n.kp.map(function(k){return '<div class="kp"><div class="kpd"></div><div class="kpt">'+k+'</div></div>';}).join(''):'';
-  var inst=n.in?'<hr class="ndiv"><div class="inst"><div class="instl">&#128172; 강사 노트</div><div class="instt">'+n.in+'</div></div>':'';
-  return '<div class="nlbl">'+n.lbl+'</div><div class="nttl">'+n.ttl+'</div><div class="ndesc">'+n.desc+'</div>'+(kps?'<hr class="ndiv"><div class="nslbl">핵심 포인트</div><div class="kpl">'+kps+'</div>':'')+inst;
+  return '<div class="nlbl">'+n.lbl+'</div><div class="nttl">'+n.ttl+'</div><div class="ndesc">'+n.desc+'</div>'+(kps?'<hr class="ndiv"><div class="nslbl">핵심 포인트</div><div class="kpl">'+kps+'</div>':'');
 }
 // ── 썸네일 HTML ──
 function getThumb(active){
   return SM.map(function(s,i){return '<div class="thumb'+(i===active?' on':'')+'" onclick="goTo('+i+')"><div class="tnum">'+(i+1)+'</div><div>'+( s.ia?'⚡':s.ic)+'</div><div style="font-size:8px;line-height:1.2">'+s.th+'</div></div>';}).join('');
 }
+// ── 섹션 정의 (슬라이드 인덱스 기준, 0-based) ──
+var SECTIONS=[
+  {name:'도입',         range:[0,1]},
+  {name:'AI의 진화',    range:[2,3]},
+  {name:'8가지 차원',   range:[4,10]},
+  {name:'AWS의 노력',   range:[11,14]},
+  {name:'지식 확인',    range:[15,19]}
+];
+// 방문한 슬라이드 추적
+var visited=new Set([0]);
+
+// ── 섹션 진행 업데이트 ──
+function updateProgress(){
+  var total=SM.length;
+  var pct=Math.round((visited.size/total)*100);
+  document.getElementById('progCount').textContent=visited.size+' / '+total;
+  document.getElementById('progFill').style.width=pct+'%';
+
+  var html='';
+  SECTIONS.forEach(function(sec){
+    var start=sec.range[0], end=sec.range[1];
+    var total_s=end-start+1;
+    var done_s=0;
+    for(var i=start;i<=end;i++){if(visited.has(i))done_s++;}
+    var isCurrent=cur>=start&&cur<=end;
+    var isDone=done_s===total_s;
+    var cls=isDone?'done':(isCurrent?'active':'pending');
+    var dot=isDone?'✓':(isCurrent?'●':'');
+    var slideInfo=isDone?'':(isCurrent&&done_s>0?done_s+'/'+total_s:'');
+    html+='<div class="sec-item '+cls+'">'
+      +'<div class="sec-dot">'+dot+'</div>'
+      +'<span>'+sec.name+'</span>'
+      +(slideInfo?'<span class="sec-slides">'+slideInfo+'</span>':'')
+      +'</div>';
+  });
+  document.getElementById('secList').innerHTML=html;
+}
+
 // ── 메인 렌더 ──
 function render(){
+  visited.add(cur);
   document.getElementById('svis').innerHTML=getVis(cur);
   document.getElementById('npanel').innerHTML=getNotes(cur);
   var label=(cur+1)+' / '+SM.length;
@@ -427,10 +484,10 @@ function render(){
   var pct=((cur+1)/SM.length*100).toFixed(1)+'%';
   document.getElementById('pfill').style.width=pct;
   document.getElementById('snprog').style.width=pct;
-  // 이전/다음 버튼 비활성화
   var atFirst=cur===0, atLast=cur===SM.length-1;
   var p=document.getElementById('btnPrev'); if(p) p.disabled=atFirst;
   var n2=document.getElementById('btnNext'); if(n2) n2.disabled=atLast;
+  updateProgress();
 }
 // ── 네비게이션 ──
 function nav(d){
