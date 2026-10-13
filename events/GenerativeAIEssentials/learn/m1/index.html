@@ -470,10 +470,10 @@ function render(){
   document.getElementById('svis').innerHTML=getVis(cur);
   document.getElementById('npanel').innerHTML=getNotes(cur);
   var label=(cur+1)+' / '+SM.length;
-  document.getElementById('cnt').textContent=label;
+  var cntEl=document.getElementById('cnt'); if(cntEl) cntEl.textContent=label;
   document.getElementById('snCnt').textContent=label;
   var pct=((cur+1)/SM.length*100).toFixed(1)+'%';
-  document.getElementById('pfill').style.width=pct;
+  var pfillEl=document.getElementById('pfill'); if(pfillEl) pfillEl.style.width=pct;
   document.getElementById('snprog').style.width=pct;
   var atFirst=cur===0, atLast=cur===SM.length-1;
   var p=document.getElementById('btnPrev'); if(p) p.disabled=atFirst;
