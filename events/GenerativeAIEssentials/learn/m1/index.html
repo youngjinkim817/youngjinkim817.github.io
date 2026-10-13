@@ -1,93 +1,373 @@
 <!doctype html>
-<html lang="ko" class="light">
+<html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>모듈 1. 책임 있는 AI — Generative AI Essentials on AWS</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M1 · 책임 있는 AI 기초 — 하이브리드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style>
-  :root{--bg:#0f1219;--bg-alt:#161618;--bg-soft:#1b1f27;--brand1:#e65100;--brand2:#f57c00;--brand3:#ff9800;--t1:#dfdfd6;--t2:#98989f;--border:#3c3f44;}
-  html.light{--bg:#ffffff;--bg-alt:#f6f7f9;--bg-soft:#eef0f3;--t1:#1a1f29;--t2:#5b6678;--border:#e3e7ef;}
-  *{box-sizing:border-box;}
-  html,body{margin:0;background:var(--bg);color:var(--t1);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.65;}
-  a{color:var(--brand3);text-decoration:none;}
-  header.top{position:sticky;top:0;z-index:40;height:60px;display:flex;align-items:center;gap:16px;padding:0 20px;background:rgba(15,18,25,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-  html.light header.top{background:rgba(255,255,255,.9);}
-  header.top .brand{font-weight:700;font-size:15px;} header.top .brand b{color:var(--brand1);}
-  header.top .back{margin-left:auto;color:var(--t2);font-size:14px;} header.top .back:hover{color:var(--t1);}
-  .themebtn{width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
-  .themebtn svg{width:17px;height:17px;}.themebtn .moon{display:none;}
-  html.light .themebtn .moon{display:block;} html.light .themebtn .sun{display:none;}
-  .layout{display:grid;grid-template-columns:minmax(200px,260px) 1fr;min-height:calc(100vh - 60px);}
-  aside{border-right:1px solid var(--border);padding:22px 14px;overflow-y:auto;position:sticky;top:60px;height:calc(100vh - 60px);background:var(--bg);}
-  .navgrp{margin-bottom:20px;}
-  .navgrp-t{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);font-weight:600;padding:0 10px;margin-bottom:8px;}
-  .navitem{display:block;padding:8px 12px;border-radius:8px;color:var(--t1);font-size:14px;border-left:2px solid transparent;}
-  .navitem:hover{background:var(--bg-alt);}
-  .navitem.active{background:rgba(230,81,0,.12);border-left-color:var(--brand1);color:var(--brand3);font-weight:600;}
-  main{padding:36px 40px 72px;max-width:860px;}
-  .badge{display:inline-block;font-size:11px;font-weight:600;color:var(--brand3);background:rgba(230,81,0,.12);border:1px solid rgba(230,81,0,.3);border-radius:999px;padding:3px 11px;text-transform:uppercase;letter-spacing:.04em;}
-  .badge.lab{color:#7cc4ff;background:rgba(60,140,230,.12);border-color:rgba(60,140,230,.3);}
-  h1.t{font-size:30px;margin:14px 0 6px;font-weight:800;letter-spacing:-.01em;}
-  .sub{color:var(--t2);font-size:16px;margin:0 0 26px;}
-  h2{font-size:18px;margin:28px 0 12px;color:var(--brand3);}
-  ul{padding-left:1.2em;} li{margin:.4em 0;}
-  .tbd-box{margin-top:16px;border:1px dashed var(--border);border-radius:10px;padding:18px 20px;color:var(--t2);font-size:14px;background:var(--bg-alt);}
-  .assets{margin-top:14px;border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:var(--bg-alt);font-size:14px;color:var(--t2);}
-  .assets code{color:var(--brand3);background:var(--bg-soft);padding:2px 6px;border-radius:5px;}
-  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
-  .pager a{display:inline-flex;flex-direction:column;gap:3px;padding:12px 18px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--t1);font-size:14px;font-weight:600;max-width:48%;}
-  .pager a:hover{border-color:var(--brand1);}
-  .pager .lbl{font-size:11px;color:var(--t2);font-weight:500;}
-  .pager a.next{text-align:right;margin-left:auto;}
-  @media(max-width:560px){.layout{grid-template-columns:1fr;}aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border);}main{padding:24px 18px 56px;}}
+:root{--bg:#fff;--bg2:#f6f7f9;--bg3:#eef0f3;--t1:#1a1f29;--t2:#5b6678;--t3:#9ba3b5;--border:#e3e7ef;--brand:#e65100;--brand2:#f57c00;--card-bg:#fff;--sh:0 2px 8px rgba(0,0,0,.08);}
+html.dark{--bg:#0f1117;--bg2:#161b27;--bg3:#1e2535;--t1:#e8eaf0;--t2:#8b92a5;--t3:#5a6380;--border:#2a3148;--card-bg:#161b27;--sh:0 2px 8px rgba(0,0,0,.3);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;font-size:18px;min-height:100vh;display:flex;flex-direction:column;transition:background .2s,color .2s;}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.hbadge{background:var(--brand);color:#fff;font-size:13px;font-weight:700;padding:3px 8px;border-radius:4px;}
+.htitle{font-size:17px;font-weight:600;}
+.pbar{height:3px;background:var(--bg3);flex-shrink:0;}
+.pfill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .3s;}
+main{max-width:900px;margin:0 auto;padding:24px 20px 120px;width:100%;}
+.svis{background:var(--bg2);border:1px solid var(--border);border-radius:14px;min-height:480px;position:relative;overflow:hidden;box-shadow:var(--sh);}
+.svis::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(230,81,0,.06),transparent 55%);pointer-events:none;z-index:0;}
+.ibadge{position:absolute;top:10px;right:10px;background:rgba(230,81,0,.15);border:1px solid var(--brand);color:var(--brand2);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;z-index:10;}
+/* 슬라이드 하단 이전/다음 */
+.slnav{display:flex;align-items:center;justify-content:space-between;margin:14px 0 8px;}
+.slnav-btn{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--border);color:var(--t2);padding:9px 18px;border-radius:8px;cursor:pointer;font-size:16px;font-family:inherit;transition:all .15s;}
+.slnav-btn:hover{border-color:var(--brand);color:var(--brand);background:rgba(230,81,0,.04);}
+.slnav-btn:disabled{opacity:.35;cursor:default;}
+.slnav-cnt{font-size:15px;color:var(--t3);font-weight:600;}
+/* 노트 패널 (슬라이드 아래 배치) */
+.npanel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--sh);margin-top:4px;}
+.nlbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--brand);}
+.nttl{font-size:22px;font-weight:700;line-height:1.3;}
+.ndesc{font-size:16px;color:var(--t2);line-height:1.8;}
+.ndiv{border:none;border-top:1px solid var(--border);}
+.nslbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:8px;}
+.kpl{display:flex;flex-direction:column;gap:8px;}
+.kp{display:flex;gap:10px;align-items:flex-start;}
+.kpd{width:7px;height:7px;border-radius:50%;background:var(--brand2);flex-shrink:0;margin-top:8px;}
+.kpt{font-size:16px;line-height:1.65;}
+.inst{background:rgba(230,81,0,.05);border-left:3px solid var(--brand2);border-radius:0 8px 8px 0;padding:10px 14px;}
+.instl{font-size:12px;font-weight:700;color:var(--brand2);margin-bottom:4px;}
+.instt{font-size:15px;color:var(--t2);line-height:1.7;}
+/* 강사 노트 (항시 표시) */
+.inst{background:rgba(230,81,0,.05);border-left:3px solid var(--brand2);border-radius:0 8px 8px 0;padding:10px 14px;}
+.instl{font-size:12px;font-weight:700;color:var(--brand2);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.instt{font-size:15px;color:var(--t2);line-height:1.7;}
+/* 하단 고정 네비게이션 바 */
+.sticknav{position:fixed;bottom:0;left:0;right:0;z-index:900;background:var(--bg2);border-top:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 -4px 20px rgba(0,0,0,.06);}
+.sticknav button{background:var(--bg3);border:1px solid var(--border);color:var(--t1);padding:8px 20px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;font-family:inherit;transition:all .15s;}
+.sticknav button:hover{background:var(--brand);border-color:var(--brand);color:#fff;}
+.sticknav button:disabled{opacity:.35;cursor:default;background:var(--bg3);}
+.sticknav button:disabled:hover{background:var(--bg3);border-color:var(--border);color:var(--t1);}
+.sticknav-cnt{font-size:16px;color:var(--t2);min-width:60px;text-align:center;font-weight:600;}
+.sticknav-prog{position:absolute;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .3s;}
+/* 노트 패널 (슬라이드 아래 배치) */
+.npanel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--sh);margin-top:4px;}
+.tbtn{position:fixed;top:14px;right:16px;z-index:999;width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s;}
+.tbtn:hover{border-color:var(--brand);}
+html.dark .imoon{display:none;}
+html:not(.dark) .isun{display:none;}
+/* 슬라이드 내부 공통 */
+.sc{width:100%;height:100%;display:flex;flex-direction:column;padding:22px 20px;position:relative;z-index:1;overflow:hidden;}
+.sct{font-size:20px;font-weight:700;color:var(--brand2);margin-bottom:13px;flex-shrink:0;}
+/* 타이틀 슬라이드 */
+.stitle{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--bg2),var(--bg3));position:relative;z-index:1;text-align:center;padding:32px;}
+.stitle::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(230,81,0,.1),transparent 60%);z-index:0;}
+.sti{position:relative;z-index:1;}
+.sm1b{display:inline-block;background:var(--brand);color:#fff;font-size:15px;font-weight:700;padding:4px 14px;border-radius:20px;margin-bottom:16px;}
+.smttl{font-size:40px;font-weight:800;line-height:1.25;color:var(--t1);}
+html.dark .smttl{background:linear-gradient(135deg,#fff 30%,var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.smsub{font-size:17px;color:var(--t2);margin-top:10px;}
+/* 섹션 헤더 */
+.sech{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px;position:relative;z-index:1;}
+.sechic{font-size:48px;margin-bottom:14px;}
+.sechlbl{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin-bottom:7px;}
+.sechttl{font-size:28px;font-weight:800;line-height:1.3;color:var(--t1);}
+/* 목표 카드 */
+.sgoals{width:100%;height:100%;display:flex;flex-direction:column;padding:24px;position:relative;z-index:1;}
+.sgttl{font-size:20px;font-weight:700;color:var(--brand2);margin-bottom:16px;}
+.gcards{display:flex;flex-direction:column;gap:12px;flex:1;justify-content:center;}
+.gcard{background:rgba(245,124,0,.07);border:1px solid rgba(245,124,0,.2);border-radius:10px;padding:16px;display:flex;gap:12px;align-items:flex-start;}
+.gnum{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;}
+.gtxt{font-size:17px;line-height:1.65;}.gtxt strong{color:var(--brand2);}
+/* 파이프라인 */
+.pipe{display:flex;align-items:center;gap:0;flex:1;min-height:0;}
+.pstep{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 8px;text-align:center;height:100%;}
+.parr{font-size:20px;color:var(--brand);flex-shrink:0;padding:0 4px;}
+.pic{font-size:26px;margin-bottom:7px;}.plbl{font-size:17px;font-weight:700;margin-bottom:3px;}.pdsc{font-size:14px;color:var(--t2);line-height:1.5;}
+.pbnr{margin-top:12px;background:rgba(230,81,0,.07);border:1px solid rgba(230,81,0,.22);border-radius:8px;padding:8px 12px;text-align:center;font-size:14px;color:var(--brand2);font-weight:600;flex-shrink:0;}
+/* 2열 */
+.twoc{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1;min-height:0;}
+.cg{display:flex;flex-direction:column;gap:7px;}
+.cgttl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--brand);padding:0 0 4px;border-bottom:1px solid var(--border);}
+.icard{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 10px;display:flex;gap:7px;align-items:flex-start;flex:1;}
+.iic{font-size:17px;flex-shrink:0;margin-top:1px;}.ilbl{font-size:16px;font-weight:600;margin-bottom:2px;}.idsc{font-size:14px;color:var(--t2);line-height:1.5;}
+/* 3기둥 */
+.tpill{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;flex:1;min-height:0;}
+.pil{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;}
+.pilic{font-size:26px;}.pilnm{font-size:17px;font-weight:700;}.pildsc{font-size:15px;color:var(--t2);line-height:1.5;flex:1;}.pilsub{font-size:12px;color:var(--brand);font-weight:600;}
+/* 수명주기 */
+.lc{display:flex;align-items:stretch;gap:0;flex:1;min-height:0;}
+.lcs{flex:1;border:1px solid var(--border);border-radius:10px;padding:12px 9px;text-align:center;display:flex;flex-direction:column;gap:5px;background:var(--bg3);}
+.lcsn{font-size:22px;font-weight:800;color:var(--brand);opacity:.3;}.lcsnm{font-size:14px;font-weight:700;}
+.lcsi{display:flex;flex-direction:column;gap:3px;flex:1;}
+.lcsit{background:var(--bg2);border-radius:5px;padding:4px 6px;font-size:12px;color:var(--t2);text-align:left;}
+.lcarr{display:flex;align-items:center;padding:0 3px;color:var(--brand2);font-size:16px;flex-shrink:0;}
+/* 2x2 */
+.g2x2{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:9px;flex:1;min-height:0;}
+.gcd{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px 11px;display:flex;flex-direction:column;gap:5px;}
+.gcdi{font-size:20px;}.gcdttl{font-size:16px;font-weight:700;}.gcddsc{font-size:14px;color:var(--t2);line-height:1.5;flex:1;}
+.gcdbdg{display:inline-block;background:rgba(245,124,0,.1);border:1px solid rgba(245,124,0,.25);color:var(--brand2);font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;align-self:flex-start;}
+/* 3열 프레임워크 */
+.tfw{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;flex:1;min-height:0;}
+.fwc{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px 11px;display:flex;flex-direction:column;gap:5px;}
+.fwci{font-size:24px;}.fwcnm{font-size:17px;font-weight:700;}.fwcdsc{font-size:15px;color:var(--t2);line-height:1.55;flex:1;}
+.fwcaw{font-size:12px;color:var(--brand2);font-weight:600;padding-top:4px;border-top:1px solid var(--border);}
+/* ai-timeline */
+.ctl{width:100%;height:100%;display:flex;flex-direction:column;padding:20px 18px 14px;position:relative;z-index:1;overflow:hidden;}
+.ctlttl{font-size:20px;color:var(--brand2);font-weight:700;text-align:center;margin-bottom:16px;flex-shrink:0;}
+.tlwrap{flex-shrink:0;padding:0 8px;}
+.tltrack{display:flex;align-items:flex-start;justify-content:space-between;position:relative;}
+.tltrack::before{content:'';position:absolute;top:25px;left:25px;right:25px;height:2px;background:linear-gradient(90deg,var(--brand),var(--brand2));z-index:0;}
+.tlera{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;z-index:1;cursor:pointer;}
+.tldot{width:50px;height:50px;border-radius:50%;background:var(--bg3);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;}
+.tlera:hover .tldot,.tlera.on .tldot{border-color:var(--brand);background:rgba(230,81,0,.12);transform:scale(1.1);box-shadow:0 0 0 4px rgba(230,81,0,.1);}
+.tlenm{font-size:13px;font-weight:700;text-align:center;color:var(--t2);max-width:68px;transition:color .2s;}
+.tlera.on .tlenm{color:var(--brand2);}
+.tlep{font-size:10px;color:var(--brand);text-align:center;}
+.tldet{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px 14px;margin-top:12px;overflow-y:auto;transition:border-color .2s;}
+.tldet.on{border-color:var(--brand);}
+.tldet h3{font-size:17px;color:var(--brand2);margin-bottom:5px;}
+.tldet p{font-size:16px;color:var(--t2);line-height:1.6;}
+.tltag{display:inline-block;background:rgba(230,81,0,.1);color:var(--brand2);font-size:12px;font-weight:600;padding:2px 7px;border-radius:4px;margin:5px 3px 0 0;}
+.tlph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--t3);font-size:14px;}
+/* dim-cards */
+.cdc{width:100%;height:100%;display:flex;flex-direction:column;padding:13px;position:relative;z-index:1;gap:9px;}
+.dgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;flex-shrink:0;}
+.dc{background:var(--bg3);border:1.5px solid var(--border);border-radius:9px;padding:10px 7px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;text-align:center;}
+.dc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--c,var(--brand));transition:height .2s;}
+.dc:hover{border-color:var(--c,var(--brand));transform:translateY(-1px);}
+.dc.on{border-color:var(--c,var(--brand));background:var(--bg2);}
+.dc.on::before{height:100%;opacity:.04;}
+.dcic{font-size:22px;}.dcnm{font-size:14px;font-weight:700;margin-top:4px;}
+.ddet{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px 13px;overflow-y:auto;}
+.ddet h3{font-size:17px;font-weight:700;margin-bottom:4px;}
+.dddef{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:7px;}
+.ddcase{background:var(--bg2);border-left:3px solid;border-radius:0 6px 6px 0;padding:7px 11px;margin-bottom:5px;}
+.ddcase h4{font-size:13px;font-weight:700;margin-bottom:3px;color:var(--brand2);}.ddcase p{font-size:13px;color:var(--t2);line-height:1.6;}
+.ddaws{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.awsbdg{background:rgba(245,124,0,.08);border:1px solid rgba(245,124,0,.25);color:var(--brand2);font-size:12px;font-weight:600;padding:2px 7px;border-radius:5px;}
+.ddph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--t3);font-size:14px;text-align:center;}
+/* quiz */
+.cqz{width:100%;height:100%;display:flex;flex-direction:column;padding:22px 20px;position:relative;z-index:1;gap:12px;overflow-y:auto;}
+.qzq{font-size:20px;font-weight:600;line-height:1.6;flex-shrink:0;}
+.qzcs{display:flex;flex-direction:column;gap:7px;flex:1;}
+.qzc{background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;gap:9px;align-items:flex-start;cursor:pointer;transition:all .15s;}
+.qzc:hover:not(.dis){border-color:var(--brand);background:rgba(230,81,0,.05);}
+.qzc.cor{border-color:#2e7d32;background:rgba(46,125,50,.08);}
+.qzc.wrg{border-color:#c62828;background:rgba(198,40,40,.07);}
+.qzc.rev{border-color:#2e7d32;background:rgba(46,125,50,.08);}
+.qzc.dis{cursor:default;}
+.qzck{width:22px;height:22px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;transition:all .15s;}
+.qzc.cor .qzck,.qzc.rev .qzck{background:#2e7d32;border-color:#2e7d32;color:#fff;}
+.qzc.wrg .qzck{background:#c62828;border-color:#c62828;color:#fff;}
+.qzct{font-size:16px;line-height:1.6;padding-top:2px;}
+.qzfb{background:rgba(46,125,50,.07);border:1px solid #2e7d32;border-radius:8px;padding:9px 12px;font-size:14px;line-height:1.65;color:#388e3c;flex-shrink:0;display:none;}
+html.dark .qzfb{color:#81c784;}
+.qzfb.show{display:block;}
+.qzfb.wfb{background:rgba(198,40,40,.07);border-color:#c62828;color:#c62828;}
+html.dark .qzfb.wfb{color:#ef9a9a;}
+/* 반응형 */
+@media(max-width:820px){main{padding:16px 14px 110px;}.svis{min-height:340px;}.slnav-btn{padding:8px 14px;font-size:15px;}}
+@media(max-width:500px){.svis{min-height:280px;}.dgrid{grid-template-columns:repeat(2,1fr);}.tpill{grid-template-columns:1fr;}.g2x2{grid-template-columns:1fr;grid-template-rows:none;}}
 </style>
 </head>
 <body>
-  <header class="top">
-    <span class="brand">Generative AI Essentials <b>on AWS</b></span>
-    <a class="back" href="../../GenerativeAIEssentials_intro_v1.html">← 강의 소개</a>
-    <button class="themebtn" id="themeToggle" aria-label="배경 전환" title="배경 전환"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
-  </header>
-  <div class="layout">
-    <aside>
-      <div class="navgrp"><div class="navgrp-t">모듈</div>
-        <a class="navitem active" href="../m1/">모듈 1. 책임 있는 AI</a>
-        <a class="navitem" href="../m2/">모듈 2. 생성형 AI 소개</a>
-        <a class="navitem" href="../m3/">모듈 3. 멀티모달 AI</a>
-        <a class="navitem" href="../m4/">모듈 4. 프롬프트 엔지니어링 · 실습</a>
-        <a class="navitem" href="../m5/">모듈 5. Bedrock 가드레일 · 실습</a>
-        <a class="navitem" href="../m6/">모듈 6. 에이전틱 AI</a>
-        <a class="navitem" href="../m7/">모듈 7. 보안 및 거버넌스</a>
-        <a class="navitem" href="../m8/">모듈 8. 프로젝트 계획 · 실습</a>
-        <a class="navitem" href="../m9/">모듈 9. 과정 요약 · Q&A</a>
-      </div>
-      <div class="navgrp"><div class="navgrp-t">실습 (Hands-on)</div>
-        <a class="navitem" href="../lab1/">Lab 1. 프롬프트 엔지니어링</a>
-        <a class="navitem" href="../lab2/">Lab 2. Bedrock 가드레일</a>
-        <a class="navitem" href="../lab3/">Lab 3. 프로젝트 계획</a>
-        <a class="navitem" href="../guide/">가이드 데모</a>
-      </div>
-    </aside>
-    <main>
-      <span class="badge">모듈</span>
-      <h1 class="t">모듈 1. 책임 있는 AI</h1>
-      <p class="sub">책임 있는 AI의 8가지 핵심 차원과 AWS의 노력</p>
-      <h2>학습 내용</h2>
-      <ul>
-          <li>책임 있는 AI의 8가지 차원: 공정성·설명가능성·개인정보보호/보안·안전성·제어가능성·진실성/견고성·거버넌스·투명성</li>
-          <li>AI의 진화(규칙기반→기계학습→딥러닝→생성형→에이전틱)와 누적되는 거버넌스 복잡성</li>
-          <li>AWS 도구: SageMaker Clarify, Bedrock Guardrails, Model Monitor, Model Cards</li>
-          <li>모든 모듈을 관통하는 핵심 주제 — 윤리와 기술 구현의 연결</li>
-      </ul>
-      <div class="tbd-box">상세 학습 콘텐츠와 슬라이드·설명은 이 영역에 추가됩니다. (강의 전 업데이트 예정)</div>
-      <h2>학습 자료</h2>
-      <div class="assets">이 모듈의 이미지·자료는 <code>m1/assets/</code> 폴더에 넣고 아래처럼 참조합니다.<br>예: <code>&lt;img src="./assets/diagram1.png"&gt;</code> · <code>&lt;a href="./assets/handout.pdf"&gt;</code></div>
-      <div class="pager">
-        <span></span>
-        <a class="next" href="../m2/"><span class="lbl">다음 →</span>모듈 2. 생성형 AI 소개</a>
-      </div>
-    </main>
+<header>
+  <span class="hbadge">M1</span>
+  <span class="htitle">책임 있는 AI 기초</span>
+</header>
+<div class="pbar"><div class="pfill" id="pfill"></div></div>
+<main>
+  <div class="svis" id="svis"></div>
+  <div class="slnav">
+    <button class="slnav-btn" id="btnPrevTop" onclick="nav(-1)">&#8592; 이전</button>
+    <span class="slnav-cnt" id="cnt">1 / 20</span>
+    <button class="slnav-btn" id="btnNextTop" onclick="nav(1)">다음 &#8594;</button>
   </div>
-  <script>var tb=document.getElementById('themeToggle');if(tb)tb.addEventListener('click',function(){document.documentElement.classList.toggle('light');});</script>
+  <div class="npanel" id="npanel"></div>
+</main>
+<!-- 하단 고정 네비게이션 바 -->
+<div class="sticknav">
+  <div class="sticknav-prog" id="snprog"></div>
+  <button id="btnPrev" onclick="nav(-1)">&#8592; 이전</button>
+  <span class="sticknav-cnt" id="snCnt">1 / 20</span>
+  <button id="btnNext" onclick="nav(1)">다음 &#8594;</button>
+</div>
+<script>
+// 상태
+let cur=0,tlSel=-1,dimSel={i:-1};
+const qst={q1:null,q2:null};
+// 타임라인 데이터
+const TL=[
+  {ic:'🧮',nm:'기존 AI',pr:'1950년대~',desc:'규칙 기반 시스템. 전문가가 직접 규칙을 코딩하고 통계 방법을 사용합니다.',ex:'이메일 스팸 분류, 보드게임 AI',lim:'규칙 외 상황 처리 불가',tags:['규칙 기반','통계']},
+  {ic:'📊',nm:'머신 러닝',pr:'1980년대~',desc:'데이터에서 패턴을 스스로 학습합니다. 결정 트리, 랜덤 포레스트, SVM 등 알고리즘 활용.',ex:'추천 시스템, 신용평가',lim:'특성 엔지니어링 필요',tags:['패턴 학습','특성 엔지니어링']},
+  {ic:'🧠',nm:'딥 러닝',pr:'2010년대~',desc:'다층 신경망으로 비정형 데이터를 자동 처리합니다. AlexNet(2012)이 이미지인식을 혁신했습니다.',ex:'음성인식, 기계번역',lim:'대규모 GPU 자원 필요',tags:['신경망','GPU 가속']},
+  {ic:'✨',nm:'생성형 AI',pr:'2022년~',desc:'학습한 패턴을 조합하여 새로운 콘텐츠를 생성합니다. GPT, Claude, DALL-E 등이 대표적입니다.',ex:'텍스트·이미지·코드 생성',lim:'할루시네이션 가능',tags:['콘텐츠 생성','창의적 출력']},
+  {ic:'🤖',nm:'에이전틱 AI',pr:'현재',desc:'목표만 주면 스스로 계획하고 도구를 사용하며 실행합니다. ⚠️ 책임 있는 설계가 가장 중요합니다.',ex:'자율 코딩 에이전트, AI 오케스트레이터',lim:'감독 없이 예상치 못한 결과 가능',tags:['자율 실행','⚠️ 고위험']}
+];
+// 차원 카드 데이터
+const DM=[
+  {ic:'⚖️',nm:'공정성',en:'Fairness',c:'#e53935',def:'AI가 다양한 집단에게 공평한 결과를 산출합니다. 편향된 훈련 데이터가 차별적 결과로 이어지지 않도록 합니다.',ex:'Amazon 이력서 AI: 과거 채용 데이터의 성별 편향이 여성 지원자 차별로 이어져 2018년 프로젝트 중단.',aws:['SageMaker Clarify']},
+  {ic:'🛡️',nm:'안전성',en:'Safety',c:'#e65100',def:'유해 콘텐츠 생성과 할루시네이션을 방지합니다. AI 출력이 사용자에게 해를 끼치지 않도록 합니다.',ex:'CloudSync Pro 할루시네이션: 존재하지 않는 AWS 서비스를 AI가 자신 있게 설명하는 오류.',aws:['Bedrock Guardrails','RLHF']},
+  {ic:'🔒',nm:'개인정보/보안',en:'Privacy & Security',c:'#1565c0',def:'AI 수명주기 전반에 걸쳐 민감한 데이터를 보호합니다. 학습·추론·저장 모든 단계에서 보안을 유지합니다.',ex:'환자 기록 훈련 AI: 의료 AI 훈련 중 PHI(보호 의료정보) 유출 위험 사례.',aws:['Amazon Macie','KMS 암호화']},
+  {ic:'🎛️',nm:'제어 가능성',en:'Controllability',c:'#6a1b9a',def:'인간이 AI 행동을 감독하고 필요시 개입할 수 있습니다. AI가 자동으로 인간에게 판단을 요청하는 구조.',ex:'환불 처리 AI: 복잡한 환불 요청 시 AI가 자동으로 인간 상담원에게 이관.',aws:['Amazon A2I','인간 검토 루프']},
+  {ic:'🏛️',nm:'거버넌스',en:'Governance',c:'#2e7d32',def:'조직 차원의 AI 정책, 책임 체계, 정기 검토를 통해 책임 있는 AI 실행을 제도화합니다.',ex:'대출 AI 윤리위원회: 대출 결정 AI에 독립적 윤리위원회를 두고 분기별 감사 진행.',aws:['AWS Config','CloudTrail']},
+  {ic:'🔍',nm:'설명 가능성',en:'Explainability',c:'#00838f',def:'AI의 결정 이유를 이해하고 설명할 수 있습니다. 사용자가 AI 판단을 신뢰할 수 있는 근거를 제공합니다.',ex:'대출 거절 설명: "신용 이력 부족, DTI 비율 초과" 등 구체적 사유 제공.',aws:['SageMaker Clarify','SHAP 분석']},
+  {ic:'🪟',nm:'투명성',en:'Transparency',c:'#f57c00',def:'AI임을 명확히 고지하고 시스템의 한계를 공개합니다. 사용자가 AI와의 상호작용을 인지하도록 합니다.',ex:'챗봇 고지: "저는 AI입니다. 복잡한 문제는 전문가와 상담을 권장합니다."',aws:['AWS AI 서비스 카드']},
+  {ic:'💪',nm:'진실성/견고성',en:'Veracity & Robustness',c:'#558b2f',def:'정확한 출력을 생성하고 예상치 못한 입력에도 안정적으로 작동합니다. 불확실한 경우 이를 명확히 표시합니다.',ex:'뉴스 요약 AI: 팩트체크 DB 연동으로 불확실 정보에 "확인 필요" 태그 자동 추가.',aws:['Bedrock Guardrails','그라운딩 기법']}
+];
+// 퀴즈 데이터
+const QZ={
+  q1:{q:'책임 있는 AI에서 공정성(Fairness)에 관한 설명으로 가장 적절한 것은 무엇입니까?',
+    cs:['AI 시스템은 항상 동일한 출력을 생성해야 한다','AI 편향은 주로 개발자의 의도적인 설계 선택에서 비롯된다','AI 공정성은 훈련 데이터, 기능 선택, 모델 아키텍처 등 여러 요인에서 비롯될 수 있다','공정성은 AI 시스템 배포 후에만 평가해야 한다'],
+    ans:2,exp:'AI 편향은 의도적인 설계가 아니라 훈련 데이터, 기능 선택, 레이블링 프로세스, 모델 아키텍처, 배포 컨텍스트 등 다양한 요인에서 발생합니다. Amazon 이력서 AI 사례처럼 편향은 대부분 의도하지 않게 발생합니다.'},
+  q2:{q:'에이전틱 AI가 이전 AI 시대와 비교하여 책임 있는 AI 원칙을 가장 중요하게 요구하는 주요 이유는 무엇입니까?',
+    cs:['더 많은 컴퓨팅 리소스를 사용하기 때문에','자율적으로 계획하고 행동하므로 인간 감독 없이 예상치 못한 결과를 초래할 수 있기 때문에','훈련 데이터가 더 많이 필요하기 때문에','생성형 AI보다 더 많은 할루시네이션을 생성하기 때문에'],
+    ans:1,exp:'에이전틱 AI는 목표만 주어지면 스스로 계획을 세우고 도구를 사용하며 행동합니다. 이 자율성으로 인해 인간의 감독 없이 예상치 못한 광범위한 결과를 초래할 수 있어 책임 있는 AI 원칙이 가장 중요합니다.'}
+};
+// 슬라이드 메타 (썸네일 + 노트용)
+const SM=[
+  {th:'제목',ic:'🏷️',ia:false,n:{lbl:'슬라이드 1',ttl:'모듈 1: 책임 있는 AI 기초',desc:'이 모듈은 사양 기반 에이전트 개발의 기본 컨텍스트를 다룹니다. 책임 있는 AI 원칙이 Kiro 같은 도구의 사용 방식을 결정합니다.',kp:['책임 있는 AI는 선택이 아닌 필수 프레임워크','AWS Well-Architected Responsible AI Lens로 구체적 지침 제공','에이전틱 AI 시대에 책임 있는 AI 원칙의 중요성이 더욱 높아짐'],in:'수강생에게 AI와의 경험을 짧게 물어보며 모듈 시작. 어떤 AI 도구를 사용해 봤는지, 불편했던 점이 있었는지 확인.'}},
+  {th:'목표',ic:'🎯',ia:false,n:{lbl:'슬라이드 2',ttl:'모듈 1 학습 목표',desc:'이 2가지 목표는 과정 후반부 에이전트 워크플로 평가에 직접적으로 도움이 됩니다.',kp:['목표 1: 책임 있는 AI 8가지 핵심 요소를 구체적 사례와 함께 설명','목표 2: AWS의 책임 있는 AI 도구와 노력을 실무 관점에서 이해'],in:'"책임 있는 AI가 무엇을 의미하는지"를 먼저 질문하여 기본 이해도 파악. 다양한 배경의 답변을 수용하고 모듈 학습으로 연결.'}},
+  {th:'AI진화',ic:'⏳',ia:false,n:{lbl:'슬라이드 3',ttl:'AI의 진화: 기존 방식에서 생성형으로',desc:'에이전틱 AI가 광범위한 AI 개발 흐름에서 차지하는 위치와 새로운 거버넌스 접근 방식이 필요한 이유를 설명합니다.',kp:['각 AI 시대는 이전 기술을 대체하는 것이 아니라 축적합니다','에이전틱 AI는 자율성이 가장 높아 거버넌스 요구도 가장 큽니다','책임 있는 AI 원칙은 모든 AI 시대에 걸쳐 적용됩니다'],in:'다음 슬라이드의 타임라인 인터랙션을 미리 안내: "각 시대를 클릭하면 자세한 정보를 볼 수 있습니다."'}},
+  {th:'타임라인',ic:'⚡',ia:true,n:{lbl:'슬라이드 4',ttl:'AI 진화의 시대',desc:'각 시대는 이전을 대체하지 않고 축적되어 더 강력한 AI 시스템을 형성합니다. 에이전틱 AI는 이 모든 발전의 정점입니다.',kp:['기존 AI → ML → 딥 러닝 → 생성형 AI → 에이전틱 AI 순으로 진화','각 단계마다 자율성이 높아지고 거버넌스 필요성도 증가','에이전틱 AI는 목표만 주면 스스로 계획·도구 사용·실행'],in:'수강생에게 자신의 역할에서 어느 시대 AI와 가장 많이 상호작용하는지 질문. 개인화된 맥락 연결이 학습 효과를 높입니다.'}},
+  {th:'8차원',ic:'8️⃣',ia:false,n:{lbl:'슬라이드 5',ttl:'책임 있는 AI의 8가지 차원',desc:'이 섹션에서는 책임 있는 AI를 구성하는 8가지 핵심 차원을 탐색합니다.',kp:['8가지 차원은 서로 독립된 것이 아니라 상호 연결된 프레임워크','하나의 차원만으로는 책임 있는 AI를 완성할 수 없음','AWS Well-Architected Responsible AI Lens에 기반한 체계'],in:'"책임 있는 AI를 들었을 때 무엇이 떠오르는지" 사전 질문. 수강생 응답을 수집한 뒤 다음 슬라이드와 연결.'}},
+  {th:'8가지차원',ic:'⚡',ia:true,n:{lbl:'슬라이드 6',ttl:'책임 있는 AI의 8가지 차원 소개',desc:'8가지 차원은 상호 연결된 프레임워크입니다. 단일 차원만으로는 충분하지 않습니다.',kp:['공정성·안전성·개인정보는 "무엇을 만드느냐"에 관한 차원','제어가능성·거버넌스는 "어떻게 운영하느냐"에 관한 차원','설명가능성·투명성·진실성은 "신뢰를 어떻게 구축하느냐"에 관한 차원'],in:'건축법 비유: 내화성만 있다고 안전한 건물이 아닌 것처럼, 공정성 하나만으로 책임 있는 AI가 되지 않습니다.'}},
+  {th:'공정성',ic:'⚖️',ia:false,n:{lbl:'슬라이드 7',ttl:'공정성 - 편견 및 차별 피하기',desc:'AI 편향은 의도가 아닌 훈련 데이터에서 비롯됩니다. 기존 ML과 생성형 AI의 공정성 접근 방식에 차이가 있습니다.',kp:['편향은 데이터 수집→모델 학습→출력 단계에서 각각 증폭 가능','기존 ML: 특정 기능의 통계적 불균형이 주요 원인','생성형 AI: 텍스트 데이터의 사회적 편향이 출력에 반영'],in:'Amazon 이력서 AI 사례: 2018년 과거 채용 데이터 편향이 여성 지원자 차별로 이어져 프로젝트 중단. 의도하지 않은 편향의 실제 영향 강조.'}},
+  {th:'안전성',ic:'🛡️',ia:false,n:{lbl:'슬라이드 8',ttl:'안전성 - 유해 출력 방지',desc:'AI 안전성은 유해 콘텐츠, 위험한 지침, 할루시네이션 방지를 포함합니다.',kp:['할루시네이션: AI가 없는 정보를 자신감 있게 생성하는 현상','RLHF(인간 피드백 강화학습)로 유해 출력 감소 가능','Bedrock Guardrails로 콘텐츠 필터링 및 접근 제어 구현'],in:'"CloudSync Pro" 예시: 가상의 AWS 서비스를 AI가 자신 있게 설명한 할루시네이션 사례. 수강생에게 AI가 틀렸지만 확신했던 경험이 있는지 질문.'}},
+  {th:'개인정보/제어',ic:'🔒',ia:false,n:{lbl:'슬라이드 9',ttl:'개인 정보 보호 및 보안, 제어 가능성',desc:'의료 환자 기록 예시: AI 모델 훈련 시 PHI(보호 의료정보) 유출 위험. AI 수명주기 전반에 걸친 보호가 필요합니다.',kp:['개인정보 보호: 데이터 수집-학습-추론 전 단계에서 민감 정보 보호','제어 가능성: 인간이 언제든 AI 결정에 개입할 수 있는 구조','Amazon A2I: 낮은 신뢰도 예측에 인간 검토 자동 요청'],in:'복잡한 환불 요청 시 AI가 인간 상담원에게 자동 이관하는 사례. "AI가 모든 것을 처리해야 한다"는 오해를 바로잡는 기회.'}},
+  {th:'거버넌스',ic:'🏛️',ia:false,n:{lbl:'슬라이드 10',ttl:'거버넌스 - 조직 차원의 책임',desc:'거버넌스 없이는 책임 있는 AI가 선언에 그칩니다. 정책, 책임성, 검토의 3가지 기둥이 필요합니다.',kp:['정책: AI 사용 기준과 허용 범위를 명문화','책임성: AI 결정에 대한 명확한 책임 체계','검토: 정기적 감사와 독립적 평가 메커니즘'],in:'대출 AI 사례: 대출 결정 AI에 독립적 윤리위원회를 두고 분기별 감사 진행. 기술 솔루션만으로 거버넌스가 완성되지 않음을 강조.'}},
+  {th:'설명/투명/진실',ic:'🔍',ia:false,n:{lbl:'슬라이드 11',ttl:'설명 가능성, 투명성, 진실성 및 견고성',desc:'3가지 추가 차원으로 책임 있는 AI 프레임워크를 완성합니다.',kp:['설명 가능성: "대출 거절 이유: 신용 이력 부족" 같은 구체적 근거 제공','투명성: AI임을 명확히 밝히고 한계를 공개','진실성·견고성: 예상치 못한 입력에도 정확하고 안정적으로 작동'],in:'AWS 서비스 카드 소개: AWS는 각 AI 서비스의 한계와 적합한 사용 사례를 공개하는 "서비스 카드"를 제공합니다.'}},
+  {th:'수명주기',ic:'🔄',ia:false,n:{lbl:'슬라이드 12',ttl:'AI 시스템 수명 주기 전반의 책임 있는 AI',desc:'책임 있는 AI는 배포 후가 아니라 설계 단계부터 시작됩니다.',kp:['설계: 데이터 다양성, 윤리적 요구사항 정의','개발: 편향 탐지, 안전 테스트, 설명 가능성 도구 적용','운영: 지속적 모니터링, 드리프트 감지, 인간 감독'],in:'AWS Well-Architected Responsible AI Lens를 언급. 각 수명주기 단계에서 구체적 질문 목록을 제공합니다.'}},
+  {th:'AWS노력',ic:'☁️',ia:false,n:{lbl:'슬라이드 13',ttl:'책임 있는 AI에 대한 AWS의 노력',desc:'AWS는 원칙과 실용적 도구를 함께 제공하여 책임 있는 AI 구현을 지원합니다.',kp:['AWS AI 원칙: 공정성, 설명 가능성, 개인정보, 견고성, 보안, 지속 가능성','실용 도구: 위험 탐지, 측정, 완화를 위한 서비스 제공','공동책임 모델: AWS와 고객이 함께 책임 있는 AI를 구현'],in:'"원칙이 어떻게 실제 도구로 연결되는가"에 초점. 수강생이 이미 사용 중인 AWS 서비스가 있다면 연결하여 설명.'}},
+  {th:'AWS도구',ic:'🔧',ia:false,n:{lbl:'슬라이드 14',ttl:'AWS 책임 있는 AI 원칙 및 도구',desc:'AWS는 AI 수명주기 전반에 걸쳐 책임 있는 AI 위험을 탐지·측정·완화하는 도구를 제공합니다.',kp:['SageMaker Clarify: 편향 탐지 및 모델 설명 가능성','Bedrock Guardrails: 콘텐츠 필터링, 주제 차단, PII 보호','Amazon A2I: 낮은 신뢰도 예측에 인간 검토 루프 구현'],in:'각 도구를 실제 시나리오와 연결: "채용 AI를 만든다면 Clarify로 편향을 탐지하고, Bedrock Guardrails로 부적절한 질문을 차단합니다."'}},
+  {th:'투명성지원',ic:'🪟',ia:false,n:{lbl:'슬라이드 15',ttl:'투명성 및 조직 차원 지원',desc:'AWS는 기술 도구 외에도 조직이 책임 있는 AI를 실행할 수 있는 프레임워크와 가이드를 제공합니다.',kp:['AWS AI 서비스 카드: 각 서비스의 의도된 사용, 한계, 설계 원칙 공개','Well-Architected Responsible AI Lens: 설계 검토 질문 목록','공동책임 모델: AWS와 고객이 공동으로 책임 있는 AI 구현'],in:'Bedrock: AWS는 기반 인프라의 책임 있는 AI를 담당, 고객은 애플리케이션 레이어 가드레일과 정책 담당.'}},
+  {th:'지식확인',ic:'📝',ia:false,n:{lbl:'슬라이드 16',ttl:'지식 확인',desc:'앞서 배운 내용을 확인하는 퀴즈입니다. 학습 내용을 바탕으로 답변해 보세요.',kp:['2개의 객관식 질문으로 핵심 개념 확인','정답을 클릭하면 즉시 피드백과 해설 제공','틀린 경우에도 해설을 통해 학습 보완 가능'],in:'퀴즈 전에 잠시 멈추고 수강생에게 스스로 답을 생각해볼 시간을 주세요.'}},
+  {th:'퀴즈1',ic:'⚡',ia:true,n:{lbl:'슬라이드 17',ttl:'지식 확인 1',desc:'AI 공정성에 대한 이해를 확인합니다.',kp:['AI 편향의 원인은 단일하지 않고 다양한 요인의 복합 결과','데이터, 기능 선택, 레이블링, 아키텍처 등이 모두 영향','개발자 의도보다 구조적 요인이 더 큰 영향'],in:'수강생이 답을 선택한 후 왜 그렇게 생각했는지 간단히 물어보세요.'}},
+  {th:'퀴즈1정답',ic:'✅',ia:true,n:{lbl:'슬라이드 18',ttl:'지식 확인 1 - 정답',desc:'AI 공정성에 대한 정답과 해설입니다.',kp:['정답 C: AI 공정성 문제는 훈련 데이터, 기능 선택, 모델 아키텍처 등 복합 요인에서 발생','A 오답: 동일한 출력은 공정성이 아닌 일관성의 개념','B 오답: 편향은 대부분 의도하지 않은 구조적 원인에서 발생','D 오답: 배포 전 설계 단계부터 공정성을 고려해야 함'],in:'Amazon 이력서 AI 예시를 다시 언급. 의도 없이 발생한 편향이 실제 사업 중단으로 이어진 사례로 B 오답을 강조.'}},
+  {th:'퀴즈2',ic:'⚡',ia:true,n:{lbl:'슬라이드 19',ttl:'지식 확인 2',desc:'에이전틱 AI와 책임 있는 AI의 관계를 확인합니다.',kp:['에이전틱 AI는 자율성이 높아 예상치 못한 결과 범위가 넓음','자율성 ↑ = 인간 감독 필요성 ↑','에이전틱 AI일수록 책임 있는 AI 원칙이 더 중요'],in:'수강생에게 에이전틱 AI가 잘못 작동했을 때의 시나리오를 상상해보도록 하세요.'}},
+  {th:'퀴즈2정답',ic:'✅',ia:true,n:{lbl:'슬라이드 20',ttl:'지식 확인 2 - 정답',desc:'에이전틱 AI의 특성과 책임 있는 AI의 중요성에 대한 정답 해설입니다.',kp:['정답 B: 에이전틱 AI는 자율적으로 계획하고 행동하므로 인간 감독 없이 예상치 못한 결과 초래 가능','A 오답: 컴퓨팅 리소스 사용량은 책임 있는 AI 필요성과 무관','C 오답: 훈련 데이터 양은 책임 있는 AI 원칙 필요성의 직접 원인이 아님','D 오답: 에이전틱 AI가 더 많은 할루시네이션을 생성한다는 것은 사실이 아님'],in:'모듈 마무리: "에이전틱 AI를 책임감 있게 설계하려면 어떤 차원을 가장 먼저 고려해야 할까요?" 열린 질문으로 토론 시작.'}}
+];
+
+// ── 비주얼 HTML 생성 함수들 ──
+function vs1(){return '<div class="stitle"><div class="sti"><div class="sm1b">M1</div><div class="smttl">모듈 1: 책임 있는 AI 기초</div><div class="smsub">Generative AI Essentials &middot; AWS Well-Architected Responsible AI</div></div></div>';}
+function vs2(){return '<div class="sgoals"><div class="sgttl">&#128203; 모듈 1 학습 목표</div><div class="gcards"><div class="gcard"><div class="gnum">1</div><div class="gtxt"><strong>책임 있는 AI의 8가지 핵심 요소</strong>를 정의하고 각각의 실제 사례와 AWS 도구를 설명할 수 있습니다.</div></div><div class="gcard"><div class="gnum">2</div><div class="gtxt"><strong>책임 있는 AI에 대한 AWS의 노력</strong>과 제공 도구를 AI 수명주기 관점에서 설명할 수 있습니다.</div></div></div></div>';}
+function vSec(ic,ttl){return '<div class="sech"><div class="sechic">'+ic+'</div><div class="sechlbl">섹션</div><div class="sechttl">'+ttl+'</div></div>';}
+function vsTL(){
+  var eras=TL.map(function(e,i){return '<div class="tlera'+(tlSel===i?' on':'')+'" onclick="selEra('+i+')"><div class="tldot">'+e.ic+'</div><div class="tlenm">'+e.nm+'</div><div class="tlep">'+e.pr+'</div></div>';}).join('');
+  var det=tlSel>=0?('<div class="tldet on"><h3>'+TL[tlSel].ic+' '+TL[tlSel].nm+' ('+TL[tlSel].pr+')</h3><p>'+TL[tlSel].desc+'</p><p style="margin-top:5px"><strong style="font-size:11px;color:var(--t3)">예시:</strong> '+TL[tlSel].ex+'</p><p style="margin-top:4px"><strong style="font-size:11px;color:#e53935">한계:</strong> '+TL[tlSel].lim+'</p><div style="margin-top:7px">'+TL[tlSel].tags.map(function(t){return '<span class="tltag">'+t+'</span>';}).join('')+'</div></div>'):'<div class="tldet"><div class="tlph">&#11014;&#65039; 시대를 클릭하면 상세 설명이 표시됩니다</div></div>';
+  return '<span class="ibadge">&#9889; 인터랙티브</span><div class="ctl"><div class="ctlttl">AI 진화의 시대</div><div class="tlwrap"><div class="tltrack">'+eras+'</div></div>'+det+'</div>';
+}
+function vsDC(){
+  var cards=DM.map(function(d,i){return '<div class="dc'+(dimSel.i===i?' on':'')+'" style="--c:'+d.c+'" onclick="selDim('+i+')"><div class="dcic">'+d.ic+'</div><div class="dcnm">'+d.nm+'</div></div>';}).join('');
+  var det=dimSel.i>=0?(function(){var d=DM[dimSel.i];return '<div class="ddet"><h3 style="color:'+d.c+'">'+d.ic+' '+d.nm+' <span style="font-size:11px;color:var(--t2);font-weight:400">('+d.en+')</span></h3><p class="dddef">'+d.def+'</p><div class="ddcase" style="border-color:'+d.c+'"><h4>&#128188; 실제 사례</h4><p>'+d.ex+'</p></div><div class="ddaws"><span style="font-size:10px;color:var(--t3)">AWS 도구:</span>'+d.aws.map(function(a){return '<span class="awsbdg">'+a+'</span>';}).join('')+'</div></div>';})():'<div class="ddet"><div class="ddph">&#11014;&#65039; 차원 카드를 클릭하면 정의와 사례가 표시됩니다</div></div>';
+  return '<span class="ibadge">&#9889; 인터랙티브</span><div class="cdc"><div class="dgrid">'+cards+'</div>'+det+'</div>';
+}
+function vsQZ(qid,pre){
+  var q=QZ[qid],st=qst[qid],ans=st!==null,rev=pre||ans;
+  var cs=q.cs.map(function(c,i){
+    var cl='qzc';
+    if(rev){if(i===q.ans)cl+=' rev';else if(ans&&i===st&&i!==q.ans)cl+=' wrg';cl+=' dis';}
+    return '<div class="'+cl+'" onclick="ansQ(\''+qid+'\','+i+')"><div class="qzck">'+['A','B','C','D'][i]+'</div><div class="qzct">'+c+'</div></div>';
+  }).join('');
+  var fb=rev?('<div class="qzfb show'+(ans&&st!==null&&st!==q.ans?' wfb':'')+'">&check; <strong>정답: '+['A','B','C','D'][q.ans]+'</strong><br>'+q.exp+'</div>'):'';
+  return '<span class="ibadge">&#9889; 인터랙티브</span><div class="cqz"><div class="qzq">&#10067; '+q.q+'</div><div class="qzcs">'+cs+'</div>'+fb+'</div>';
+}
+function vs7(){return '<div class="sc"><div class="sct">&#9878;&#65039; 공정성 - 편견 및 차별 피하기</div><div class="pipe"><div class="pstep"><div class="pic">&#128196;</div><div class="plbl">편향된 데이터</div><div class="pdsc">과거 편향이 반영된 훈련 데이터 수집</div></div><div class="parr">&#8594;</div><div class="pstep" style="border-color:rgba(230,81,0,.3)"><div class="pic">&#129302;</div><div class="plbl">AI 학습</div><div class="pdsc">모델이 편향 패턴을 학습하여 반영</div></div><div class="parr">&#8594;</div><div class="pstep" style="border-color:#c62828"><div class="pic">&#9888;&#65039;</div><div class="plbl">차별적 출력</div><div class="pdsc">특정 집단에 불리한 결과 산출</div></div></div><div class="pbnr">&#128260; 지속적 모니터링 &middot; SageMaker Clarify로 편향 측정 &middot; 다양한 데이터 수집</div></div>';}
+function vs8(){return '<div class="sc"><div class="sct">&#128737;&#65039; 안전성 - 유해 출력 방지</div><div class="twoc"><div class="cg"><div class="cgttl">&#9888;&#65039; 위험 요소</div><div class="icard"><div class="iic">&#128683;</div><div><div class="ilbl">유해 콘텐츠</div><div class="idsc">폭력, 혐오, 불법 행위 조장 내용 생성</div></div></div><div class="icard"><div class="iic">&#9760;&#65039;</div><div><div class="ilbl">위험한 지침</div><div class="idsc">실제 해를 유발할 수 있는 정보 제공</div></div></div><div class="icard"><div class="iic">&#128123;</div><div><div class="ilbl">할루시네이션</div><div class="idsc">없는 정보를 자신감 있게 생성 (CloudSync Pro 사례)</div></div></div></div><div class="cg"><div class="cgttl">&#9989; 완화 방법</div><div class="icard"><div class="iic">&#128144;</div><div><div class="ilbl">가드레일</div><div class="idsc">Bedrock Guardrails로 콘텐츠 필터링</div></div></div><div class="icard"><div class="iic">&#128269;</div><div><div class="ilbl">안전 필터</div><div class="idsc">입력·출력 단계의 자동 안전성 검사</div></div></div><div class="icard"><div class="iic">&#128101;</div><div><div class="ilbl">RLHF</div><div class="idsc">인간 피드백으로 유해 출력 최소화 학습</div></div></div></div></div></div>';}
+function vs9(){return '<div class="sc"><div class="sct">&#128274; 개인 정보 보호 및 보안 &amp; 제어 가능성</div><div class="twoc"><div class="cg"><div class="cgttl">&#128737;&#65039; 개인정보 보호 전략</div><div class="icard"><div class="iic">&#9986;&#65039;</div><div><div class="ilbl">데이터 최소화</div><div class="idsc">목적에 필요한 최소한의 데이터만 수집</div></div></div><div class="icard"><div class="iic">&#128272;</div><div><div class="ilbl">암호화</div><div class="idsc">저장·전송 중 민감 데이터 보호 (KMS)</div></div></div><div class="icard"><div class="iic">&#127917;</div><div><div class="ilbl">익명화/가명화</div><div class="idsc">개인 식별 정보 제거 또는 치환</div></div></div><div class="icard"><div class="iic">&#128270;</div><div><div class="ilbl">Amazon Macie</div><div class="idsc">S3의 민감 데이터 자동 탐지 및 분류</div></div></div></div><div class="cg"><div class="cgttl">&#127777;&#65039; 제어 메커니즘</div><div class="icard"><div class="iic">&#128065;&#65039;</div><div><div class="ilbl">인간 감독</div><div class="idsc">AI 결정의 지속적 모니터링 및 검토</div></div></div><div class="icard"><div class="iic">&#9209;&#65039;</div><div><div class="ilbl">긴급 정지</div><div class="idsc">문제 발생 시 즉시 AI 작동 중단 가능</div></div></div><div class="icard"><div class="iic">&#128260;</div><div><div class="ilbl">Amazon A2I</div><div class="idsc">낮은 신뢰도 예측 시 자동으로 인간 검토 요청</div></div></div></div></div></div>';}
+function vs10(){return '<div class="sc"><div class="sct">&#127963;&#65039; 거버넌스 - 조직 차원의 책임</div><div class="tpill"><div class="pil"><div class="pilic">&#128220;</div><div class="pilnm">정책</div><div class="pildsc">AI 사용 기준, 허용 범위, 금지 사항을 문서화하고 전사에 배포</div><div class="pilsub">AI 정책 + 사용 기준</div></div><div class="pil" style="border-color:rgba(230,81,0,.3)"><div class="pilic">&#128100;</div><div class="pilnm">책임성</div><div class="pildsc">AI 결정에 대한 명확한 책임 체계와 에스컬레이션 경로 정의</div><div class="pilsub">책임 체계 + 윤리위원회</div></div><div class="pil"><div class="pilic">&#128269;</div><div class="pilnm">검토</div><div class="pildsc">정기적 감사, 독립적 평가, 지속적 개선 메커니즘 운영</div><div class="pilsub">AWS Config + CloudTrail</div></div></div></div>';}
+function vs11(){return '<div class="sc"><div class="sct">&#128269; 설명 가능성, 투명성, 진실성 및 견고성</div><div class="tfw"><div class="fwc"><div class="fwci">&#128269;</div><div class="fwcnm">설명 가능성</div><div class="fwcdsc">"대출 거절 이유: 신용 이력 부족, DTI 비율 초과" — AI 결정의 구체적 근거를 제공하여 신뢰를 구축합니다.</div><div class="fwcaw">SageMaker Clarify &middot; SHAP 분석</div></div><div class="fwc"><div class="fwci">&#129695;</div><div class="fwcnm">투명성</div><div class="fwcdsc">"저는 AI 어시스턴트입니다" — AI임을 명확히 밝히고 한계와 불확실성을 공개합니다.</div><div class="fwcaw">AWS AI 서비스 카드</div></div><div class="fwc"><div class="fwci">&#128170;</div><div class="fwcnm">진실성/견고성</div><div class="fwcdsc">불확실한 정보에 "확인 필요" 태그 추가. 예상치 못한 입력에도 안정적 작동 보장.</div><div class="fwcaw">Bedrock Guardrails &middot; 그라운딩</div></div></div></div>';}
+function vs12(){return '<div class="sc"><div class="sct">&#128260; AI 시스템 수명 주기 전반의 책임 있는 AI</div><div class="lc"><div class="lcs" style="border-color:rgba(230,81,0,.4)"><div class="lcsn">01</div><div class="lcsnm">&#127912; 설계</div><div class="lcsi"><div class="lcsit">윤리적 요구사항 정의</div><div class="lcsit">다양한 데이터 수집 계획</div><div class="lcsit">편향 위험 사전 평가</div><div class="lcsit">이해관계자 참여</div></div></div><div class="lcarr">&#8594;</div><div class="lcs" style="border-color:rgba(245,124,0,.4)"><div class="lcsn">02</div><div class="lcsnm">&#9881;&#65039; 개발</div><div class="lcsi"><div class="lcsit">SageMaker Clarify 편향 탐지</div><div class="lcsit">안전성·견고성 테스트</div><div class="lcsit">설명 가능성 도구 적용</div><div class="lcsit">레드팀 테스트</div></div></div><div class="lcarr">&#8594;</div><div class="lcs"><div class="lcsn">03</div><div class="lcsnm">&#128640; 운영</div><div class="lcsi"><div class="lcsit">지속적 드리프트 모니터링</div><div class="lcsit">인간 감독 유지</div><div class="lcsit">정기 감사 및 재학습</div><div class="lcsit">피드백 루프 운영</div></div></div></div></div>';}
+function vs14(){return '<div class="sc"><div class="sct">&#128295; AWS 책임 있는 AI 원칙 및 도구</div><div class="g2x2"><div class="gcd"><div class="gcdi">&#9878;&#65039;</div><div class="gcdttl">편향 탐지</div><div class="gcddsc">훈련 데이터와 모델 예측의 편향을 자동 탐지하고 공정성 지표를 측정합니다.</div><div class="gcdbdg">SageMaker Clarify</div></div><div class="gcd"><div class="gcdi">&#128737;&#65039;</div><div class="gcdttl">콘텐츠 안전</div><div class="gcddsc">유해 콘텐츠 필터링, 주제 차단, 개인정보(PII) 자동 제거 기능을 제공합니다.</div><div class="gcdbdg">Bedrock Guardrails</div></div><div class="gcd"><div class="gcdi">&#128269;</div><div class="gcdttl">설명 가능성</div><div class="gcddsc">SHAP 분석으로 각 피처가 모델 예측에 미치는 영향을 정량화합니다.</div><div class="gcdbdg">SageMaker Clarify</div></div><div class="gcd"><div class="gcdi">&#127963;&#65039;</div><div class="gcdttl">거버넌스 도구</div><div class="gcddsc">AI 결정 로그, 변경 추적, 자동 규정 준수 평가를 지원합니다.</div><div class="gcdbdg">AWS Config &middot; CloudTrail</div></div></div></div>';}
+function vs15(){return '<div class="sc"><div class="sct">&#129695; 투명성 및 조직 차원 지원</div><div class="twoc"><div class="cg"><div class="cgttl">&#9729;&#65039; AWS 투명성 관행</div><div class="icard"><div class="iic">&#127183;</div><div><div class="ilbl">AI 서비스 카드</div><div class="idsc">각 서비스의 의도, 한계, 적합한 사용 사례 공개</div></div></div><div class="icard"><div class="iic">&#128214;</div><div><div class="ilbl">AI 원칙 공개</div><div class="idsc">공정성, 설명가능성, 보안 등 6가지 원칙 문서화</div></div></div><div class="icard"><div class="iic">&#129309;</div><div><div class="ilbl">공동책임 모델</div><div class="idsc">AWS(인프라) ↔ 고객(앱 레이어) 역할 분담</div></div></div></div><div class="cg"><div class="cgttl">&#127959;&#65039; 조직 지원 리소스</div><div class="icard"><div class="iic">&#128208;</div><div><div class="ilbl">Well-Architected Lens</div><div class="idsc">책임 있는 AI 설계 검토 질문 목록 제공</div></div></div><div class="icard"><div class="iic">&#127891;</div><div><div class="ilbl">교육 자료</div><div class="idsc">AWS 책임 있는 AI 모범 사례 가이드 제공</div></div></div><div class="icard"><div class="iic">&#128295;</div><div><div class="ilbl">실무 도구 모음</div><div class="idsc">탐지·측정·완화 단계별 AWS 서비스 가이드</div></div></div></div></div></div>';}
+
+// ── 비주얼 디스패처 ──
+function getVis(i){
+  switch(i){
+    case 0: return vs1();
+    case 1: return vs2();
+    case 2: return vSec('⏳','AI의 진화: 기존 방식에서 생성형으로');
+    case 3: return vsTL();
+    case 4: return vSec('8️⃣','책임 있는 AI의 8가지 차원');
+    case 5: return vsDC();
+    case 6: return vs7();
+    case 7: return vs8();
+    case 8: return vs9();
+    case 9: return vs10();
+    case 10: return vs11();
+    case 11: return vs12();
+    case 12: return vSec('☁️','책임 있는 AI에 대한 AWS의 노력');
+    case 13: return vs14();
+    case 14: return vs15();
+    case 15: return vSec('📝','지식 확인');
+    case 16: return vsQZ('q1',false);
+    case 17: return vsQZ('q1',true);
+    case 18: return vsQZ('q2',false);
+    case 19: return vsQZ('q2',true);
+    default: return '';
+  }
+}
+// ── 노트 HTML ──
+function getNotes(i){
+  var n=SM[i].n;
+  var kps=n.kp?n.kp.map(function(k){return '<div class="kp"><div class="kpd"></div><div class="kpt">'+k+'</div></div>';}).join(''):'';
+  var inst=n.in?'<hr class="ndiv"><div class="inst"><div class="instl">&#128172; 강사 노트</div><div class="instt">'+n.in+'</div></div>':'';
+  return '<div class="nlbl">'+n.lbl+'</div><div class="nttl">'+n.ttl+'</div><div class="ndesc">'+n.desc+'</div>'+(kps?'<hr class="ndiv"><div class="nslbl">핵심 포인트</div><div class="kpl">'+kps+'</div>':'')+inst;
+}
+// ── 썸네일 HTML ──
+function getThumb(active){
+  return SM.map(function(s,i){return '<div class="thumb'+(i===active?' on':'')+'" onclick="goTo('+i+')"><div class="tnum">'+(i+1)+'</div><div>'+( s.ia?'⚡':s.ic)+'</div><div style="font-size:8px;line-height:1.2">'+s.th+'</div></div>';}).join('');
+}
+// ── 메인 렌더 ──
+function render(){
+  document.getElementById('svis').innerHTML=getVis(cur);
+  document.getElementById('npanel').innerHTML=getNotes(cur);
+  var label=(cur+1)+' / '+SM.length;
+  document.getElementById('cnt').textContent=label;
+  document.getElementById('snCnt').textContent=label;
+  var pct=((cur+1)/SM.length*100).toFixed(1)+'%';
+  document.getElementById('pfill').style.width=pct;
+  document.getElementById('snprog').style.width=pct;
+  // 이전/다음 버튼 비활성화
+  var atFirst=cur===0, atLast=cur===SM.length-1;
+  ['btnPrev','btnPrevTop'].forEach(function(id){document.getElementById(id).disabled=atFirst;});
+  ['btnNext','btnNextTop'].forEach(function(id){document.getElementById(id).disabled=atLast;});
+}
+// ── 네비게이션 ──
+function nav(d){
+  var n=cur+d;
+  if(n>=0&&n<SM.length){
+    cur=n;
+    render();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+function goTo(i){if(i>=0&&i<SM.length){cur=i;render();window.scrollTo({top:0,behavior:'smooth'});}}
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){nav(1);e.preventDefault();}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){nav(-1);e.preventDefault();}
+});
+// ── 인터랙티브 핸들러 ──
+function selEra(i){tlSel=tlSel===i?-1:i;document.getElementById('svis').innerHTML=getVis(cur);}
+function selDim(i){dimSel.i=dimSel.i===i?-1:i;document.getElementById('svis').innerHTML=getVis(cur);}
+function ansQ(qid,ai){if(qst[qid]!==null)return;qst[qid]=ai;document.getElementById('svis').innerHTML=getVis(cur);}
+// ── 테마 토글 (DOMContentLoaded 후 버튼 바인딩) ──
+if(localStorage.getItem('courseTheme')==='dark'){document.documentElement.classList.add('dark');}
+document.addEventListener('DOMContentLoaded',function(){
+  var btn=document.getElementById('themeToggle');
+  if(btn)btn.addEventListener('click',function(){
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('courseTheme',document.documentElement.classList.contains('dark')?'dark':'light');
+  });
+});
+// ── 초기화 ──
+render();
+</script>
+<button class="tbtn" id="themeToggle" title="배경 전환">
+  <span class="imoon">🌙</span>
+  <span class="isun">☀️</span>
+</button>
 </body>
 </html>
