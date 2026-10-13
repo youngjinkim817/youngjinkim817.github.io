@@ -302,6 +302,13 @@ html.dark .qzfb.wfb{color:#ef9a9a;}
   </div>
   <script>
 
+// ── PIN 접근 제어 ──
+(function(){
+  if(!sessionStorage.getItem('gaeClassAccess')){
+    window.location.replace('../../GenerativeAIEssentials_gate_v1.html');
+  }
+})();
+
 // 상태
 let cur=0,tlSel=-1,dimSel={i:-1};
 const qst={q1:null,q2:null};
