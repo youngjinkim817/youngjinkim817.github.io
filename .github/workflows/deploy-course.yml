@@ -1,0 +1,98 @@
+name: Deploy Changed Course
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'events/**'
+
+permissions:
+  id-token: write   # OIDC 토큰 발급에 필요
+  contents: read
+
+jobs:
+  detect-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 소스 체크아웃
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: 변경된 강의 폴더 감지
+        id: detect
+        run: |
+          # 이전 커밋 대비 변경된 events/ 하위 폴더명 추출
+          CHANGED=$(git diff --name-only HEAD~1 HEAD \
+            | grep '^events/' \
+            | awk -F'/' '{print $2}' \
+            | sort -u \
+            | tr '\n' ' ')
+          echo "변경된 과정: $CHANGED"
+          echo "courses=$CHANGED" >> $GITHUB_OUTPUT
+
+      - name: AWS 자격증명 설정 (OIDC)
+        if: steps.detect.outputs.courses != ''
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::930157846357:role/GitHubActionsAmplifyDeploy
+          aws-region: ap-northeast-2
+
+      - name: 변경된 강의 Amplify 재배포
+        if: steps.detect.outputs.courses != ''
+        run: |
+          for COURSE in ${{ steps.detect.outputs.courses }}; do
+            echo "==============================="
+            echo "배포 시작: $COURSE"
+            echo "==============================="
+
+            # 과정명으로 Amplify App ID 조회
+            APP_ID=$(aws amplify list-apps \
+              --region ap-northeast-2 \
+              --output json | python3 -c "
+import sys, json, os
+apps = json.load(sys.stdin)['apps']
+matched = [a for a in apps if a['name'] == os.environ.get('COURSE', '')]
+print(matched[0]['appId'] if matched else '')
+" COURSE="$COURSE")
+
+            if [ -z "$APP_ID" ]; then
+              echo "⚠️  '$COURSE' 에 해당하는 Amplify 앱을 찾을 수 없습니다. 건너뜁니다."
+              continue
+            fi
+
+            echo "App ID: $APP_ID"
+
+            # 배포 트리거
+            JOB=$(aws amplify start-job \
+              --app-id "$APP_ID" \
+              --branch-name main \
+              --job-type RELEASE \
+              --region ap-northeast-2 \
+              --output json)
+
+            JOB_ID=$(echo "$JOB" | python3 -c "import sys,json; print(json.load(sys.stdin)['jobSummary']['jobId'])")
+            echo "Job ID: $JOB_ID"
+
+            # 완료 대기 (최대 5분)
+            for i in $(seq 1 30); do
+              STATUS=$(aws amplify get-job \
+                --app-id "$APP_ID" \
+                --branch-name main \
+                --job-id "$JOB_ID" \
+                --region ap-northeast-2 \
+                --output json | python3 -c "import sys,json; print(json.load(sys.stdin)['job']['summary']['status'])")
+
+              echo "  [$i/30] 상태: $STATUS"
+
+              if [ "$STATUS" = "SUCCEED" ]; then
+                echo "✅ $COURSE 배포 완료"
+                break
+              elif [ "$STATUS" = "FAILED" ] || [ "$STATUS" = "CANCELLED" ]; then
+                echo "❌ $COURSE 배포 실패: $STATUS"
+                exit 1
+              fi
+              sleep 10
+            done
+          done
