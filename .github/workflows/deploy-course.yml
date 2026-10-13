@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'events/**'
+  workflow_dispatch:  # 수동 실행 허용
 
 permissions:
   id-token: write   # OIDC 토큰 발급에 필요
