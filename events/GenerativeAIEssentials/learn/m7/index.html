@@ -1,92 +1,1141 @@
 <!doctype html>
-<html lang="ko" class="light">
+<html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>모듈 7. 보안 및 거버넌스 — Generative AI Essentials on AWS</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root{--bg:#0f1219;--bg-alt:#161618;--bg-soft:#1b1f27;--brand1:#e65100;--brand2:#f57c00;--brand3:#ff9800;--t1:#dfdfd6;--t2:#98989f;--border:#3c3f44;}
-  html.light{--bg:#ffffff;--bg-alt:#f6f7f9;--bg-soft:#eef0f3;--t1:#1a1f29;--t2:#5b6678;--border:#e3e7ef;}
-  *{box-sizing:border-box;}
-  html,body{margin:0;background:var(--bg);color:var(--t1);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.65;}
-  a{color:var(--brand3);text-decoration:none;}
-  header.top{position:sticky;top:0;z-index:40;height:60px;display:flex;align-items:center;gap:16px;padding:0 20px;background:rgba(15,18,25,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-  html.light header.top{background:rgba(255,255,255,.9);}
-  header.top .brand{font-weight:700;font-size:15px;} header.top .brand b{color:var(--brand1);}
-  header.top .back{margin-left:auto;color:var(--t2);font-size:14px;} header.top .back:hover{color:var(--t1);}
-  .themebtn{width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
-  .themebtn svg{width:17px;height:17px;}.themebtn .moon{display:none;}
-  html.light .themebtn .moon{display:block;} html.light .themebtn .sun{display:none;}
-  .layout{display:grid;grid-template-columns:minmax(200px,260px) 1fr;min-height:calc(100vh - 60px);}
-  aside{border-right:1px solid var(--border);padding:22px 14px;overflow-y:auto;position:sticky;top:60px;height:calc(100vh - 60px);background:var(--bg);}
-  .navgrp{margin-bottom:20px;}
-  .navgrp-t{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);font-weight:600;padding:0 10px;margin-bottom:8px;}
-  .navitem{display:block;padding:8px 12px;border-radius:8px;color:var(--t1);font-size:14px;border-left:2px solid transparent;}
-  .navitem:hover{background:var(--bg-alt);}
-  .navitem.active{background:rgba(230,81,0,.12);border-left-color:var(--brand1);color:var(--brand3);font-weight:600;}
-  main{padding:36px 40px 72px;max-width:860px;}
-  .badge{display:inline-block;font-size:11px;font-weight:600;color:var(--brand3);background:rgba(230,81,0,.12);border:1px solid rgba(230,81,0,.3);border-radius:999px;padding:3px 11px;text-transform:uppercase;letter-spacing:.04em;}
-  .badge.lab{color:#7cc4ff;background:rgba(60,140,230,.12);border-color:rgba(60,140,230,.3);}
-  h1.t{font-size:30px;margin:14px 0 6px;font-weight:800;letter-spacing:-.01em;}
-  .sub{color:var(--t2);font-size:16px;margin:0 0 26px;}
-  h2{font-size:18px;margin:28px 0 12px;color:var(--brand3);}
-  ul{padding-left:1.2em;} li{margin:.4em 0;}
-  .tbd-box{margin-top:16px;border:1px dashed var(--border);border-radius:10px;padding:18px 20px;color:var(--t2);font-size:14px;background:var(--bg-alt);}
-  .assets{margin-top:14px;border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:var(--bg-alt);font-size:14px;color:var(--t2);}
-  .assets code{color:var(--brand3);background:var(--bg-soft);padding:2px 6px;border-radius:5px;}
-  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
-  .pager a{display:inline-flex;flex-direction:column;gap:3px;padding:12px 18px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--t1);font-size:14px;font-weight:600;max-width:48%;}
-  .pager a:hover{border-color:var(--brand1);}
-  .pager .lbl{font-size:11px;color:var(--t2);font-weight:500;}
-  .pager a.next{text-align:right;margin-left:auto;}
-  @media(max-width:560px){.layout{grid-template-columns:1fr;}aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border);}main{padding:24px 18px 56px;}}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>M7: 보안, 거버넌스 및 규정 준수 소개 | Generative AI Essentials on AWS</title>
+  <style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css');
+
+/* ── 디자인 시스템 변수 ── */
+:root {
+  --bg:#ffffff; --bg-alt:#f8f7ff; --bg-soft:#ede9fe;
+  --primary:#211E62; --secondary:#0891B2; --accent:#D97706;
+  --positive:#059669; --danger:#DC2626;
+  --t1:#1e1b4b; --t2:#4338CA; --t3:#6B7280;
+  --border:#c7d2fe; --tag:#ede9fe;
+  --brand1:#211E62; --brand2:#0891B2; --brand3:#D97706;
+  --sh:0 2px 8px rgba(33,30,98,.08);
+}
+html.dark {
+  --bg:#0a0a0a; --bg-alt:#111111; --bg-soft:#1a1a2e;
+  --primary:#818CF8; --secondary:#22D3EE; --accent:#FCD34D;
+  --positive:#34D399; --danger:#F87171;
+  --t1:#F1F5F9; --t2:#94A3B8; --t3:#64748B;
+  --border:#1e293b; --tag:#1e1b4b;
+  --brand1:#818CF8; --brand2:#22D3EE; --brand3:#FCD34D;
+  --sh:0 2px 12px rgba(0,0,0,.35);
+}
+html.dark body,html.dark .layout,html.dark aside,html.dark main,
+html.dark .npanel,html.dark .svis,html.dark .sticknav,html.dark header.top {
+  background-color:#0a0a0a;
+}
+html.dark .svis,html.dark .npanel { background-color:#111111; border-color:#1e293b; }
+html.dark header.top { border-bottom-color:#1e293b; }
+html.dark * { color:#F1F5F9; }
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body { font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+       font-size:17px; line-height:1.75; color:var(--t1); background:var(--bg); }
+
+/* ── 헤더 ── */
+header.top {
+  position:sticky; top:0; z-index:100;
+  height:64px; background:#fff; border-bottom:2px solid var(--border);
+  display:flex; align-items:center; padding:0 24px; gap:16px;
+}
+.brand { font-size:18px; font-weight:800; color:var(--primary); }
+.header-sub { font-size:13px; color:var(--t3); margin-left:8px; }
+.header-prog { margin-left:auto; display:flex; align-items:center; gap:10px; font-size:13px; color:var(--t3); }
+.prog-bar { width:120px; height:6px; background:var(--bg-soft); border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--primary); border-radius:3px; transition:width .3s; }
+
+/* ── 레이아웃 ── */
+.layout { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 64px); }
+aside.sidebar {
+  background:var(--bg); border-right:1px solid var(--border);
+  padding:20px 12px; overflow-y:auto;
+}
+.sidebar-section-label {
+  font-size:11px; font-weight:700; color:var(--t3);
+  text-transform:uppercase; letter-spacing:.08em;
+  padding:0 8px; margin-bottom:6px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:8px;
+  padding:9px 10px; border-radius:8px;
+  text-decoration:none; color:var(--t1);
+  font-size:13px; font-weight:500;
+  transition:background .15s; margin-bottom:2px;
+}
+.nav-item:hover { background:var(--bg-soft); }
+.nav-item.active { background:var(--primary); color:#fff; font-weight:700; }
+.nav-item.locked { opacity:.4; pointer-events:none; cursor:default; }
+.nav-num { font-size:11px; font-weight:700; color:var(--t3); min-width:20px; }
+.nav-item.active .nav-num { color:#c7d2fe; }
+
+/* ── 메인 ── */
+main { padding:32px 36px 96px; width:100%; background:var(--bg); }
+.slide-unit { display:none; }
+.slide-unit.active { display:block; }
+
+/* ── 슬라이드 비주얼(svis) ── */
+.svis {
+  min-height:clamp(400px,45vh,620px);
+  background:var(--bg-alt); border:1px solid var(--border);
+  border-radius:14px; box-shadow:var(--sh); overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.slide-title-bar {
+  display:flex; align-items:center; gap:12px;
+  padding:14px 20px 12px; border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.slide-badge {
+  font-size:11px; font-weight:700; color:var(--t3);
+  background:var(--tag); border-radius:6px; padding:2px 8px; flex-shrink:0;
+}
+.slide-title-text {
+  font-size:clamp(15px,1.6vw,19px); font-weight:800;
+  color:var(--primary); line-height:1.3;
+}
+.sc { flex:1; padding:24px 28px; overflow-y:auto; font-size:17px; }
+
+/* ── ibadge ── */
+.ibadge {
+  display:inline-flex; background:var(--secondary); color:#fff !important;
+  font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;
+  margin-left:8px; vertical-align:middle; flex-shrink:0;
+}
+
+/* ── 노트 패널 ── */
+.npanel { background:var(--bg); border:1px solid var(--border); border-radius:14px;
+  margin-top:20px; padding:20px 24px; box-shadow:var(--sh); }
+.note-section { margin-bottom:16px; }
+.note-section-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:6px; }
+.note-section p,.note-section ul,.note-section li { font-size:15px; color:var(--t2); line-height:1.75; }
+.note-section ul { padding-left:18px; }
+.note-section li { margin-bottom:4px; }
+.note-kw { font-weight:700; color:var(--primary); }
+.note-case { background:var(--bg-soft); border-left:3px solid var(--secondary);
+  border-radius:0 8px 8px 0; padding:12px 16px; margin-bottom:14px; }
+.note-case-label { font-size:13px; font-weight:800; color:var(--secondary); margin-bottom:6px; }
+.note-case p,.note-case ul,.note-case li { font-size:14px; color:var(--t2); line-height:1.75; }
+.note-case ul { padding-left:18px; }
+.note-case li { margin-bottom:4px; }
+code { font-family:monospace; font-size:13px; background:var(--tag);
+  border-radius:3px; padding:1px 4px; color:var(--t1); }
+
+/* ── 하단 네비 ── */
+.sticknav {
+  position:fixed; bottom:0; left:0; right:0;
+  height:56px; background:var(--bg); border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center; gap:20px;
+  z-index:200;
+}
+.nav-btn { padding:8px 20px; border-radius:8px; border:1px solid var(--border);
+  background:var(--bg); color:var(--t1); font-size:14px; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:background .15s; }
+.nav-btn:hover:not(:disabled) { background:var(--bg-soft); }
+.nav-btn:disabled { opacity:.4; cursor:default; }
+.nav-btn.primary-btn { background:var(--primary); color:#fff; border-color:transparent; }
+.nav-btn.primary-btn:hover:not(:disabled) { background:#3730a3; }
+.slide-counter { font-size:14px; color:var(--t3); min-width:80px; text-align:center; }
+
+/* ── 테마 토글 ── */
+.theme-btn { position:fixed; top:14px; right:16px; z-index:999;
+  width:36px; height:36px; border-radius:50%;
+  background:var(--bg-alt); border:1px solid var(--border);
+  cursor:pointer; font-size:16px;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s,border-color .2s; }
+.theme-btn:hover { border-color:var(--primary); }
+html.dark .icon-moon { display:none; }
+html:not(.dark) .icon-sun { display:none; }
+
+/* ── 커버 ── */
+.m7-cover { display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:24px; min-height:320px; gap:10px; }
+.m7-cover-badge { font-size:12px; font-weight:800; letter-spacing:.12em;
+  color:var(--secondary); background:var(--bg-soft); border:1px solid var(--border);
+  border-radius:20px; padding:4px 16px; }
+.m7-cover-title { font-size:clamp(22px,2.6vw,32px); font-weight:900; color:var(--primary); line-height:1.2; }
+.m7-cover-en { font-size:15px; color:var(--t3); }
+.m7-cover-meta { font-size:12px; color:var(--t3); }
+.m7-cover-chips { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.m7-chip { font-size:12px; font-weight:600; color:var(--primary);
+  background:var(--bg-soft); border:1px solid var(--border); border-radius:20px; padding:4px 12px; }
+
+/* ── 학습 목표 ── */
+.m7-goals { padding:8px 0; }
+.m7-goals-sub { font-size:14px; color:var(--t3); margin-bottom:16px; }
+.m7-goals-list { display:flex; flex-direction:column; gap:10px; }
+.m7-goal-card { display:flex; align-items:flex-start; gap:14px;
+  background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:12px 16px; }
+.m7-goal-num { min-width:28px; height:28px; border-radius:50%;
+  background:var(--primary); color:#fff !important; font-size:14px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.m7-goal-card p { font-size:15px; color:var(--t1); line-height:1.6; }
+
+/* ── 섹션 ── */
+.m7-section { display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:28px; min-height:260px; gap:12px; }
+.m7-sec-badge { font-size:12px; font-weight:700; color:var(--secondary);
+  background:var(--bg-soft); border-radius:20px; padding:3px 12px; }
+.m7-sec-title { font-size:clamp(22px,2.5vw,32px); font-weight:800; color:var(--primary); }
+.m7-sec-sub { font-size:15px; color:var(--t3); }
+
+/* ── 벤 다이어그램 ── */
+.m7-venn-wrap { display:flex; flex-direction:column; gap:16px; }
+.m7-venn-section { background:var(--bg-alt); border-radius:12px; padding:16px 20px; }
+.m7-venn-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:12px; }
+.m7-venn-title small { font-size:12px; font-weight:500; color:var(--t3); }
+.m7-venn-diagram { display:flex; align-items:center; justify-content:center; gap:0; margin-bottom:12px; }
+.m7-venn-circle {
+  width:130px; height:130px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; text-align:center;
+  cursor:pointer; transition:transform .2s, box-shadow .2s;
+  font-size:14px; font-weight:800; border:3px solid transparent;
+  margin:-20px;
+}
+.m7-venn-circle:hover { transform:scale(1.07); z-index:10; }
+.m7-venn-circle.selected { transform:scale(1.12); z-index:20; box-shadow:0 0 0 3px var(--primary); }
+.m7-vc-security  { background:rgba(8,145,178,0.18); border-color:#0891B2; color:var(--primary) !important; }
+.m7-vc-governance { background:rgba(33,30,98,0.15); border-color:#211E62; color:var(--primary) !important; }
+.m7-vc-compliance { background:rgba(217,119,6,0.15); border-color:#D97706; color:var(--primary) !important; }
+html.dark .m7-vc-security  { background:rgba(34,211,238,0.18); border-color:#22D3EE; }
+html.dark .m7-vc-governance { background:rgba(129,140,248,0.18); border-color:#818CF8; }
+html.dark .m7-vc-compliance { background:rgba(252,211,77,0.18); border-color:#FCD34D; }
+.m7-vc-label { line-height:1.3; }
+.m7-vc-label small { font-size:11px; font-weight:500; color:var(--t3); }
+.m7-venn-detail { background:var(--bg); border:1px solid var(--border); border-radius:10px;
+  padding:12px 14px; margin-top:8px; }
+.m7-vd-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:6px; }
+.m7-venn-detail ul { list-style:disc; padding-left:16px; }
+.m7-venn-detail li { font-size:13px; color:var(--t2); margin-bottom:3px; }
+
+/* ── 과정 타임라인 ── */
+.m7-timeline-section { background:var(--bg-alt); border-radius:12px; padding:12px 16px; }
+.m7-tl-title { font-size:13px; font-weight:700; color:var(--t3); margin-bottom:10px; }
+.m7-course-timeline { display:flex; align-items:center; gap:4px; flex-wrap:wrap; }
+.m7-ct-item { text-align:center; background:var(--bg); border:1px solid var(--border);
+  border-radius:8px; padding:6px 10px; font-size:13px; font-weight:700; color:var(--primary);
+  min-width:54px; }
+.m7-ct-item.m7-ct-current { background:var(--primary); color:#fff !important; }
+.m7-ct-sub { font-size:10px; font-weight:500; color:var(--t3); margin-top:2px; }
+.m7-ct-current .m7-ct-sub { color:#c7d2fe !important; }
+.m7-ct-arrow { font-size:14px; color:var(--t3); flex-shrink:0; }
+
+/* ── 거버넌스 소개 ── */
+.m7-gov-intro-wrap { display:flex; flex-direction:column; gap:14px; }
+.m7-gov-def { background:var(--bg-soft); border-radius:10px; padding:14px 16px; }
+.m7-gov-def-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:6px; }
+.m7-gov-def-text { font-size:14px; color:var(--t1); line-height:1.6; margin-bottom:6px; }
+.m7-gov-def-note { font-size:13px; color:var(--t3); }
+.m7-gov-comp-title-bar { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:8px; }
+.m7-gov-comp-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.m7-gov-comp-card { background:var(--bg); border:1px solid var(--border);
+  border-radius:8px; padding:10px 12px; }
+.m7-gov-comp-title { font-size:14px; font-weight:800; color:var(--primary); }
+.m7-gov-comp-en { font-size:11px; font-weight:500; color:var(--t3); margin-left:4px; }
+.m7-gov-comp-desc { font-size:12px; color:var(--t2); margin-top:4px; line-height:1.5; }
+
+/* ── 정책 클릭 카드 (공통) ── */
+.m7-policies-wrap { display:flex; flex-direction:column; gap:14px; }
+.m7-policies-grid { display:flex; flex-direction:column; gap:8px; }
+.m7-policy-card { background:var(--bg); border:1px solid var(--border);
+  border-radius:10px; padding:12px 14px; cursor:pointer; transition:border-color .2s; }
+.m7-policy-card:hover { border-color:var(--secondary); }
+.m7-policy-card.open { border-color:var(--primary); }
+.m7-policy-header { display:flex; align-items:center; gap:10px; }
+.m7-policy-name { font-size:15px; font-weight:800; color:var(--primary); flex:1; }
+.m7-policy-en { font-size:12px; font-weight:500; color:var(--t3); margin-left:4px; }
+.m7-policy-sub { font-size:12px; color:var(--t3); }
+.m7-policy-arrow { font-size:16px; color:var(--t3); transition:transform .2s; flex-shrink:0; }
+.m7-policy-card.open .m7-policy-arrow { transform:rotate(45deg); }
+.m7-policy-detail { font-size:13px; color:var(--t2); max-height:0; overflow:hidden;
+  transition:max-height .35s ease; padding-top:0; }
+.m7-policy-card.open .m7-policy-detail { max-height:200px; padding-top:8px;
+  border-top:1px solid var(--border); margin-top:8px; }
+
+/* ── 허브-스포크 ── */
+.m7-hub-wrap { display:flex; flex-direction:column; gap:12px; }
+.m7-hub-layout { display:flex; align-items:center; gap:16px; }
+.m7-hub-center { min-width:90px; height:90px; border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:#fff !important; font-size:13px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; flex-shrink:0; box-shadow:var(--sh); line-height:1.3; }
+.m7-hub-center small { font-size:11px; display:block; opacity:.85; }
+.m7-spoke-grid { flex:1; display:flex; flex-direction:column; gap:8px; }
+.m7-spoke-card { background:var(--bg); border:1px solid var(--border);
+  border-radius:8px; padding:10px 12px; cursor:pointer; transition:border-color .2s; }
+.m7-spoke-card:hover { border-color:var(--secondary); }
+.m7-spoke-card.open { border-color:var(--primary); }
+.m7-spoke-name { font-size:14px; font-weight:700; color:var(--primary); }
+.m7-spoke-en { font-size:11px; font-weight:500; color:var(--t3); margin-left:4px; }
+.m7-spoke-detail { font-size:12px; color:var(--t2); display:none; margin-top:6px; line-height:1.5; }
+.m7-spoke-card.open .m7-spoke-detail { display:block; }
+.m7-hub-note { font-size:12px; color:var(--t3); text-align:center; }
+
+/* ── 공동 책임 모델 ── */
+.m7-resp-wrap { display:flex; flex-direction:column; gap:14px; }
+.m7-resp-header { text-align:center; }
+.m7-resp-header-title { font-size:16px; font-weight:800; color:var(--primary); }
+.m7-resp-header-sub { font-size:12px; color:var(--t3); margin-top:2px; }
+.m7-resp-cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.m7-resp-col { background:var(--bg); border:2px solid var(--border);
+  border-radius:12px; overflow:hidden; cursor:pointer; transition:border-color .2s,box-shadow .2s; }
+.m7-resp-col:hover { box-shadow:0 0 0 2px var(--secondary); }
+.m7-resp-col.highlighted { border-color:var(--primary); box-shadow:0 0 0 2px var(--primary); }
+.m7-resp-col-header { padding:12px 16px; }
+.m7-resp-aws-hdr { background:linear-gradient(135deg,#0891B2,#0369a1); }
+.m7-resp-cust-hdr { background:linear-gradient(135deg,#211E62,#4338CA); }
+.m7-resp-col-title { font-size:15px; font-weight:800; color:#fff !important; }
+.m7-resp-col-sub { font-size:12px; color:rgba(255,255,255,.85) !important; margin-top:2px; line-height:1.4; }
+.m7-resp-list { list-style:disc; padding:12px 16px 12px 28px; }
+.m7-resp-list li { font-size:13px; color:var(--t2); margin-bottom:5px; line-height:1.5; }
+.m7-resp-list li small { font-size:11px; color:var(--t3); }
+.m7-resp-warning { background:#fef3c7; border:1px solid #D97706; border-radius:10px;
+  padding:12px 16px; }
+html.dark .m7-resp-warning { background:#1c1400; border-color:#D97706; }
+.m7-resp-warn-title { font-size:13px; font-weight:800; color:#D97706 !important; margin-bottom:6px; }
+.m7-resp-warning p { font-size:13px; color:var(--t1); line-height:1.6; }
+
+/* ── 퀴즈 ── */
+.m7-quiz { display:flex; flex-direction:column; gap:14px; }
+.m7-quiz-q { font-size:16px; font-weight:700; color:var(--primary); line-height:1.6; }
+.m7-quiz-opts { display:flex; flex-direction:column; gap:8px; }
+.m7-quiz-btn { display:flex; align-items:flex-start; gap:10px;
+  background:var(--bg); border:1px solid var(--border); border-radius:8px;
+  padding:10px 14px; font-size:14px; font-family:inherit; cursor:pointer; text-align:left;
+  transition:border-color .2s,background .2s; }
+.m7-quiz-btn:hover { border-color:var(--secondary); background:var(--bg-soft); }
+.m7-quiz-btn.selected { border-color:var(--primary); background:var(--bg-soft); }
+.m7-quiz-opt-label { font-size:12px; font-weight:800; color:var(--secondary);
+  background:var(--tag); border-radius:4px; padding:1px 6px; flex-shrink:0; margin-top:1px; }
+.m7-quiz-hint { font-size:13px; color:var(--t3); }
+
+/* ── 정답 ── */
+.m7-answer { display:flex; flex-direction:column; gap:14px; }
+.m7-answer-q { font-size:15px; font-weight:700; color:var(--primary); }
+.m7-answer-opts { display:flex; flex-direction:column; gap:6px; }
+.m7-ans-opt { display:flex; align-items:flex-start; gap:10px;
+  background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:9px 13px; font-size:14px; }
+.m7-ans-correct { background:#f0fdf4; border-color:var(--positive); font-weight:700; }
+html.dark .m7-ans-correct { background:#052e16; }
+.m7-answer-exp { background:var(--bg-soft); border-radius:8px; padding:12px 14px;
+  font-size:14px; line-height:1.7; }
+
+/* ── 기타 ── */
+.m7-placeholder { display:flex; align-items:center; justify-content:center;
+  min-height:200px; color:var(--t3); font-size:15px; }
+
+@media (max-width:900px) {
+  .layout { grid-template-columns:1fr; }
+  aside.sidebar { display:none; }
+  main { padding:16px 16px 80px; }
+  .m7-gov-comp-grid { grid-template-columns:1fr; }
+  .m7-resp-cols { grid-template-columns:1fr; }
+  .m7-hub-layout { flex-direction:column; }
+}
 </style>
 </head>
 <body>
-  <header class="top">
-    <span class="brand">Generative AI Essentials <b>on AWS</b></span>
-    <a class="back" href="../../GenerativeAIEssentials_intro_v1.html">← 강의 소개</a>
-    <button class="themebtn" id="themeToggle" aria-label="배경 전환" title="배경 전환"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
-  </header>
-  <div class="layout">
-    <aside>
-      <div class="navgrp"><div class="navgrp-t">모듈</div>
-        <a class="navitem" href="../m1/">모듈 1. 책임 있는 AI</a>
-        <a class="navitem" href="../m2/">모듈 2. 생성형 AI 소개</a>
-        <a class="navitem" href="../m3/">모듈 3. 멀티모달 AI</a>
-        <a class="navitem" href="../m4/">모듈 4. 프롬프트 엔지니어링 · 실습</a>
-        <a class="navitem" href="../m5/">모듈 5. Bedrock 가드레일 · 실습</a>
-        <a class="navitem" href="../m6/">모듈 6. 에이전틱 AI</a>
-        <a class="navitem active" href="../m7/">모듈 7. 보안 및 거버넌스</a>
-        <a class="navitem" href="../m8/">모듈 8. 프로젝트 계획 · 실습</a>
-        <a class="navitem" href="../m9/">모듈 9. 과정 요약 · Q&A</a>
-      </div>
-      <div class="navgrp"><div class="navgrp-t">실습 (Hands-on)</div>
-        <a class="navitem" href="../lab1/">Lab 1. 프롬프트 엔지니어링</a>
-        <a class="navitem" href="../lab2/">Lab 2. Bedrock 가드레일</a>
-        <a class="navitem" href="../lab3/">Lab 3. 프로젝트 계획</a>
-        <a class="navitem" href="../guide/">가이드 데모</a>
-      </div>
-    </aside>
-    <main>
-      <span class="badge">모듈</span>
-      <h1 class="t">모듈 7. 보안 및 거버넌스</h1>
-      <p class="sub">규정 준수 보호·규제·유지</p>
-      <h2>학습 내용</h2>
-      <ul>
-          <li>생성형 AI 워크로드 보안</li>
-          <li>IAM 기반 접근 제어</li>
-          <li>규정 준수와 거버넌스 체계</li>
-      </ul>
-      <div class="tbd-box">상세 학습 콘텐츠와 슬라이드·설명은 이 영역에 추가됩니다. (강의 전 업데이트 예정)</div>
-      <h2>학습 자료</h2>
-      <div class="assets">이 모듈의 이미지·자료는 <code>m7/assets/</code> 폴더에 넣고 아래처럼 참조합니다.<br>예: <code>&lt;img src="./assets/diagram1.png"&gt;</code> · <code>&lt;a href="./assets/handout.pdf"&gt;</code></div>
-      <div class="pager">
-        <a class="prev" href="../m6/"><span class="lbl">← 이전</span>모듈 6. 에이전틱 AI</a>
-        <a class="next" href="../m8/"><span class="lbl">다음 →</span>모듈 8. 프로젝트 계획 · 실습</a>
-      </div>
-    </main>
+
+<header class="top">
+  <span class="brand">Generative AI Essentials on AWS</span>
+  <span class="header-sub">Module 7 — 보안, 거버넌스 및 규정 준수</span>
+  <div class="header-prog">
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:6.7%"></div></div>
+    <span class="prog-text" id="progText">1/15</span>
   </div>
-  <script>var tb=document.getElementById('themeToggle');if(tb)tb.addEventListener('click',function(){document.documentElement.classList.toggle('light');});</script>
+</header>
+
+<div class="layout">
+  <aside class="sidebar"><div class="sidebar-section-label">모듈</div><a href="../m1/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">01</span><span class="nav-label">M1. 책임 있는 AI 기초</span></a><a href="../m2/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">02</span><span class="nav-label">M2. 생성형 AI 소개</span></a><a href="../m3/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">03</span><span class="nav-label">M3. 멀티모달 AI 및 사용 사례</span></a><a href="../m4/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">04</span><span class="nav-label">M4. 프롬프트 엔지니어링</span></a><a href="../m5/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">05</span><span class="nav-label">M5. Amazon Bedrock Guardrails</span></a><a href="../m6/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">06</span><span class="nav-label">M6. Amazon 에이전트 소개</span></a><a href="#" class="nav-item active"><span class="nav-num">07</span><span class="nav-label">M7. 보안, 거버넌스 및 규정 준수</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">08</span><span class="nav-label">M8. 생성형 AI 프로젝트 구현</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">09</span><span class="nav-label">M9</span></a><div class="sidebar-section-label" style="margin-top:16px;">실습</div><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 1</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 2</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 3</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 가이드</span></a></aside>
+  <main>
+    <section class="slide-unit active" data-idx="0">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">1 / 15</span>
+      <h2 class="slide-title-text">모듈 7: 보안, 거버넌스 및 규정 준수 소개</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-cover">
+  <div class="m7-cover-badge">MODULE 7</div>
+  <h1 class="m7-cover-title">보안, 거버넌스 및 규정 준수 소개</h1>
+  <p class="m7-cover-en">Introduction to Security, Governance, and Compliance</p>
+  <p class="m7-cover-meta">&copy; 2026, Amazon Web Services, Inc. 또는 계열사. All rights reserved.</p>
+  <div class="m7-cover-chips">
+    <span class="m7-chip">슬라이드 15장</span>
+    <span class="m7-chip">섹션 2개</span>
+    <span class="m7-chip">지식 확인 2문항</span>
+  </div>
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">모듈 7 개요</div>
+  <ul>
+    <li>M1~M6에서 구축한 기술적 구현을 AI를 책임 있게 대규모로 배포하는 데 필요한 조직적 구조와 연결</li>
+    <li><span class="note-kw">거버넌스(Governance)</span>: 정책, 프로세스, 역할, 책임 구조의 조합 — 기술 제어를 관리하는 상위 프레임워크</li>
+    <li>보안, 거버넌스, 규정 준수는 사후 고려 사항이 아닌 AI 개발·배포의 모든 단계에 반영해야 하는 기본 요소</li>
+  </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">M1~M7 연계</div>
+  <ul>
+    <li>M1: 책임 있는 AI 8차원 → M7에서 <span class="note-kw">거버넌스(Governance)</span> 차원을 조직 수준으로 심화</li>
+    <li>M5: Amazon Bedrock Guardrails → M7: 기술 제어를 언제·어떻게 구성·적용할지 결정하는 조직 정책</li>
+    <li>M6: 에이전틱 AI 실행 가드레일 → M7: 다단계 에이전트를 포함하는 규정 준수 의무</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="1">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">2 / 15</span>
+      <h2 class="slide-title-text">모듈 7 학습 목표</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-goals"><p class="m7-goals-sub">이 모듈에서 학습할 내용은 다음과 같습니다.</p><div class="m7-goals-list"><div class="m7-goal-card"><span class="m7-goal-num">1</span><p>AI 거버넌스 프레임워크의 주요 구성 요소(정책, 소유권, 감사 추적)를 설명한다.</p></div>
+<div class="m7-goal-card"><span class="m7-goal-num">2</span><p>AI 배포와 관련된 규제 프레임워크(HIPAA, PCI DSS, GDPR 등)를 식별한다.</p></div>
+<div class="m7-goal-card"><span class="m7-goal-num">3</span><p>AI 거버넌스에서 법률 및 규정 준수 전문 지식이 필요한 이유를 인식한다.</p></div>
+</div></div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">3가지 학습 목표</div>
+  <ul>
+    <li><span class="note-kw">AI 거버넌스 프레임워크(AI Governance Framework)</span>: 주요 구성 요소(정책, 소유권, 감사 추적) 설명</li>
+    <li><span class="note-kw">규제 프레임워크(Regulatory Framework)</span>: AI 배포와 관련된 HIPAA, PCI DSS, GDPR 등 식별</li>
+    <li><span class="note-kw">법률 및 규정 준수 전문 지식(Legal &amp; Compliance Expertise)</span>: AI 거버넌스에서 법적 전문 지식이 필요한 이유 인식</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">모듈 전체 흐름</div>
+  <ul>
+    <li>섹션 1: 거버넌스 프레임워크 — 정의 → 왜 필요한가 → 구성 요소</li>
+    <li>섹션 2: 규정 준수 요구 사항 — 공동 책임 모델 → 6가지 규정 준수 프로그램 → AWS Artifact</li>
+    <li>지식 확인: 거버넌스 한계 시나리오 + AWS Artifact 정의</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="2">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">3 / 15</span>
+      <h2 class="slide-title-text">보안, 거버넌스, 규정 준수의 관계</h2>
+      <span class="ibadge">인터랙티브</span>
+    </div>
+    <div class="sc"><div class="m7-venn-wrap">
+  <div class="m7-venn-section">
+    <div class="m7-venn-title">핵심 개념 관계도 <small>(각 원을 클릭하세요)</small></div>
+    <div class="m7-venn-diagram">
+      <div class="m7-venn-circle m7-vc-security" onclick="selectVennCircle('security')" id="vc-security">
+        <div class="m7-vc-label">보안<br><small>Security</small></div>
+      </div>
+      <div class="m7-venn-circle m7-vc-governance" onclick="selectVennCircle('governance')" id="vc-governance">
+        <div class="m7-vc-label">거버넌스<br><small>Governance</small></div>
+      </div>
+      <div class="m7-venn-circle m7-vc-compliance" onclick="selectVennCircle('compliance')" id="vc-compliance">
+        <div class="m7-vc-label">규정 준수<br><small>Compliance</small></div>
+      </div>
+    </div>
+    <div class="m7-venn-detail" id="venn-detail-security" style="display:none;">
+      <div class="m7-vd-title">보안(Security) — 기술적 제어</div>
+      <ul>
+        <li>암호화(Encryption), IAM(Identity and Access Management)</li>
+        <li>Amazon Bedrock Guardrails — 입력/출력 정책 제어</li>
+        <li>네트워크 제어, 로깅, 모니터링</li>
+      </ul>
+    </div>
+    <div class="m7-venn-detail" id="venn-detail-governance" style="display:none;">
+      <div class="m7-vd-title">거버넌스(Governance) — 조직적 구조</div>
+      <ul>
+        <li>정책(Policies), 승인 워크플로(Approval Workflows)</li>
+        <li>명확한 소유권(Clear Ownership), 감사 추적(Audit Trails)</li>
+        <li>기술 제어를 관리하는 상위 프레임워크</li>
+      </ul>
+    </div>
+    <div class="m7-venn-detail" id="venn-detail-compliance" style="display:none;">
+      <div class="m7-vd-title">규정 준수(Compliance) — 규제 요건 충족</div>
+      <ul>
+        <li>HIPAA, PCI DSS, GDPR, SOC, ISO 27001</li>
+        <li>외부 감사 기관의 요구사항 증명</li>
+        <li>증명 가능한 기록 제공</li>
+      </ul>
+    </div>
+  </div>
+  <div class="m7-timeline-section">
+    <div class="m7-tl-title">과정 전반의 보안 주제</div>
+    <div class="m7-course-timeline">
+      <div class="m7-ct-item">M1<div class="m7-ct-sub">책임 있는 AI</div></div>
+      <div class="m7-ct-arrow">&#8594;</div>
+      <div class="m7-ct-item">M2<div class="m7-ct-sub">Bedrock 보안</div></div>
+      <div class="m7-ct-arrow">&#8594;</div>
+      <div class="m7-ct-item">M4<div class="m7-ct-sub">프롬프트 공격</div></div>
+      <div class="m7-ct-arrow">&#8594;</div>
+      <div class="m7-ct-item">M5<div class="m7-ct-sub">Guardrails</div></div>
+      <div class="m7-ct-arrow">&#8594;</div>
+      <div class="m7-ct-item">M6<div class="m7-ct-sub">에이전트 가드</div></div>
+      <div class="m7-ct-arrow">&#8594;</div>
+      <div class="m7-ct-item m7-ct-current">M7<div class="m7-ct-sub">거버넌스</div></div>
+    </div>
+  </div>
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">3가지 핵심 개념의 관계</div>
+  <ul>
+    <li><span class="note-kw">보안(Security)</span>: 기술적 제어 — 암호화, IAM, Guardrails, 입력/출력 검증</li>
+    <li><span class="note-kw">거버넌스(Governance)</span>: 조직적 구조 — 정책, 승인 워크플로, 소유권, 감사 추적</li>
+    <li><span class="note-kw">규정 준수(Compliance)</span>: 규제 요건 충족 — HIPAA, PCI DSS, GDPR, SOC, ISO</li>
+  </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">과정 전반의 보안 주제 정리</div>
+  <ul>
+    <li>M1: 책임 있는 AI 8차원 중 <span class="note-kw">개인정보보호/보안(Privacy &amp; Security)</span>, <span class="note-kw">거버넌스(Governance)</span> 소개</li>
+    <li>M2: Amazon Bedrock의 플랫폼 보안 — 콘텐츠 필터링, 암호화, 액세스 제어</li>
+    <li>M4: 프롬프트 공격 벡터(탈옥·인젝션·추출) + <span class="note-kw">심층 방어(Defense in Depth)</span> 아키텍처</li>
+    <li>M5: Amazon Bedrock Guardrails — 6가지 정책 유형으로 입력·출력 양방향 보호</li>
+    <li>M6: 에이전틱 AI 실행 가드레일 + CloudTrail 감사 로깅</li>
+    <li>M7: 보안 제어를 관리하고 책임 구조를 정의하는 거버넌스 + 규제 의무 규정 준수</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">보안 단독으로 충분하지 않은 이유</div>
+  <ul>
+    <li>보안만: 기술 제어 존재 — 하지만 누가 제어하고 책임지는지 불명확</li>
+    <li>거버넌스 추가: 제어의 소유자, 적용 시기, 예외 처리 방식을 정의</li>
+    <li><strong>규정 준수 추가: 외부 규제 기관이 요구하는 증명 가능한 기록 제공</strong></li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="3">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">4 / 15</span>
+      <h2 class="slide-title-text">섹션 1: 거버넌스 프레임워크</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-section"><div class="m7-sec-badge">섹션 1 / 2</div><h2 class="m7-sec-title">거버넌스 프레임워크</h2></div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">섹션 1: 거버넌스 프레임워크</div>
+  <ul>
+    <li>거버넌스를 단순한 보안 기능이 아닌 통합 프레임워크로 이해</li>
+    <li>범위: 보안, 규정 준수, 비용 관리, 운영 표준, 윤리적 감독을 하나의 구조로 통합</li>
+    <li>핵심 구분: 개별적인 기술 제어 조치 보유 vs 이를 조율하는 일관된 조직 구조 보유는 완전히 다른 문제</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="4">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">5 / 15</span>
+      <h2 class="slide-title-text">거버넌스 프레임워크 소개</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-gov-intro-wrap">
+  <div class="m7-gov-def">
+    <div class="m7-gov-def-title">거버넌스(Governance) 정의</div>
+    <p class="m7-gov-def-text">조직이 AI 시스템을 책임감 있게 개발·운영하기 위해 수립하는 <strong>정책, 프로세스, 역할, 책임 구조</strong>의 조합</p>
+    <p class="m7-gov-def-note">단순히 보안에 국한되지 않음 — 보안, 규정 준수, 비용 관리, 운영 표준, 윤리적 감독이 함께 작동</p>
+  </div>
+  <div class="m7-gov-comp-title-bar">거버넌스 프레임워크의 5가지 구성 요소</div>
+  <div class="m7-gov-comp-grid"><div class="m7-gov-comp-card"><div class="m7-gov-comp-title">조직 정책<span class="m7-gov-comp-en">(Organizational Policies)</span></div><div class="m7-gov-comp-desc">AI 사용 허용 범위, 금지 사항, 에스컬레이션 경로 정의</div></div><div class="m7-gov-comp-card"><div class="m7-gov-comp-title">승인 워크플로<span class="m7-gov-comp-en">(Approval Workflows)</span></div><div class="m7-gov-comp-desc">새 AI 모델·기능 배포 전 검토 및 승인 절차</div></div><div class="m7-gov-comp-card"><div class="m7-gov-comp-title">명확한 소유권<span class="m7-gov-comp-en">(Clear Ownership)</span></div><div class="m7-gov-comp-desc">AI 시스템별 책임자 지정 — 문제 발생 시 대응 주체 명확화</div></div><div class="m7-gov-comp-card"><div class="m7-gov-comp-title">감사 추적<span class="m7-gov-comp-en">(Audit Trails)</span></div><div class="m7-gov-comp-desc">누가 무엇을 언제 결정했는지 기록 — CloudTrail, 로깅 포함</div></div><div class="m7-gov-comp-card"><div class="m7-gov-comp-title">정기적 검토<span class="m7-gov-comp-en">(Regular Reviews)</span></div><div class="m7-gov-comp-desc">배포 후 지속적인 성과 평가 및 정책 업데이트</div></div></div>
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">거버넌스(Governance) 정의</div>
+  <ul>
+    <li>AI 맥락에서의 거버넌스: 조직이 AI 시스템을 책임감 있게 개발·운영하기 위해 수립하는 정책, 프로세스, 역할, 책임 구조의 조합</li>
+    <li>단순히 보안에 국한되지 않음 — <span class="note-kw">보안(Security)</span>, <span class="note-kw">규정 준수(Compliance)</span>, <span class="note-kw">비용 관리(Cost Management)</span>, <span class="note-kw">운영 표준(Operational Standards)</span>, <span class="note-kw">윤리적 감독(Ethical Oversight)</span>이 함께 작동</li>
+  </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">거버넌스 프레임워크의 5가지 구성 요소</div>
+  <ul>
+    <li><span class="note-kw">조직 정책(Organizational Policies)</span>: AI 사용 허용 범위, 금지 사항, 에스컬레이션 경로 정의</li>
+    <li><span class="note-kw">승인 워크플로(Approval Workflows)</span>: 새 AI 모델·기능 배포 전 검토 및 승인 절차</li>
+    <li><span class="note-kw">명확한 소유권(Clear Ownership)</span>: AI 시스템별 책임자 지정 — 문제 발생 시 대응 주체 명확화</li>
+    <li><span class="note-kw">감사 추적(Audit Trails)</span>: 누가 무엇을 언제 결정했는지 기록 — CloudTrail, 로깅 포함</li>
+    <li><span class="note-kw">정기적 검토(Regular Reviews)</span>: 배포 후 지속적인 성과 평가 및 정책 업데이트</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">기술적 제어 vs 거버넌스 프레임워크</div>
+  <ul>
+    <li>M5 Guardrails = 기술적 제어: 콘텐츠 필터를 어떻게 적용하는가</li>
+    <li>M7 거버넌스 = 조직 구조: 콘텐츠 필터를 언제·왜·누가 결정하는가</li>
+    <li><strong>두 계층 모두 필요 — 기술 제어는 거버넌스 프레임워크 내에서 운영될 때 효과적</strong></li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="5">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">6 / 15</span>
+      <h2 class="slide-title-text">생성형 AI에 거버넌스가 중요한 이유</h2>
+      <span class="ibadge">인터랙티브</span>
+    </div>
+    <div class="sc"><div class="m7-policies-wrap"><div class="m7-policies-grid"><div class="m7-policy-card" onclick="togGovCard(this,'gdet-0')" id="gcrd-0">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">비결정론적 출력<span class="m7-policy-en">(Non-Deterministic Output)</span></span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="gdet-0">동일한 입력에서 매번 다른 응답 — 온도(Temperature)·샘플링 파라미터로 인한 가변성 → 허용 범위 유지를 위한 모니터링·제어 메커니즘 필요</div>
+</div><div class="m7-policy-card" onclick="togGovCard(this,'gdet-1')" id="gcrd-1">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">신속한 기능 변화<span class="m7-policy-en">(Rapid Capability Evolution)</span></span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="gdet-1">Amazon Bedrock을 통해 새 파운데이션 모델이 빠르게 출시 → 프로덕션 배포 전 평가·승인 프로세스 포함 필요</div>
+</div><div class="m7-policy-card" onclick="togGovCard(this,'gdet-2')" id="gcrd-2">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">광범위한 조직 영향<span class="m7-policy-en">(Cross-Departmental Impact)</span></span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="gdet-2">마케팅, 고객 서비스, 코드 개발 등 다양한 부서 → 중앙 집중식 거버넌스 없으면 팀별 일관성 없는 AI 채택 → 위험 노출 및 규정 준수 격차</div>
+</div><div class="m7-policy-card" onclick="togGovCard(this,'gdet-3')" id="gcrd-3">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">적대적 프롬프트 위험<span class="m7-policy-en">(Adversarial Prompt Risk)</span></span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="gdet-3">탈옥(Jailbreak), 인젝션(Injection), 추출(Extraction) 시도 — 기술 제어 + 조직 정책 병행 필요</div>
+</div><div class="m7-policy-card" onclick="togGovCard(this,'gdet-4')" id="gcrd-4">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">책임 요구 사항<span class="m7-policy-en">(Accountability Requirements)</span></span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="gdet-4">유해하거나 잘못된 출력 발생 시 명확한 소유권 구조 필요 — 검토·수정·커뮤니케이션 담당자 사전 정의</div>
+</div></div></div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">생성형 AI 고유의 5가지 거버넌스 문제</div>
+  <ul>
+    <li><span class="note-kw">비결정론적 출력(Non-Deterministic Output)</span>: 동일한 입력에서 매번 다른 응답 — 온도(Temperature)·샘플링 파라미터로 인한 가변성 → 허용 범위 유지를 위한 모니터링·제어 메커니즘 필요</li>
+    <li><span class="note-kw">신속한 기능 변화(Rapid Capability Evolution)</span>: 새 파운데이션 모델(Foundation Model)이 빠르게 출시 → 프로덕션 배포 전 평가·승인 프로세스 필요</li>
+    <li><span class="note-kw">광범위한 조직 영향(Cross-Departmental Impact)</span>: 마케팅, 고객 서비스, 코드 개발 등 다양한 부서 → 중앙 집중식 거버넌스 없으면 위험 노출 및 규정 준수 격차</li>
+    <li><span class="note-kw">적대적 프롬프트 위험(Adversarial Prompt Risk)</span>: 탈옥(Jailbreak), 인젝션(Injection), 추출(Extraction) 시도 — 기술 제어 + 조직 정책 병행 필요</li>
+    <li><span class="note-kw">책임 요구 사항(Accountability Requirements)</span>: 유해하거나 잘못된 출력 발생 시 명확한 소유권 구조 필요 — 검토·수정·커뮤니케이션 담당자 사전 정의</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">기존 IT 거버넌스의 한계</div>
+  <ul>
+    <li>기존 IT 거버넌스: <span class="note-kw">결정론적(Deterministic)</span> 소프트웨어 가정 — 동일 입력 → 동일 출력</li>
+    <li>생성형 AI: 비결정론적 → 기존 테스트·검증 방법 적용 불가</li>
+    <li>기존 거버넌스에만 의존 시 5가지 고유 문제 미해결 → AI 전용 거버넌스 프레임워크 필요</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="6">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">7 / 15</span>
+      <h2 class="slide-title-text">섹션 2: 규정 준수 요구 사항</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-section"><div class="m7-sec-badge">섹션 2 / 2</div><h2 class="m7-sec-title">규정 준수 요구 사항</h2></div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">섹션 2: 규정 준수 요구 사항</div>
+  <ul>
+    <li>거버넌스 프레임워크(섹션 1) → 실질적인 규정 준수 의무 연결 (섹션 2)</li>
+    <li>규정 준수는 단일 체크리스트가 아닌 다층적 문제: <span class="note-kw">데이터 프라이버시(Data Privacy)</span>, 산업 규정, 조직 정책 포괄</li>
+    <li>생성형 AI 애플리케이션은 규제 대상 데이터를 처리·생성하는 경우가 많아 요구 사항 이해가 필수</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="7">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">8 / 15</span>
+      <h2 class="slide-title-text">규정 준수 요소 소개</h2>
+      <span class="ibadge">인터랙티브</span>
+    </div>
+    <div class="sc"><div class="m7-hub-wrap">
+  <div class="m7-hub-layout">
+    <div class="m7-hub-center">규정 준수<br><small>Compliance</small></div>
+    <div class="m7-spoke-grid"><div class="m7-spoke-card" onclick="togCompSpokeCard(this)" id="spoke-0">
+  <div class="m7-spoke-name">데이터 프라이버시<span class="m7-spoke-en">(Data Privacy)</span></div>
+  <div class="m7-spoke-detail">AI 시스템이 민감 정보를 처리하는 방식 관리 — GDPR, CCPA 등 적용 / 정보주체 권리(열람, 수정, 삭제) 보장</div>
+</div><div class="m7-spoke-card" onclick="togCompSpokeCard(this)" id="spoke-1">
+  <div class="m7-spoke-name">업계 규정<span class="m7-spoke-en">(Industry Regulations)</span></div>
+  <div class="m7-spoke-detail">산업별 의무 사항 — 의료(HIPAA), 금융(PCI DSS), 공공 부문(SOC/ISO) 규제 / 해당 산업 서비스 설계 전 적용 규제 확인 필수</div>
+</div><div class="m7-spoke-card" onclick="togCompSpokeCard(this)" id="spoke-2">
+  <div class="m7-spoke-name">공동 책임<span class="m7-spoke-en">(Shared Responsibility)</span></div>
+  <div class="m7-spoke-detail">AWS 인프라 보안(Security OF the Cloud) + 고객 워크로드 보안(Security IN the Cloud)의 명확한 역할 분담</div>
+</div></div>
+  </div>
+  <div class="m7-hub-note">각 요소를 클릭하면 세부 내용이 표시됩니다.</div>
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">규정 준수 3가지 핵심 요소</div>
+  <ul>
+    <li><span class="note-kw">데이터 프라이버시(Data Privacy)</span>: AI 시스템이 민감 정보를 처리하는 방식 관리 — GDPR, CCPA 등 적용</li>
+    <li><span class="note-kw">업계 규정(Industry Regulations)</span>: 산업별 의무 사항 — 의료(HIPAA), 금융(PCI DSS), 공공 부문(SOC/ISO) 규제</li>
+    <li><span class="note-kw">공동 책임(Shared Responsibility)</span>: AWS 인프라 보안 + 고객 워크로드 보안의 명확한 역할 분담</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">산업별 적용 예시</div>
+  <ul>
+    <li>의료 분야 챗봇: 개인 건강 정보(<span class="note-kw">PHI, Protected Health Information</span>) 처리 가능 → HIPAA 적용</li>
+    <li>금융 서비스 AI: 결제 카드 데이터 처리 시 <span class="note-kw">PCI DSS(Payment Card Industry Data Security Standard)</span> 적용</li>
+    <li>EU 사용자 대상 서비스: AI 생성 데이터 포함 개인 데이터 처리 → <span class="note-kw">GDPR(General Data Protection Regulation)</span> 적용</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="8">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">9 / 15</span>
+      <h2 class="slide-title-text">공동 책임 모델</h2>
+      <span class="ibadge">인터랙티브</span>
+    </div>
+    <div class="sc"><div class="m7-resp-wrap">
+  <div class="m7-resp-header">
+    <div class="m7-resp-header-title">AWS 공동 책임 모델(Shared Responsibility Model)</div>
+    <div class="m7-resp-header-sub">각 열을 클릭하면 강조 표시됩니다</div>
+  </div>
+  <div class="m7-resp-cols">
+    <div class="m7-resp-col" id="resp-aws" onclick="togRespCol('aws')">
+      <div class="m7-resp-col-header m7-resp-aws-hdr">
+        <div class="m7-resp-col-title">AWS 책임</div>
+        <div class="m7-resp-col-sub">클라우드 자체의 보안<br>Security OF the Cloud</div>
+      </div>
+      <ul class="m7-resp-list">
+        <li>물리적 데이터 센터 보안</li>
+        <li>네트워킹 하드웨어</li>
+        <li>하이퍼바이저(Hypervisor)</li>
+        <li>호스트 운영 체제</li>
+        <li>규정 준수 인증 유지<br><small>(SOC, ISO, PCI DSS — 인프라 범위)</small></li>
+      </ul>
+    </div>
+    <div class="m7-resp-col" id="resp-customer" onclick="togRespCol('customer')">
+      <div class="m7-resp-col-header m7-resp-cust-hdr">
+        <div class="m7-resp-col-title">고객 책임</div>
+        <div class="m7-resp-col-sub">클라우드 내부의 보안<br>Security IN the Cloud</div>
+      </div>
+      <ul class="m7-resp-list">
+        <li>게스트 OS 패치 및 애플리케이션 구성</li>
+        <li>데이터 암호화 선택 (전송 중·저장 중)</li>
+        <li>IAM (자격 증명 및 액세스 관리)</li>
+        <li>네트워크 및 방화벽 구성</li>
+        <li>모델 출력 거버넌스<br><small>(Amazon Bedrock 데이터 처리 방식)</small></li>
+      </ul>
+    </div>
+  </div>
+  <div class="m7-resp-warning">
+    <div class="m7-resp-warn-title">중요 구분</div>
+    <p>AWS 규정 준수 인증은 인프라를 다룹니다. PCI DSS를 준수하는 AWS 인프라에서 생성형 AI 애플리케이션을 실행해도, 애플리케이션 자체가 <strong>자동으로 PCI DSS를 준수하는 것은 아닙니다.</strong> 워크로드(애플리케이션, 데이터 처리, 접근 제어)에 대한 별도 검증이 필요합니다.</p>
+  </div>
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">AWS 책임 — 클라우드 자체의 보안(Security OF the Cloud)</div>
+  <ul>
+    <li>물리적 데이터 센터 보안 및 유지 관리</li>
+    <li>네트워킹 하드웨어, <span class="note-kw">하이퍼바이저(Hypervisor)</span>, 호스트 운영 체제</li>
+    <li>인프라 계층 규정 준수 인증 유지: SOC, ISO, PCI DSS (인프라 범위)</li>
+  </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">고객 책임 — 클라우드 내부의 보안(Security IN the Cloud)</div>
+  <ul>
+    <li>게스트 운영 체제 패치 적용 및 애플리케이션 구성</li>
+    <li>데이터 암호화 선택 — 전송 중(in-transit) 및 저장 중(at-rest)</li>
+    <li><span class="note-kw">IAM(Identity and Access Management)</span>: 자격 증명 및 액세스 관리</li>
+    <li>Amazon Bedrock: 모델이 데이터를 처리하는 방식, 모델이 생성하는 출력, 서비스 구성 방법</li>
+    <li>네트워크 및 방화벽 구성 — VPC, 보안 그룹, 네트워크 ACL</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">핵심 구분: PCI DSS 적용 예시</div>
+  <ul>
+    <li>PCI DSS를 준수하는 AWS 인프라에서 생성형 AI 애플리케이션을 실행</li>
+    <li>→ 애플리케이션 자체가 자동으로 PCI DSS를 준수하는 것은 아님</li>
+    <li>→ 워크로드(애플리케이션, 데이터 처리, 접근 제어)에 대한 별도 검증 필요</li>
+    <li><strong>AWS 규정 준수 인증은 인프라를 다루며, 고객 워크로드의 규정 준수는 고객 책임</strong></li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="9">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">10 / 15</span>
+      <h2 class="slide-title-text">AWS 기반 규정 준수 프로그램</h2>
+      <span class="ibadge">인터랙티브</span>
+    </div>
+    <div class="sc"><div class="m7-policies-wrap"><div class="m7-policies-grid"><div class="m7-policy-card" onclick="togCompCard(this,'cpdet-0')" id="cpcrd-0">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">HIPAA</span>
+    <span class="m7-policy-sub">의료 개인정보 보호법</span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="cpdet-0">개인 건강 정보(PHI, Protected Health Information) 처리 규제 / HIPAA 적격 서비스 사용 + AWS와 비즈니스 제휴 계약(BAA, Business Associate Agreement) 체결 + 필수 보호 장치 구현 — 세 가지 모두 필요</div>
+</div><div class="m7-policy-card" onclick="togCompCard(this,'cpdet-1')" id="cpcrd-1">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">PCI DSS</span>
+    <span class="m7-policy-sub">결제 카드 산업 보안 표준</span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="cpdet-1">Payment Card Industry Data Security Standard / AI 애플리케이션이 결제 카드 데이터를 처리할 때 적용 / 카드 소유자 데이터 환경(CDE) 내 모든 시스템 포함</div>
+</div><div class="m7-policy-card" onclick="togCompCard(this,'cpdet-2')" id="cpcrd-2">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">GDPR</span>
+    <span class="m7-policy-sub">EU 일반 개인정보보호법</span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="cpdet-2">General Data Protection Regulation / EU 내 사용자 개인 데이터 처리 방식 규정 — AI 생성 데이터 포함 / 정보주체 권리(열람, 수정, 삭제, 이동) 보장</div>
+</div><div class="m7-policy-card" onclick="togCompCard(this,'cpdet-3')" id="cpcrd-3">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">SOC 1 / SOC 2 / SOC 3</span>
+    <span class="m7-policy-sub">서비스 조직 통제 보고서</span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="cpdet-3">System and Organization Controls / AWS 제어 환경에 대한 독립 감사 보고서 / SOC 2 Type II — 보안·가용성·기밀성·처리 무결성·프라이버시 통제 검증 / 가장 일반적 활용</div>
+</div><div class="m7-policy-card" onclick="togCompCard(this,'cpdet-4')" id="cpcrd-4">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">ISO 27001 / 27017 / 27018</span>
+    <span class="m7-policy-sub">정보 보안 국제 표준</span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="cpdet-4">27001: 정보 보안 관리 체계(ISMS) / 27017: 클라우드 서비스 보안 추가 통제 / 27018: 클라우드 내 개인 데이터 보호 — 국제 표준 인증</div>
+</div><div class="m7-policy-card" onclick="togCompCard(this,'cpdet-5')" id="cpcrd-5">
+  <div class="m7-policy-header">
+    <span class="m7-policy-name">AWS Artifact</span>
+    <span class="m7-policy-sub">규정 준수 보고서 포털</span>
+    <span class="m7-policy-arrow">+</span>
+  </div>
+  <div class="m7-policy-detail" id="cpdet-5">추가 비용 없이 규정 준수 보고서 및 계약 온디맨드 액세스 / SOC 보고서, PCI DSS 증명서, ISO 인증서, HIPAA BAA 다운로드 / 감사·규제 기관 제출용 문서 포털</div>
+</div></div></div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">6가지 규정 준수 프로그램</div>
+  <ul>
+    <li><span class="note-kw">HIPAA</span>: 개인 건강 정보(PHI) 처리 — HIPAA 적격 서비스 사용 + AWS와 비즈니스 제휴 계약(<span class="note-kw">BAA, Business Associate Agreement</span>) 체결 + 필수 보호 장치 구현 — 세 가지 모두 필요</li>
+    <li><span class="note-kw">PCI DSS(Payment Card Industry Data Security Standard)</span>: AI 애플리케이션이 결제 카드 데이터를 처리할 때 적용</li>
+    <li><span class="note-kw">GDPR(General Data Protection Regulation)</span>: EU 내 사용자 개인 데이터 처리 방식 규정 — AI 생성 데이터 포함</li>
+    <li><span class="note-kw">SOC 1 / SOC 2 / SOC 3</span>: AWS 제어 환경에 대한 독립 감사 보고서 — SOC 2 Type II가 가장 일반적으로 활용</li>
+    <li><span class="note-kw">ISO 27001 / 27017 / 27018</span>: 정보 보안 관리(27001), 클라우드 보안(27017), 클라우드 내 개인 데이터 보호(27018) 국제 표준</li>
+    <li><span class="note-kw">AWS Artifact</span>: 추가 비용 없이 규정 준수 보고서 및 계약 온디맨드 액세스 — 감사·규제 기관 제출용 문서 포털</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">서비스 범위 확인의 중요성</div>
+  <ul>
+    <li>모든 AWS 서비스가 모든 규정 준수 프로그램의 범위에 포함되는 것은 아님</li>
+    <li>생성형 AI 솔루션 설계 전 반드시 확인: Amazon Bedrock이 해당 규정 준수 프로그램의 범위에 속하는지</li>
+    <li><strong>배포 계획 프로세스에서 AWS Artifact를 활용하여 필요한 보고서 사전 다운로드 권장</strong></li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="10">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">11 / 15</span>
+      <h2 class="slide-title-text">지식 확인</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-section"><h2 class="m7-sec-title">지식 확인</h2></div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">지식 확인 안내</div>
+  <ul>
+    <li>2문항 — 실제 업무 시나리오 기반</li>
+    <li>KC1: 생성형 AI가 기존 IT 거버넌스 프레임워크를 초과하는 이유 — 5가지 고유 거버넌스 문제 적용</li>
+    <li>KC2: <span class="note-kw">AWS Artifact</span>의 정의 및 제공 기능 — 규정 준수 프로그램 이해 확인</li>
+  </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">복습 핵심 키워드</div>
+  <ul>
+    <li><span class="note-kw">비결정론적 출력(Non-Deterministic Output)</span>: 기존 IT 거버넌스 적용 불가 핵심 이유</li>
+    <li><span class="note-kw">AWS Artifact</span>: 무료 온디맨드 규정 준수 보고서 포털</li>
+    <li><span class="note-kw">공동 책임 모델(Shared Responsibility Model)</span>: AWS 인프라 vs 고객 워크로드</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="11">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">12 / 15</span>
+      <h2 class="slide-title-text">지식 확인 1</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-quiz" id="quiz-kc1">
+  <div class="m7-quiz-q">모듈에서 조직이 생성형 AI와 관련하여 기존 IT 거버넌스 프레임워크에만 의존할 수는 없다고 설명하는 이유는 무엇입니까?</div>
+  <div class="m7-quiz-opts"><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc1')"><span class="m7-quiz-opt-label">A</span>생성형 AI는 기존 IT 거버넌스로는 해결할 수 없는 비결정론적 출력, 빠른 기능 진화, 적대적 프롬프트 위험 등 고유한 문제가 발생하기 때문입니다.</button><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc1')"><span class="m7-quiz-opt-label">B</span>생성형 AI에는 기존 소프트웨어보다 더 비싼 규정 준수 인증이 필요하기 때문입니다.</button><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc1')"><span class="m7-quiz-opt-label">C</span>생성형 AI는 기존 애플리케이션과 다른 클라우드 인프라에서 실행되기 때문입니다.</button><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc1')"><span class="m7-quiz-opt-label">D</span>기존 IT 거버넌스 프레임워크는 데이터 암호화 요구 사항을 다루지 않기 때문입니다.</button></div>
+  
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">KC1 문제 분석 힌트</div>
+  <ul>
+    <li>시나리오: 조직이 생성형 AI에 기존 IT 거버넌스 프레임워크만 의존할 수 없는 이유</li>
+    <li>핵심 개념: 슬라이드 6의 5가지 고유한 거버넌스 문제 — <span class="note-kw">비결정론적 출력(Non-Deterministic Output)</span>, 빠른 기능 변화, 광범위한 조직 영향, 적대적 프롬프트 위험, 책임 요구 사항</li>
+    <li>오답 구분:
+      <ul>
+        <li>B: 인증 비용 문제는 거버넌스 필요성의 핵심 이유가 아님</li>
+        <li>C: 생성형 AI는 동일한 AWS 클라우드 인프라에서 실행됨</li>
+        <li>D: 기존 IT 거버넌스도 데이터 암호화를 다룸</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="12">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">13 / 15</span>
+      <h2 class="slide-title-text">지식 확인 1 — 정답</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-answer">
+  <div class="m7-answer-q">모듈에서 조직이 생성형 AI와 관련하여 기존 IT 거버넌스 프레임워크에만 의존할 수는 없다고 설명하는 이유는 무엇입니까?</div>
+  <div class="m7-answer-opts"><div class="m7-ans-opt m7-ans-correct"><span class="m7-quiz-opt-label">A</span>생성형 AI는 기존 IT 거버넌스로는 해결할 수 없는 비결정론적 출력, 빠른 기능 진화, 적대적 프롬프트 위험 등 고유한 문제가 발생하기 때문입니다.  &#10004; 정답</div><div class="m7-ans-opt "><span class="m7-quiz-opt-label">B</span>생성형 AI에는 기존 소프트웨어보다 더 비싼 규정 준수 인증이 필요하기 때문입니다.</div><div class="m7-ans-opt "><span class="m7-quiz-opt-label">C</span>생성형 AI는 기존 애플리케이션과 다른 클라우드 인프라에서 실행되기 때문입니다.</div><div class="m7-ans-opt "><span class="m7-quiz-opt-label">D</span>기존 IT 거버넌스 프레임워크는 데이터 암호화 요구 사항을 다루지 않기 때문입니다.</div></div>
+  <div class="m7-answer-exp"><strong>해설:</strong> 생성형 AI에는 비결정론적 출력(Non-Deterministic Output), 신속한 기능 변화(Rapid Capability Evolution), 광범위한 조직 영향(Cross-Departmental Impact), 적대적 프롬프트 위험(Adversarial Prompt Risk), 책임 요구 사항(Accountability Requirements) 등 5가지 고유한 거버넌스 문제가 있습니다. 기존 IT 거버넌스는 결정론적 소프트웨어를 가정하므로 이러한 문제를 해결할 수 없습니다.</div>
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">KC1 정답 해설</div>
+  <ul>
+    <li>정답: A — 생성형 AI 고유의 5가지 거버넌스 문제로 인해 기존 IT 거버넌스만으로는 부족</li>
+    <li><span class="note-kw">비결정론적 출력(Non-Deterministic Output)</span>: 기존 IT 거버넌스는 결정론적 소프트웨어를 가정 — 생성형 AI의 가변적 응답은 새로운 모니터링·제어 체계 요구</li>
+    <li><span class="note-kw">적대적 프롬프트(Adversarial Prompt)</span>: 기존 IT 거버넌스에 없던 새로운 위협 벡터 — 기술 제어 + 조직 정책 병행 필요</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">실전 시나리오 적용</div>
+  <ul>
+    <li>기존 IT 거버넌스: "코드 변경 시 테스트 → 승인 → 배포"</li>
+    <li>생성형 AI: 동일한 코드·구성으로도 매번 다른 출력 — 기존 테스트 방법론 적용 불가</li>
+    <li>→ 출력 모니터링, 가드레일 설정, 에스컬레이션 정책을 포함하는 AI 전용 거버넌스 필요</li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="13">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">14 / 15</span>
+      <h2 class="slide-title-text">지식 확인 2</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-quiz" id="quiz-kc2">
+  <div class="m7-quiz-q">AWS Artifact란 무엇이며 무엇을 제공합니까?</div>
+  <div class="m7-quiz-opts"><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc2')"><span class="m7-quiz-opt-label">A</span>추가 비용 없이 AWS 규정 준수 보고서 및 계약에 액세스할 수 있는 온디맨드 포털</button><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc2')"><span class="m7-quiz-opt-label">B</span>고객 워크로드가 규정 준수 요구 사항을 충족하는지 자동으로 검증하는 도구</button><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc2')"><span class="m7-quiz-opt-label">C</span>Amazon Bedrock Guardrails 내에서 규정 준수 정책을 구성하기 위한 서비스</button><button class="m7-quiz-btn" onclick="selectQuiz(this, 'kc2')"><span class="m7-quiz-opt-label">D</span>AWS와 비즈니스 제휴 계약을 체결하기 위한 관리형 서비스</button></div>
+  
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">KC2 문제 분석 힌트</div>
+  <ul>
+    <li>시나리오: <span class="note-kw">AWS Artifact</span>의 정의와 제공 기능</li>
+    <li>핵심: 추가 비용 없이 규정 준수 보고서 및 계약에 온디맨드 액세스를 제공하는 포털</li>
+    <li>오답 구분:
+      <ul>
+        <li>B: 고객 워크로드의 규정 준수를 자동 검증하는 도구는 <span class="note-kw">AWS Config</span>, <span class="note-kw">AWS Security Hub</span></li>
+        <li>C: Amazon Bedrock Guardrails 내 규정 준수 정책 구성 서비스가 아님</li>
+        <li>D: BAA(비즈니스 제휴 계약) 체결 관리 서비스가 아님 — AWS Artifact에서 계약 문서 다운로드는 가능</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+  </div>
+</section>
+<section class="slide-unit" data-idx="14">
+  <div class="svis">
+    <div class="slide-title-bar">
+      <span class="slide-badge">15 / 15</span>
+      <h2 class="slide-title-text">지식 확인 2 — 정답</h2>
+      
+    </div>
+    <div class="sc"><div class="m7-answer">
+  <div class="m7-answer-q">AWS Artifact란 무엇이며 무엇을 제공합니까?</div>
+  <div class="m7-answer-opts"><div class="m7-ans-opt m7-ans-correct"><span class="m7-quiz-opt-label">A</span>추가 비용 없이 AWS 규정 준수 보고서 및 계약에 액세스할 수 있는 온디맨드 포털  &#10004; 정답</div><div class="m7-ans-opt "><span class="m7-quiz-opt-label">B</span>고객 워크로드가 규정 준수 요구 사항을 충족하는지 자동으로 검증하는 도구</div><div class="m7-ans-opt "><span class="m7-quiz-opt-label">C</span>Amazon Bedrock Guardrails 내에서 규정 준수 정책을 구성하기 위한 서비스</div><div class="m7-ans-opt "><span class="m7-quiz-opt-label">D</span>AWS와 비즈니스 제휴 계약을 체결하기 위한 관리형 서비스</div></div>
+  <div class="m7-answer-exp"><strong>해설:</strong> AWS Artifact는 추가 비용 없이 규정 준수 보고서 및 계약에 대한 온디맨드 액세스를 제공하는 규정 준수 보고서 포털 역할을 합니다. 고객 워크로드 자동 검증(B)은 AWS Config 및 Security Hub, 규정 준수 정책 구성(C)은 Guardrails 콘솔, BAA 체결(D)은 별도 계약 프로세스가 담당합니다.</div>
+</div></div>
+  </div>
+  <div class="npanel">
+    <div class="note-section">
+  <div class="note-section-title">KC2 정답 해설 — AWS Artifact 온디맨드 포털</div>
+  <ul>
+    <li>정답: A — <span class="note-kw">AWS Artifact</span>는 추가 비용 없이 규정 준수 보고서 및 계약에 대한 온디맨드 액세스를 제공하는 포털</li>
+    <li>제공 문서: SOC 보고서, PCI DSS 증명서, ISO 인증서, HIPAA BAA 등 규정 준수 보고서 다운로드</li>
+    <li>비용: 추가 비용 없음 — AWS 계정이 있으면 즉시 접근 가능</li>
+    <li>용도: 감사 기관, 규제 기관, 내부 준수 검토팀에 AWS 규정 준수 증거 제출</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">AWS Artifact vs AWS Config vs AWS Security Hub 구분</div>
+  <ul>
+    <li><strong>AWS Artifact</strong>: AWS 인프라의 규정 준수 보고서 문서 다운로드 포털</li>
+    <li><strong>AWS Config</strong>: 고객 리소스 구성 변경 기록 및 규정 준수 규칙 평가</li>
+    <li><strong>AWS Security Hub</strong>: 고객 워크로드의 보안 상태 통합 뷰 — 규정 준수 체크리스트 자동 실행</li>
+  </ul>
+</div>
+  </div>
+</section>
+  </main>
+</div>
+
+<nav class="sticknav" role="navigation" aria-label="슬라이드 네비게이션">
+  <button class="nav-btn" id="prevBtn" disabled aria-label="이전 슬라이드">&#8592; 이전</button>
+  <span class="slide-counter" id="slideCounter" aria-live="polite">1 / 15</span>
+  <button class="nav-btn primary-btn" id="nextBtn" aria-label="다음 슬라이드">다음 &#8594;</button>
+</nav>
+
+<button class="theme-btn" id="themeToggle" title="배경 전환" aria-label="다크/라이트 모드 전환">
+  <span class="icon-moon" aria-hidden="true">&#127769;</span>
+  <span class="icon-sun"  aria-hidden="true">&#9728;&#65039;</span>
+</button>
+
+<script>
+// PIN 게이트
+(function(){
+  if(!sessionStorage.getItem('gaeClassAccess')){
+    window.location.replace('../../GenerativeAIEssentials_gate_v1.html');
+  }
+})();
+
+// 테마 토글
+(function(){
+  if(localStorage.getItem('courseTheme')==='dark')
+    document.documentElement.classList.add('dark');
+  var btn=document.getElementById('themeToggle');
+  if(btn) btn.addEventListener('click',function(){
+    var isDark=document.documentElement.classList.toggle('dark');
+    localStorage.setItem('courseTheme',isDark?'dark':'light');
+  });
+})();
+
+// 슬라이드 네비게이션
+var cur=0, total=15;
+function goTo(n){
+  if(n<0||n>=total) return;
+  var prev=document.querySelector('.slide-unit.active');
+  if(prev) prev.classList.remove('active');
+  var next=document.querySelector('.slide-unit[data-idx="'+n+'"]');
+  if(next) next.classList.add('active');
+  cur=n;
+  var counter=document.getElementById('slideCounter');
+  if(counter) counter.textContent=(n+1)+' / '+total;
+  var fill=document.getElementById('progFill');
+  if(fill) fill.style.width=((n+1)/total*100).toFixed(1)+'%';
+  var progText=document.getElementById('progText');
+  if(progText) progText.textContent=(n+1)+'/'+total;
+  var prevBtn=document.getElementById('prevBtn');
+  var nextBtn=document.getElementById('nextBtn');
+  if(prevBtn) prevBtn.disabled=(n===0);
+  if(nextBtn) nextBtn.disabled=(n===total-1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  goTo(0);
+  var prevBtn=document.getElementById('prevBtn');
+  var nextBtn=document.getElementById('nextBtn');
+  if(prevBtn) prevBtn.addEventListener('click',function(){ goTo(cur-1); });
+  if(nextBtn) nextBtn.addEventListener('click',function(){ goTo(cur+1); });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') goTo(cur+1);
+    if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(cur-1);
+  });
+});
+
+// 벤 다이어그램 (data-idx=2)
+function selectVennCircle(name){
+  var names=['security','governance','compliance'];
+  names.forEach(function(n){
+    var el=document.getElementById('vc-'+n);
+    var det=document.getElementById('venn-detail-'+n);
+    if(n===name){
+      var isSelected=el&&el.classList.contains('selected');
+      if(el) el.classList.toggle('selected');
+      if(det) det.style.display=isSelected?'none':'block';
+    } else {
+      if(el) el.classList.remove('selected');
+      if(det) det.style.display='none';
+    }
+  });
+}
+
+// 거버넌스 5카드 토글 (data-idx=5)
+function togGovCard(el, detId){
+  var isOpen=el.classList.contains('open');
+  var parent=el.parentElement;
+  if(parent){
+    parent.querySelectorAll('.m7-policy-card').forEach(function(c){ c.classList.remove('open'); });
+  }
+  if(!isOpen) el.classList.add('open');
+}
+
+// 허브-스포크 토글 (data-idx=7)
+function togCompSpokeCard(el){
+  var isOpen=el.classList.contains('open');
+  document.querySelectorAll('.m7-spoke-card').forEach(function(c){ c.classList.remove('open'); });
+  if(!isOpen) el.classList.add('open');
+}
+
+// 공동 책임 열 토글 (data-idx=8)
+function togRespCol(side){
+  var col=document.getElementById('resp-'+side);
+  if(!col) return;
+  var isHighlighted=col.classList.contains('highlighted');
+  document.querySelectorAll('.m7-resp-col').forEach(function(c){ c.classList.remove('highlighted'); });
+  if(!isHighlighted) col.classList.add('highlighted');
+}
+
+// 규정 준수 6카드 토글 (data-idx=9)
+function togCompCard(el, detId){
+  var isOpen=el.classList.contains('open');
+  var parent=el.parentElement;
+  if(parent){
+    parent.querySelectorAll('.m7-policy-card').forEach(function(c){ c.classList.remove('open'); });
+  }
+  if(!isOpen) el.classList.add('open');
+}
+
+// 퀴즈 선택
+function selectQuiz(btn, slideId){
+  var quiz=document.getElementById('quiz-'+slideId);
+  if(!quiz) return;
+  quiz.querySelectorAll('.m7-quiz-btn').forEach(function(b){ b.classList.remove('selected'); });
+  btn.classList.add('selected');
+}
+</script>
 </body>
 </html>
