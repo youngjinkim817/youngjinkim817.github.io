@@ -484,9 +484,9 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   <div class="prog-box">
     <div class="prog-header">
       <span class="prog-label">진행 현황</span>
-      <span class="prog-count" id="prog-count">1 / 12</span>
+      <span class="prog-count" id="progText">1 / 12</span>
     </div>
-    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-bar" style="width:8.3%"></div></div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="progFill" style="width:8.3%"></div></div>
     <div class="sec-list">
       <div class="sec-item" data-start="0" data-end="1" onclick="goTo(0)">
         <div class="sec-dot"></div><span>커버/목표</span><span class="sec-slides">1–2</span>
@@ -557,7 +557,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
 <div class="m8-goal-card"><span class="m8-goal-num">4</span><div class="m8-goal-body"><p class="m8-goal-text">책임 있는 AI 통합을 통한 포괄적인 프로젝트 계획 수립</p><p class="m8-goal-hint">4가지 구성 요소를 단일 결과물로 종합</p></div></div>
 </div></div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">4가지 학습 목표 상세</div>
   <ul>
@@ -672,7 +672,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   </div>
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">섹션 1: 프로젝트 계획 기초(Project Planning Fundamentals)</div>
   <ul>
@@ -836,7 +836,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   </div>
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">사용 사례 정의(Use Case Definition) — 3가지 질문</div>
   <ul>
@@ -978,7 +978,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   </div>
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">책임 있는 AI 통합 — 계획 단계에서 시작</div>
   <ul>
@@ -1022,7 +1022,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   <div class="m8-lab-time-badge">45분</div>
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">Capstone 실습 3 소개</div>
   <ul>
@@ -1209,7 +1209,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
 
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">Paulo 시나리오 — 실제 기업 문제</div>
   <ul>
@@ -1256,7 +1256,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
     </div>
     <div class="sc"><div class="m8-section"><h2 class="m8-sec-title">지식 확인</h2></div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">지식 확인 안내</div>
   <ul>
@@ -1288,7 +1288,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC1 문제 분석 힌트</div>
   <ul>
@@ -1320,7 +1320,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   <div class="m8-answer-exp"><strong>해설:</strong> 정답 A: 문제를 먼저 정의하면 실제 비즈니스 요구 사항에 맞는 서비스를 선택할 수 있습니다. 서비스 복잡성을 문제 복잡성에 맞추는 것이 핵심 원칙입니다.</div>
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC1 정답 해설 — A) 과도한 엔지니어링 방지</div>
   <ul>
@@ -1351,7 +1351,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC2 문제 분석 힌트</div>
   <ul>
@@ -1383,7 +1383,7 @@ html.dark .npanel{border-color:#3a3a6a!important;}
   <div class="m8-answer-exp"><strong>해설:</strong> 정답 D: 간단한 FAQ 챗봇에는 단일 파운데이션 모델을 갖춘 Amazon Bedrock만 필요합니다. AgentCore는 다단계 에이전트 워크플로를 위한 것이며, 단순 RAG 챗봇에 적용하면 불필요한 복잡성만 추가됩니다.</div>
 </div></div>
   </div>
-  <div class="<div class="npanel">
+  <div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC2 정답 해설 — D) AgentCore 과도한 엔지니어링</div>
   <ul>
