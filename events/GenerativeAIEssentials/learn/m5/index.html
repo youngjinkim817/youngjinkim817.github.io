@@ -53,10 +53,7 @@ header.top {
 
 /* ── 레이아웃 ── */
 .layout { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 64px); }
-aside.sidebar {
-  background:var(--bg); border-right:1px solid var(--border);
-  padding:20px 12px; overflow-y:auto;
-}
+
 .sidebar-section-label {
   font-size:11px; font-weight:700; color:var(--t3);
   text-transform:uppercase; letter-spacing:.08em;
@@ -124,7 +121,7 @@ main { padding:32px 36px 96px; width:100%; background:var(--bg); }
 .npanel { background:var(--bg); border:1px solid var(--border); border-radius:14px;
   margin-top:20px; padding:20px 24px; box-shadow:var(--sh); }
 .note-section { margin-bottom:16px; }
-.note-section-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:6px; }
+.note-section-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:6px; ;border-bottom:1px solid var(--border);padding-bottom:4px;}
 .note-section p,.note-section ul,.note-section li { font-size:15px; color:var(--t2); line-height:1.75; }
 .note-section ul { padding-left:18px; }
 .note-section li { margin-bottom:4px; }
@@ -357,7 +354,7 @@ html.dark .m5-ans-correct { background:#052e16; }
 
 @media (max-width:900px) {
   .layout { grid-template-columns:1fr; }
-  aside.sidebar { display:none; }
+  
   main { padding:16px 16px 80px; }
   .m5-intro-grid,.m5-2col,.m5-cf-grid { grid-template-columns:1fr 1fr; }
   .m5-version-hub-wrap { grid-template-columns:1fr; }
@@ -595,60 +592,157 @@ html.dark .m5p-head.blue { background:#0d3349; }
 .m5tl-note.warn{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.3);}
 .m5tl-note.tip{background:var(--bg-soft);border:1px solid var(--border);}
 .m5tl-note-lbl{font-weight:700;color:var(--accent);margin-bottom:3px;font-size:11px;}
-</style>
+
+/* 공통 커버 스타일 (M1/M2와 동일) */
+.cover-sc{background:linear-gradient(135deg,var(--primary) 0%,#3730A3 60%,#0891B2 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px 48px;border-radius:14px;}
+.cover-badge{display:inline-block;background:rgba(255,255,255,.2);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 14px;border-radius:20px;margin-bottom:20px;}
+.cover-title{font-size:clamp(28px,3.5vw,46px);font-weight:800;line-height:1.2;color:#fff;margin-bottom:12px;}
+.cover-sub{font-size:17px;color:rgba(255,255,255,.8);font-weight:400;}
+html.dark .cover-title,html.dark .cover-sub{color:#fff!important;}
+
+/* 강의실 나가기 버튼 (눈에 띄게) */
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  width:calc(100% - 24px);margin:12px;
+  padding:10px 14px;border-radius:10px;
+  background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.3);
+  color:#b91c1c;font-size:13px;font-weight:700;
+  text-decoration:none;cursor:pointer;transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+html.dark .exit-classroom-btn{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fca5a5;}
+
+.prog-box{margin-bottom:16px;background:var(--bg-soft);border-radius:10px;padding:12px;}
+.prog-header{display:flex;justify-content:space-between;margin-bottom:6px;}
+.prog-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);}
+.prog-count{font-size:12px;font-weight:700;color:var(--primary);}
+.prog-bar-wrap{background:var(--border);border-radius:4px;height:6px;margin-bottom:10px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .3s;}
+.sec-list{display:flex;flex-direction:column;gap:4px;}
+.sec-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;
+  cursor:pointer;font-size:11px;color:var(--t3);transition:background .15s;}
+.sec-item:hover{background:var(--bg);}
+.sec-item.active{color:var(--primary);}
+.sec-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;}
+.sec-item.active .sec-dot{background:var(--primary);}
+.sec-slides{margin-left:auto;font-size:10px;color:var(--t3);}
+.exit-classroom-btn{display:flex;align-items:center;gap:8px;width:calc(100% - 24px);margin:0 12px 8px;
+  padding:10px 14px;border-radius:10px;background:rgba(239,68,68,.08);
+  border:1.5px solid rgba(239,68,68,.3);color:#b91c1c;font-size:13px;font-weight:700;
+  text-decoration:none;cursor:pointer;transition:all .2s;}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+html.dark .exit-classroom-btn{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fca5a5;}
+html.dark .prog-count, html.dark .sec-item.active{color:var(--brand1, #818CF8);}
+html.dark .sec-item.active .sec-dot{background:var(--brand1, #818CF8);}
+html.dark .prog-bar-fill{background:var(--brand1, #818CF8);}
+
+header.top{height:64px;background:#fff;border-bottom:2px solid #c7d2fe;
+  display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;gap:12px;}
+.brand{font-size:18px;font-weight:800;color:var(--primary);}
+.brand-sub{font-size:13px;color:var(--t3);margin-left:4px;}
+.mod-badge{background:var(--tag,#ede9fe);color:var(--primary);font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:20px;margin-left:auto;margin-right:52px;}
+html.dark header.top{background-color:#0a0a0a;border-bottom-color:#1e293b;}
+html.dark .brand{color:#818CF8!important;}
+html.dark .mod-badge{background:#1e1b4b;color:#818CF8;}
+
+/* M1 스타일 navitem (M3-M8 통일용) */
+.navitem{display:block;padding:7px 10px;border-radius:8px;font-size:13px;
+  color:var(--t1);cursor:pointer;border-left:3px solid transparent;
+  transition:background .15s,color .15s;margin-bottom:2px;text-decoration:none;}
+.navitem:hover{background:var(--bg-soft);}
+.navitem.active{background:rgba(33,30,98,.1);border-left-color:var(--primary);
+  color:var(--primary);font-weight:700;}
+html.dark .navitem.active{background:rgba(129,140,248,.1);border-left-color:#818CF8;color:#818CF8;}
+.navgrp{margin-bottom:12px;}.navgrp-t{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;margin-bottom:4px;}aside{width:240px;position:sticky;top:64px;height:calc(100vh - 64px);
+  overflow-y:auto;border-right:1px solid var(--border);padding:16px 12px;background:var(--bg);}
+.note-section-title{font-size:13px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--secondary);margin-bottom:8px;
+  border-bottom:1px solid var(--border);padding-bottom:4px;}
+html.dark .note-section-title{color:#22D3EE!important;border-bottom-color:#3a3a6a!important;}
+
+.npanel{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;
+  padding:24px;font-size:15px;line-height:1.85;margin-top:16px;color:var(--t1);}
+.npanel ul{list-style:none;padding-left:16px;margin:8px 0;}
+.npanel ul li{position:relative;padding-left:16px;margin-bottom:6px;font-size:15px;}
+.npanel ul li::before{content:"•";position:absolute;left:0;color:var(--secondary);}
+html.dark .npanel{border-color:#3a3a6a!important;}
+.npanel p{color:#1e1b4b;font-size:15px;margin-bottom:8px;}.npanel li{color:#1e1b4b;}</style>
 </head>
 <body>
 
 <header class="top">
   <span class="brand">Generative AI Essentials on AWS</span>
-  <span class="header-sub">Module 5 — Amazon Bedrock Guardrails</span>
-  <div class="header-prog">
-    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:5.6%"></div></div>
-    <span class="prog-text" id="progText">1/18</span>
-  </div>
+  <span class="brand-sub">강의실</span>
+  <span class="mod-badge">MODULE 5</span>
 </header>
 
 <div class="layout">
-  <aside class="sidebar"><div class="sidebar-section-label">모듈</div><a href="../m1/index.html" class="nav-item"><span class="nav-num">01</span><span class="nav-label">M1. 책임 있는 AI 기초</span></a><a href="../m2/index.html" class="nav-item"><span class="nav-num">02</span><span class="nav-label">M2. 생성형 AI 소개</span></a><a href="../m3/index.html" class="nav-item"><span class="nav-num">03</span><span class="nav-label">M3. 멀티모달 AI 및 사용 사례</span></a><a href="../m4/index.html" class="nav-item"><span class="nav-num">04</span><span class="nav-label">M4. 프롬프트 엔지니어링</span></a><a href="#" class="nav-item active"><span class="nav-num">05</span><span class="nav-label">M5. Amazon Bedrock Guardrails</span></a><a href="../m6/index.html" class="nav-item"><span class="nav-num">06</span><span class="nav-label">M6. Amazon 에이전트 소개</span></a><a href="../m7/index.html" class="nav-item"><span class="nav-num">07</span><span class="nav-label">M7. 보안 · 거버넌스 · 규정 준수</span></a><a href="../m8/index.html" class="nav-item"><span class="nav-num">08</span><span class="nav-label">M8. 생성형 AI 프로젝트 구현</span></a><div class="sidebar-section-label" style="margin-top:16px;">실습</div><a href="../lab1/index.html" class="nav-item"><span class="nav-label">실습 1: 프롬프트 엔지니어링</span></a><a href="../lab2/index.html" class="nav-item"><span class="nav-label">실습 2: Guardrails 구현</span></a><a href="../lab3/index.html" class="nav-item"><span class="nav-label">실습 3: HR 어시스턴트 구축</span></a><div class="sidebar-section-label" style="margin-top:16px;"></div><a href="../../GenerativeAIEssentials_intro_v1.html" class="nav-item" style="color:var(--t3);font-size:12px;">← 강의실 나가기</a></aside>
+  <aside>
+  <div class="prog-box">
+    <div class="prog-header">
+      <span class="prog-label">진행 현황</span>
+      <span class="prog-count" id="prog-count">1 / 18</span>
+    </div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-bar" style="width:5.6%"></div></div>
+    <div class="sec-list">
+      <div class="sec-item" data-start="0" data-end="2" onclick="goTo(0)">
+        <div class="sec-dot"></div><span>커버/목표</span><span class="sec-slides">1–3</span>
+      </div>
+      <div class="sec-item" data-start="3" data-end="9" onclick="goTo(3)">
+        <div class="sec-dot"></div><span>가드레일 정책 유형</span><span class="sec-slides">4–10</span>
+      </div>
+      <div class="sec-item" data-start="10" data-end="13" onclick="goTo(10)">
+        <div class="sec-dot"></div><span>가드레일 구성</span><span class="sec-slides">11–14</span>
+      </div>
+      <div class="sec-item" data-start="14" data-end="17" onclick="goTo(14)">
+        <div class="sec-dot"></div><span>실습 및 확인</span><span class="sec-slides">15–18</span>
+      </div>
+    </div>
+  </div>
+  <div class="navgrp">
+    <div class="navgrp-t">모듈</div>
+    <a href="../m1/index.html" class="navitem">모듈 1. 책임 있는 AI 기초</a>
+    <a href="../m2/index.html" class="navitem">모듈 2. 생성형 AI 소개</a>
+    <a href="../m3/index.html" class="navitem">모듈 3. 멀티모달 AI 및 사용 사례</a>
+    <a href="../m4/index.html" class="navitem">모듈 4. 프롬프트 엔지니어링의 필수 사항</a>
+    <a href="#" class="navitem active">모듈 5. Amazon Bedrock Guardrails</a>
+    <a href="../m6/index.html" class="navitem">모듈 6. Amazon 에이전트 소개</a>
+    <a href="../m7/index.html" class="navitem">모듈 7. 보안, 거버넌스 및 규정 준수</a>
+    <a href="../m8/index.html" class="navitem">모듈 8. 생성형 AI 프로젝트 구현</a>
+  </div>
+  <div class="navgrp">
+    <div class="navgrp-t">실습 (HANDS-ON)</div>
+    <a href="../lab1/index.html" class="navitem">실습 1: 프롬프트 엔지니어링</a>
+    <a href="../lab2/index.html" class="navitem">실습 2: Guardrails 구현</a>
+    <a href="../lab3/index.html" class="navitem">실습 3: HR 어시스턴트 구축</a>
+  </div>
+  <div class="navgrp" style="margin-top:auto;">
+    <a href="../../GenerativeAIEssentials_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </div>
+</aside>
   <main>
     <section class="slide-unit active" data-idx="0">
   <div class="svis">
-    <div class="slide-title-bar">
-      <span class="slide-badge">1 / 18</span>
-      <h2 class="slide-title-text">모듈 5: Amazon Bedrock Guardrails를 사용한 책임 있는 AI 구현</h2>
-      
-    </div>
-    <div class="sc"><div class="m5-cover">
-  <div class="m5-cover-badge">MODULE 5</div>
-  <h1 class="m5-cover-title">Amazon Bedrock Guardrails를 사용한 책임 있는 AI 구현</h1>
-  <p class="m5-cover-en">Responsible AI Implementation with Amazon Bedrock Guardrails</p>
-  <p class="m5-cover-meta">&copy; 2026, Amazon Web Services, Inc. 또는 계열사. All rights reserved.</p>
-  <div class="m5-cover-chips">
-    <span class="m5-chip">슬라이드 18장</span>
-    <span class="m5-chip">섹션 2개</span>
-    <span class="m5-chip">지식 확인 2문항</span>
-  </div>
-</div></div>
-  </div>
-  <div class="npanel">
-    <div class="note-section">
-  <div class="note-section-title">모듈 5 개요</div>
-  <ul>
-    <li>M1~M4에서 학습한 <span class="note-kw">책임 있는 AI 원칙(Responsible AI Principles)</span>을 기술적으로 구현하는 단계</li>
-    <li><span class="note-kw">Amazon Bedrock Guardrails</span>는 생성형 AI 애플리케이션에 정책 기반 안전 장치를 자동 적용하는 서비스</li>
-    <li>이 모듈에서는 Guardrails 설정 방법, 7가지 보호 기능, 버전 관리, 실습까지 다룸</li>
-  </ul>
+<div class="sc cover-sc">
+  <div class="cover-badge">MODULE 5</div>
+  <h1 class="cover-title">모듈 5: Amazon Bedrock Guardrails</h1>
+  
 </div>
+</div>
+<div class="npanel">
 <div class="note-section">
-  <div class="note-section-title">M1~M5 연계</div>
-  <ul>
-    <li>M1: 책임 있는 AI 8차원 → M5: Guardrails로 기술 구현</li>
-    <li>M4: 프롬프트 보안 → M5: 가드레일로 자동화된 방어 추가</li>
-    <li><span class="note-kw">심층 방어(Defense in Depth)</span>: 시스템 프롬프트 + 프롬프트 엔지니어링 + Guardrails</li>
-  </ul>
+<div class="note-section-title">모듈 소개</div>
+<p>Amazon Bedrock Guardrails는 책임 있는 AI 원칙을 기술적으로 구현하는 완전관리형 보호 계층입니다.</p>
+<ul>
+<li>콘텐츠 필터, 주제 거부, PII 편집 등 6가지 정책 유형을 제공합니다.</li>
+<li>모든 파운데이션 모델과 에이전트에 일관되게 적용됩니다.</li>
+<li>입력과 출력 양방향을 보호하여 책임 있는 AI를 실현합니다.</li>
+</ul>
 </div>
-  </div>
-</section>
+</div>
 <section class="slide-unit" data-idx="1">
   <div class="svis">
     <div class="slide-title-bar">
@@ -663,7 +757,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
 <div class="m5-goal-card"><span class="m5-goal-num">5</span><p>가드레일로 충분한 경우와 추가 거버넌스가 필요한 경우를 평가한다.</p></div>
 </div></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">5가지 학습 목표</div>
   <ul>
@@ -693,7 +787,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
     </div>
     <div class="sc"><div class="m5-section"><div class="m5-sec-badge">섹션 1 / 2</div><h2 class="m5-sec-title">Amazon Bedrock Guardrails 개요 및 구성</h2></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">섹션 1: Amazon Bedrock Guardrails 개요 및 구성</div>
   <ul>
@@ -786,7 +880,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">Guardrails 아키텍처 특성</div>
   <ul>
@@ -819,7 +913,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
        style="max-width:100%; max-height:100%; object-fit:contain; display:block; margin:0 auto;">
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">Amazon Bedrock 가드레일(Guardrails) 개요</div>
   <ul>
@@ -948,7 +1042,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">콘텐츠 필터(Content Filters) — 6가지 범주</div>
   <ul>
@@ -1092,7 +1186,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">단어 필터(Word Filter)</div>
   <ul>
@@ -1180,7 +1274,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
   </div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">버전 관리 — DRAFT vs 번호 지정 버전</div>
   <ul>
@@ -1244,7 +1338,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">4가지 구성 모범 사례</div>
   <ul>
@@ -1300,7 +1394,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">가드레일 실습 3단계 프로세스</div>
   <ul>
@@ -1337,7 +1431,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
     </div>
     <div class="sc"><div class="m5-section"><h2 class="m5-sec-title">실습 2: 가드레일 구현</h2><p class="m5-sec-sub">30분 — Amazon Bedrock 콘솔에서 가드레일 생성, 구성, 테스트</p></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">실습 2: 가드레일 구현 개요</div>
   <ul>
@@ -1413,7 +1507,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">4단계 실습 워크플로</div>
   <ul>
@@ -1491,7 +1585,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">실험에서 프로덕션까지 4단계</div>
   <ul>
@@ -1520,7 +1614,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
     </div>
     <div class="sc"><div class="m5-section"><h2 class="m5-sec-title">지식 확인</h2></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">지식 확인 안내</div>
   <ul>
@@ -1551,7 +1645,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
   
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC1 문제 분석 힌트</div>
   <ul>
@@ -1577,7 +1671,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
   <div class="m5-answer-exp"><strong>해설:</strong> 금지 주제(Denied Topics)는 자연어로 금지할 주제를 설명하여 동의어·우회 표현까지 포착합니다. 콘텐츠 필터는 유해 콘텐츠 범주 기반이며 투자 조언 차단에는 부적합합니다. 단어 필터는 특정 단어만 차단하므로 표현 변형에 취약합니다.</div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC1 정답 해설 — 금지 주제(Denied Topics)</div>
   <ul>
@@ -1610,7 +1704,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
   
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC2 문제 분석 힌트</div>
   <ul>
@@ -1636,7 +1730,7 @@ html.dark .m5p-head.blue { background:#0d3349; }
   <div class="m5-answer-exp"><strong>해설:</strong> 심층 방어(Defense in Depth) — 시스템 프롬프트(행동 지침) + 프롬프트 엔지니어링(출력 품질) + 가드레일(경계 적용)이 상호 보완적 계층을 형성합니다. 세 요소는 중복이 아닌 각각 다른 역할을 담당합니다.</div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC2 정답 해설 — 심층 방어(Defense in Depth)</div>
   <ul>

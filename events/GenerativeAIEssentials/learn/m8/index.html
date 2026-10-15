@@ -50,10 +50,7 @@ header.top {
 .prog-fill { height:100%; background:var(--primary); border-radius:3px; transition:width .3s; }
 
 .layout { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 64px); }
-aside.sidebar {
-  background:var(--bg); border-right:1px solid var(--border);
-  padding:20px 12px; overflow-y:auto;
-}
+
 .sidebar-section-label {
   font-size:11px; font-weight:700; color:var(--t3);
   text-transform:uppercase; letter-spacing:.08em;
@@ -102,7 +99,7 @@ main { padding:32px 36px 96px; width:100%; background:var(--bg); }
 .npanel { background:var(--bg); border:1px solid var(--border); border-radius:14px;
   margin-top:20px; padding:20px 24px; box-shadow:var(--sh); }
 .note-section { margin-bottom:16px; }
-.note-section-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:6px; }
+.note-section-title { font-size:14px; font-weight:800; color:var(--primary); margin-bottom:6px; ;border-bottom:1px solid var(--border);padding-bottom:4px;}
 .note-section p,.note-section ul,.note-section li { font-size:15px; color:var(--t2); line-height:1.75; }
 .note-section ul { padding-left:18px; }
 .note-section li { margin-bottom:4px; }
@@ -385,7 +382,7 @@ html.dark .m8-ans-correct { background:#052e16; }
 
 @media (max-width:900px) {
   .layout { grid-template-columns:1fr; }
-  aside.sidebar { display:none; }
+  
   main { padding:16px 16px 80px; }
   .m8-2col-wrap { grid-template-columns:1fr; }
   .m8-rc-cards { grid-template-columns:1fr; }
@@ -395,61 +392,157 @@ html.dark .m8-ans-correct { background:#052e16; }
   .m8-hr-impl-steps { flex-direction:column; }
   .m8-hr-impl-arrow { transform:rotate(90deg); align-self:center; }
 }
-</style>
+
+/* 공통 커버 스타일 (M1/M2와 동일) */
+.cover-sc{background:linear-gradient(135deg,var(--primary) 0%,#3730A3 60%,#0891B2 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px 48px;border-radius:14px;}
+.cover-badge{display:inline-block;background:rgba(255,255,255,.2);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 14px;border-radius:20px;margin-bottom:20px;}
+.cover-title{font-size:clamp(28px,3.5vw,46px);font-weight:800;line-height:1.2;color:#fff;margin-bottom:12px;}
+.cover-sub{font-size:17px;color:rgba(255,255,255,.8);font-weight:400;}
+html.dark .cover-title,html.dark .cover-sub{color:#fff!important;}
+
+/* 강의실 나가기 버튼 (눈에 띄게) */
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  width:calc(100% - 24px);margin:12px;
+  padding:10px 14px;border-radius:10px;
+  background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.3);
+  color:#b91c1c;font-size:13px;font-weight:700;
+  text-decoration:none;cursor:pointer;transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+html.dark .exit-classroom-btn{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fca5a5;}
+
+.prog-box{margin-bottom:16px;background:var(--bg-soft);border-radius:10px;padding:12px;}
+.prog-header{display:flex;justify-content:space-between;margin-bottom:6px;}
+.prog-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);}
+.prog-count{font-size:12px;font-weight:700;color:var(--primary);}
+.prog-bar-wrap{background:var(--border);border-radius:4px;height:6px;margin-bottom:10px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .3s;}
+.sec-list{display:flex;flex-direction:column;gap:4px;}
+.sec-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;
+  cursor:pointer;font-size:11px;color:var(--t3);transition:background .15s;}
+.sec-item:hover{background:var(--bg);}
+.sec-item.active{color:var(--primary);}
+.sec-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;}
+.sec-item.active .sec-dot{background:var(--primary);}
+.sec-slides{margin-left:auto;font-size:10px;color:var(--t3);}
+.exit-classroom-btn{display:flex;align-items:center;gap:8px;width:calc(100% - 24px);margin:0 12px 8px;
+  padding:10px 14px;border-radius:10px;background:rgba(239,68,68,.08);
+  border:1.5px solid rgba(239,68,68,.3);color:#b91c1c;font-size:13px;font-weight:700;
+  text-decoration:none;cursor:pointer;transition:all .2s;}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+html.dark .exit-classroom-btn{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fca5a5;}
+html.dark .prog-count, html.dark .sec-item.active{color:var(--brand1, #818CF8);}
+html.dark .sec-item.active .sec-dot{background:var(--brand1, #818CF8);}
+html.dark .prog-bar-fill{background:var(--brand1, #818CF8);}
+
+header.top{height:64px;background:#fff;border-bottom:2px solid #c7d2fe;
+  display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;gap:12px;}
+.brand{font-size:18px;font-weight:800;color:var(--primary);}
+.brand-sub{font-size:13px;color:var(--t3);margin-left:4px;}
+.mod-badge{background:var(--tag,#ede9fe);color:var(--primary);font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:20px;margin-left:auto;margin-right:52px;}
+html.dark header.top{background-color:#0a0a0a;border-bottom-color:#1e293b;}
+html.dark .brand{color:#818CF8!important;}
+html.dark .mod-badge{background:#1e1b4b;color:#818CF8;}
+
+/* M1 스타일 navitem (M3-M8 통일용) */
+.navitem{display:block;padding:7px 10px;border-radius:8px;font-size:13px;
+  color:var(--t1);cursor:pointer;border-left:3px solid transparent;
+  transition:background .15s,color .15s;margin-bottom:2px;text-decoration:none;}
+.navitem:hover{background:var(--bg-soft);}
+.navitem.active{background:rgba(33,30,98,.1);border-left-color:var(--primary);
+  color:var(--primary);font-weight:700;}
+html.dark .navitem.active{background:rgba(129,140,248,.1);border-left-color:#818CF8;color:#818CF8;}
+.navgrp{margin-bottom:12px;}.navgrp-t{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;margin-bottom:4px;}aside{width:240px;position:sticky;top:64px;height:calc(100vh - 64px);
+  overflow-y:auto;border-right:1px solid var(--border);padding:16px 12px;background:var(--bg);}
+.note-section-title{font-size:13px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--secondary);margin-bottom:8px;
+  border-bottom:1px solid var(--border);padding-bottom:4px;}
+html.dark .note-section-title{color:#22D3EE!important;border-bottom-color:#3a3a6a!important;}
+
+.npanel{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;
+  padding:24px;font-size:15px;line-height:1.85;margin-top:16px;color:var(--t1);}
+.npanel ul{list-style:none;padding-left:16px;margin:8px 0;}
+.npanel ul li{position:relative;padding-left:16px;margin-bottom:6px;font-size:15px;}
+.npanel ul li::before{content:"•";position:absolute;left:0;color:var(--secondary);}
+html.dark .npanel{border-color:#3a3a6a!important;}
+.npanel p{color:#1e1b4b;font-size:15px;margin-bottom:8px;}.npanel li{color:#1e1b4b;}</style>
 </head>
 <body>
 
 <header class="top">
   <span class="brand">Generative AI Essentials on AWS</span>
-  <span class="header-sub">Module 8 — 생성형 AI 프로젝트 구현</span>
-  <div class="header-prog">
-    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:8.3%"></div></div>
-    <span class="prog-text" id="progText">1/12</span>
-  </div>
+  <span class="brand-sub">강의실</span>
+  <span class="mod-badge">MODULE 8</span>
 </header>
 
 <div class="layout">
-  <aside class="sidebar"><div class="sidebar-section-label">모듈</div><a href="../m1/index.html" class="nav-item"><span class="nav-num">01</span><span class="nav-label">M1. 책임 있는 AI 기초</span></a><a href="../m2/index.html" class="nav-item"><span class="nav-num">02</span><span class="nav-label">M2. 생성형 AI 소개</span></a><a href="../m3/index.html" class="nav-item"><span class="nav-num">03</span><span class="nav-label">M3. 멀티모달 AI 및 사용 사례</span></a><a href="../m4/index.html" class="nav-item"><span class="nav-num">04</span><span class="nav-label">M4. 프롬프트 엔지니어링</span></a><a href="../m5/index.html" class="nav-item"><span class="nav-num">05</span><span class="nav-label">M5. Amazon Bedrock Guardrails</span></a><a href="../m6/index.html" class="nav-item"><span class="nav-num">06</span><span class="nav-label">M6. Amazon 에이전트 소개</span></a><a href="../m7/index.html" class="nav-item"><span class="nav-num">07</span><span class="nav-label">M7. 보안 · 거버넌스 · 규정 준수</span></a><a href="#" class="nav-item active"><span class="nav-num">08</span><span class="nav-label">M8. 생성형 AI 프로젝트 구현</span></a><div class="sidebar-section-label" style="margin-top:16px;">실습</div><a href="../lab1/index.html" class="nav-item"><span class="nav-label">실습 1: 프롬프트 엔지니어링</span></a><a href="../lab2/index.html" class="nav-item"><span class="nav-label">실습 2: Guardrails 구현</span></a><a href="../lab3/index.html" class="nav-item"><span class="nav-label">실습 3: HR 어시스턴트 구축</span></a><div class="sidebar-section-label" style="margin-top:16px;"></div><a href="../../GenerativeAIEssentials_intro_v1.html" class="nav-item" style="color:var(--t3);font-size:12px;">← 강의실 나가기</a></aside>
+  <aside>
+  <div class="prog-box">
+    <div class="prog-header">
+      <span class="prog-label">진행 현황</span>
+      <span class="prog-count" id="prog-count">1 / 12</span>
+    </div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-bar" style="width:8.3%"></div></div>
+    <div class="sec-list">
+      <div class="sec-item" data-start="0" data-end="1" onclick="goTo(0)">
+        <div class="sec-dot"></div><span>커버/목표</span><span class="sec-slides">1–2</span>
+      </div>
+      <div class="sec-item" data-start="2" data-end="5" onclick="goTo(2)">
+        <div class="sec-dot"></div><span>프로젝트 계획 기초</span><span class="sec-slides">3–6</span>
+      </div>
+      <div class="sec-item" data-start="6" data-end="8" onclick="goTo(6)">
+        <div class="sec-dot"></div><span>실습 3: Capstone</span><span class="sec-slides">7–9</span>
+      </div>
+      <div class="sec-item" data-start="9" data-end="11" onclick="goTo(9)">
+        <div class="sec-dot"></div><span>지식 확인</span><span class="sec-slides">10–12</span>
+      </div>
+    </div>
+  </div>
+  <div class="navgrp">
+    <div class="navgrp-t">모듈</div>
+    <a href="../m1/index.html" class="navitem">모듈 1. 책임 있는 AI 기초</a>
+    <a href="../m2/index.html" class="navitem">모듈 2. 생성형 AI 소개</a>
+    <a href="../m3/index.html" class="navitem">모듈 3. 멀티모달 AI 및 사용 사례</a>
+    <a href="../m4/index.html" class="navitem">모듈 4. 프롬프트 엔지니어링의 필수 사항</a>
+    <a href="../m5/index.html" class="navitem">모듈 5. Amazon Bedrock Guardrails</a>
+    <a href="../m6/index.html" class="navitem">모듈 6. Amazon 에이전트 소개</a>
+    <a href="../m7/index.html" class="navitem">모듈 7. 보안, 거버넌스 및 규정 준수</a>
+    <a href="#" class="navitem active">모듈 8. 생성형 AI 프로젝트 구현</a>
+  </div>
+  <div class="navgrp">
+    <div class="navgrp-t">실습 (HANDS-ON)</div>
+    <a href="../lab1/index.html" class="navitem">실습 1: 프롬프트 엔지니어링</a>
+    <a href="../lab2/index.html" class="navitem">실습 2: Guardrails 구현</a>
+    <a href="../lab3/index.html" class="navitem">실습 3: HR 어시스턴트 구축</a>
+  </div>
+  <div class="navgrp" style="margin-top:auto;">
+    <a href="../../GenerativeAIEssentials_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </div>
+</aside>
   <main>
     <section class="slide-unit active" data-idx="0">
   <div class="svis">
-    <div class="slide-title-bar">
-      <span class="slide-badge">1 / 12</span>
-      <h2 class="slide-title-text">모듈 8: 생성형 AI 프로젝트 구현</h2>
-      
-    </div>
-    <div class="sc"><div class="m8-cover">
-  <div class="m8-cover-badge">MODULE 8</div>
-  <h1 class="m8-cover-title">생성형 AI 프로젝트 구현</h1>
-  <p class="m8-cover-en">Implementing Generative AI Projects</p>
-  <p class="m8-cover-meta">&copy; 2026, Amazon Web Services, Inc. 또는 계열사. All rights reserved.</p>
-  <div class="m8-cover-chips">
-    <span class="m8-chip">슬라이드 12장</span>
-    <span class="m8-chip">실습 3 (Capstone)</span>
-    <span class="m8-chip">지식 확인 2문항</span>
-  </div>
-</div></div>
-  </div>
-  <div class="npanel">
-    <div class="note-section">
-  <div class="note-section-title">모듈 8 개요</div>
-  <ul>
-    <li>M1~M7에서 학습한 개별 개념을 <span class="note-kw">일관된 구현 접근 방식(Coherent Implementation Approach)</span>으로 통합하는 최고 단계</li>
-    <li>이 모듈은 개념 학습에서 실제 <span class="note-kw">프로젝트 계획 기술(Project Planning Skills)</span>로의 전환을 목표로 함</li>
-    <li>Capstone 실습(Lab 3)에서 배운 모든 기술을 하나의 프로젝트로 종합</li>
-  </ul>
+<div class="sc cover-sc">
+  <div class="cover-badge">MODULE 8</div>
+  <h1 class="cover-title">모듈 8: 생성형 AI 프로젝트 구현</h1>
+  
 </div>
-<div class="note-case">
-  <div class="note-case-label">이 모듈에서 다루는 4가지 구성 요소</div>
-  <ul>
-    <li><span class="note-kw">사용 사례 정의(Use Case Definition)</span>: 무엇을 해결하는가?</li>
-    <li><span class="note-kw">AWS 서비스 선택(Service Selection)</span>: 어떤 도구가 적합한가?</li>
-    <li><span class="note-kw">책임 있는 AI 통합(Responsible AI Integration)</span>: 거버넌스는?</li>
-    <li><span class="note-kw">비용 관리(Cost Management)</span>: 예산은 어떻게 계획하는가?</li>
-  </ul>
 </div>
-  </div>
-</section>
+<div class="npanel">
+<div class="note-section">
+<div class="note-section-title">모듈 소개</div>
+<p>이전 모듈에서 학습한 내용을 통합하여 생성형 AI 프로젝트를 책임감 있게 계획하고 구현합니다.</p>
+<ul>
+<li>사용 사례 정의부터 AWS 서비스 선택까지 체계적으로 접근합니다.</li>
+<li>비용 관리와 책임 있는 AI 원칙을 프로젝트 전반에 통합합니다.</li>
+<li>Amazon Bedrock AgentCore를 활용해 HR 어시스턴트를 직접 구축합니다.</li>
+</ul>
+</div>
+</div>
 <section class="slide-unit" data-idx="1">
   <div class="svis">
     <div class="slide-title-bar">
@@ -463,7 +556,7 @@ html.dark .m8-ans-correct { background:#052e16; }
 <div class="m8-goal-card"><span class="m8-goal-num">4</span><div class="m8-goal-body"><p class="m8-goal-text">책임 있는 AI 통합을 통한 포괄적인 프로젝트 계획 수립</p><p class="m8-goal-hint">4가지 구성 요소를 단일 결과물로 종합</p></div></div>
 </div></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">4가지 학습 목표 상세</div>
   <ul>
@@ -578,7 +671,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   </div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">섹션 1: 프로젝트 계획 기초(Project Planning Fundamentals)</div>
   <ul>
@@ -742,7 +835,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   </div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">사용 사례 정의(Use Case Definition) — 3가지 질문</div>
   <ul>
@@ -884,7 +977,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   </div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">책임 있는 AI 통합 — 계획 단계에서 시작</div>
   <ul>
@@ -928,7 +1021,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   <div class="m8-lab-time-badge">45분</div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">Capstone 실습 3 소개</div>
   <ul>
@@ -1115,7 +1208,7 @@ html.dark .m8-ans-correct { background:#052e16; }
 
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">Paulo 시나리오 — 실제 기업 문제</div>
   <ul>
@@ -1162,7 +1255,7 @@ html.dark .m8-ans-correct { background:#052e16; }
     </div>
     <div class="sc"><div class="m8-section"><h2 class="m8-sec-title">지식 확인</h2></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">지식 확인 안내</div>
   <ul>
@@ -1194,7 +1287,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC1 문제 분석 힌트</div>
   <ul>
@@ -1226,7 +1319,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   <div class="m8-answer-exp"><strong>해설:</strong> 정답 A: 문제를 먼저 정의하면 실제 비즈니스 요구 사항에 맞는 서비스를 선택할 수 있습니다. 서비스 복잡성을 문제 복잡성에 맞추는 것이 핵심 원칙입니다.</div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC1 정답 해설 — A) 과도한 엔지니어링 방지</div>
   <ul>
@@ -1257,7 +1350,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC2 문제 분석 힌트</div>
   <ul>
@@ -1289,7 +1382,7 @@ html.dark .m8-ans-correct { background:#052e16; }
   <div class="m8-answer-exp"><strong>해설:</strong> 정답 D: 간단한 FAQ 챗봇에는 단일 파운데이션 모델을 갖춘 Amazon Bedrock만 필요합니다. AgentCore는 다단계 에이전트 워크플로를 위한 것이며, 단순 RAG 챗봇에 적용하면 불필요한 복잡성만 추가됩니다.</div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="note-section">
   <div class="note-section-title">KC2 정답 해설 — D) AgentCore 과도한 엔지니어링</div>
   <ul>

@@ -52,10 +52,7 @@ header.top {
 
 /* 레이아웃 */
 .layout { display:grid; grid-template-columns:240px 1fr; min-height:calc(100vh - 64px); }
-aside.sidebar {
-  background:var(--bg); border-right:1px solid var(--border);
-  padding:20px 12px; overflow-y:auto;
-}
+
 .sidebar-section-label {
   font-size:11px; font-weight:700; color:var(--t3);
   text-transform:uppercase; letter-spacing:.08em;
@@ -377,7 +374,7 @@ html.dark .ibadge { background:var(--secondary); color:#0a0a0a; }
   letter-spacing:.1em; color:var(--t3); margin-bottom:12px; }
 .note-section { margin-bottom:14px; }
 .note-section-title { font-size:12px; font-weight:700; color:var(--secondary);
-  text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; }
+  text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; ;border-bottom:1px solid var(--border);padding-bottom:4px;}
 .note-kw { font-weight:700; color:var(--secondary); }
 .note-case { background:var(--bg-soft); border-left:3px solid var(--accent);
   border-radius:0 8px 8px 0; padding:10px 14px; margin:10px 0; }
@@ -413,7 +410,7 @@ html:not(.dark) .icon-sun { display:none; }
 
 @media (max-width:900px) {
   .layout { grid-template-columns:1fr; }
-  aside.sidebar { display:none; }
+  
   main { padding:16px 16px 80px; }
   .m3-hub-wrap { flex-direction:column; }
   .m3-hub-grid { grid-template-columns:1fr; }
@@ -466,48 +463,160 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
   border-radius:10px;padding:12px 16px;font-size:13px;color:var(--t1);
   line-height:1.7;min-height:60px;display:none;}
 .m3-plan-detail-box.on{display:block;}
-</style>
+
+/* 공통 커버 스타일 (M1/M2와 동일) */
+.cover-sc{background:linear-gradient(135deg,var(--primary) 0%,#3730A3 60%,#0891B2 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:40px 48px;border-radius:14px;}
+.cover-badge{display:inline-block;background:rgba(255,255,255,.2);color:#fff;
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 14px;border-radius:20px;margin-bottom:20px;}
+.cover-title{font-size:clamp(28px,3.5vw,46px);font-weight:800;line-height:1.2;color:#fff;margin-bottom:12px;}
+.cover-sub{font-size:17px;color:rgba(255,255,255,.8);font-weight:400;}
+html.dark .cover-title,html.dark .cover-sub{color:#fff!important;}
+
+/* 강의실 나가기 버튼 (눈에 띄게) */
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  width:calc(100% - 24px);margin:12px;
+  padding:10px 14px;border-radius:10px;
+  background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.3);
+  color:#b91c1c;font-size:13px;font-weight:700;
+  text-decoration:none;cursor:pointer;transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+html.dark .exit-classroom-btn{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fca5a5;}
+
+.prog-box{margin-bottom:16px;background:var(--bg-soft);border-radius:10px;padding:12px;}
+.prog-header{display:flex;justify-content:space-between;margin-bottom:6px;}
+.prog-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);}
+.prog-count{font-size:12px;font-weight:700;color:var(--primary);}
+.prog-bar-wrap{background:var(--border);border-radius:4px;height:6px;margin-bottom:10px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:var(--primary);border-radius:4px;transition:width .3s;}
+.sec-list{display:flex;flex-direction:column;gap:4px;}
+.sec-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;
+  cursor:pointer;font-size:11px;color:var(--t3);transition:background .15s;}
+.sec-item:hover{background:var(--bg);}
+.sec-item.active{color:var(--primary);}
+.sec-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;}
+.sec-item.active .sec-dot{background:var(--primary);}
+.sec-slides{margin-left:auto;font-size:10px;color:var(--t3);}
+.exit-classroom-btn{display:flex;align-items:center;gap:8px;width:calc(100% - 24px);margin:0 12px 8px;
+  padding:10px 14px;border-radius:10px;background:rgba(239,68,68,.08);
+  border:1.5px solid rgba(239,68,68,.3);color:#b91c1c;font-size:13px;font-weight:700;
+  text-decoration:none;cursor:pointer;transition:all .2s;}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+html.dark .exit-classroom-btn{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.4);color:#fca5a5;}
+html.dark .prog-count, html.dark .sec-item.active{color:var(--brand1, #818CF8);}
+html.dark .sec-item.active .sec-dot{background:var(--brand1, #818CF8);}
+html.dark .prog-bar-fill{background:var(--brand1, #818CF8);}
+
+header.top{height:64px;background:#fff;border-bottom:2px solid #c7d2fe;
+  display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:100;gap:12px;}
+.brand{font-size:18px;font-weight:800;color:var(--primary);}
+.brand-sub{font-size:13px;color:var(--t3);margin-left:4px;}
+.mod-badge{background:var(--tag,#ede9fe);color:var(--primary);font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:20px;margin-left:auto;margin-right:52px;}
+html.dark header.top{background-color:#0a0a0a;border-bottom-color:#1e293b;}
+html.dark .brand{color:#818CF8!important;}
+html.dark .mod-badge{background:#1e1b4b;color:#818CF8;}
+
+/* M1 스타일 navitem (M3-M8 통일용) */
+.navitem{display:block;padding:7px 10px;border-radius:8px;font-size:13px;
+  color:var(--t1);cursor:pointer;border-left:3px solid transparent;
+  transition:background .15s,color .15s;margin-bottom:2px;text-decoration:none;}
+.navitem:hover{background:var(--bg-soft);}
+.navitem.active{background:rgba(33,30,98,.1);border-left-color:var(--primary);
+  color:var(--primary);font-weight:700;}
+html.dark .navitem.active{background:rgba(129,140,248,.1);border-left-color:#818CF8;color:#818CF8;}
+.navgrp{margin-bottom:12px;}.navgrp-t{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;margin-bottom:4px;}aside{width:240px;position:sticky;top:64px;height:calc(100vh - 64px);
+  overflow-y:auto;border-right:1px solid var(--border);padding:16px 12px;background:var(--bg);}
+.note-section-title{font-size:13px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--secondary);margin-bottom:8px;
+  border-bottom:1px solid var(--border);padding-bottom:4px;}
+html.dark .note-section-title{color:#22D3EE!important;border-bottom-color:#3a3a6a!important;}
+
+.npanel{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;
+  padding:24px;font-size:15px;line-height:1.85;margin-top:16px;color:var(--t1);}
+.npanel ul{list-style:none;padding-left:16px;margin:8px 0;}
+.npanel ul li{position:relative;padding-left:16px;margin-bottom:6px;font-size:15px;}
+.npanel ul li::before{content:"•";position:absolute;left:0;color:var(--secondary);}
+html.dark .npanel{border-color:#3a3a6a!important;}
+.npanel p{color:#1e1b4b;font-size:15px;margin-bottom:8px;}.npanel li{color:#1e1b4b;}</style>
 </head>
 <body>
 
 <header class="top">
   <span class="brand">Generative AI Essentials on AWS</span>
-  <span class="header-sub">Module 3</span>
-  <div class="header-prog">
-    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:4.5%"></div></div>
-    <span class="prog-text" id="progText">1/22</span>
-  </div>
+  <span class="brand-sub">강의실</span>
+  <span class="mod-badge">MODULE 3</span>
 </header>
 
 <div class="layout">
-  <aside class="sidebar"><div class="sidebar-section-label">모듈</div><a href="../m1/index.html" class="nav-item"><span class="nav-num">01</span><span class="nav-label">M1. 책임 있는 AI 기초</span></a><a href="../m2/index.html" class="nav-item"><span class="nav-num">02</span><span class="nav-label">M2. 생성형 AI 소개</span></a><a href="#" class="nav-item active"><span class="nav-num">03</span><span class="nav-label">M3. 멀티모달 AI 및 사용 사례</span></a><a href="../m4/index.html" class="nav-item"><span class="nav-num">04</span><span class="nav-label">M4. 프롬프트 엔지니어링</span></a><a href="../m5/index.html" class="nav-item"><span class="nav-num">05</span><span class="nav-label">M5. Amazon Bedrock Guardrails</span></a><a href="../m6/index.html" class="nav-item"><span class="nav-num">06</span><span class="nav-label">M6. Amazon 에이전트 소개</span></a><a href="../m7/index.html" class="nav-item"><span class="nav-num">07</span><span class="nav-label">M7. 보안 · 거버넌스 · 규정 준수</span></a><a href="../m8/index.html" class="nav-item"><span class="nav-num">08</span><span class="nav-label">M8. 생성형 AI 프로젝트 구현</span></a><div class="sidebar-section-label" style="margin-top:16px;">실습</div><a href="../lab1/index.html" class="nav-item"><span class="nav-label">실습 1: 프롬프트 엔지니어링</span></a><a href="../lab2/index.html" class="nav-item"><span class="nav-label">실습 2: Guardrails 구현</span></a><a href="../lab3/index.html" class="nav-item"><span class="nav-label">실습 3: HR 어시스턴트 구축</span></a><div class="sidebar-section-label" style="margin-top:16px;"></div><a href="../../GenerativeAIEssentials_intro_v1.html" class="nav-item" style="color:var(--t3);font-size:12px;">← 강의실 나가기</a></aside>
+  <aside>
+  <div class="prog-box">
+    <div class="prog-header">
+      <span class="prog-label">진행 현황</span>
+      <span class="prog-count" id="prog-count">1 / 22</span>
+    </div>
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" id="prog-bar" style="width:4.5%"></div></div>
+    <div class="sec-list">
+      <div class="sec-item" data-start="0" data-end="21" onclick="goTo(0)">
+        <div class="sec-dot"></div><span>커버/목표</span><span class="sec-slides">1–3</span>
+      </div>
+      <div class="sec-item" data-start="2" data-end="6" onclick="goTo(2)">
+        <div class="sec-dot"></div><span>멀티모달 AI 기능</span><span class="sec-slides">3–7</span>
+      </div>
+      <div class="sec-item" data-start="7" data-end="12" onclick="goTo(7)">
+        <div class="sec-dot"></div><span>산업별 사용 사례</span><span class="sec-slides">8–13</span>
+      </div>
+      <div class="sec-item" data-start="13" data-end="17" onclick="goTo(13)">
+        <div class="sec-dot"></div><span>사용 사례 평가</span><span class="sec-slides">14–18</span>
+      </div>
+      <div class="sec-item" data-start="18" data-end="21" onclick="goTo(18)">
+        <div class="sec-dot"></div><span>지식 확인</span><span class="sec-slides">19–22</span>
+      </div>
+    </div>
+  </div>
+  <div class="navgrp">
+    <div class="navgrp-t">모듈</div>
+    <a href="../m1/index.html" class="navitem">모듈 1. 책임 있는 AI 기초</a>
+    <a href="../m2/index.html" class="navitem">모듈 2. 생성형 AI 소개</a>
+    <a href="#" class="navitem active">모듈 3. 멀티모달 AI 및 사용 사례</a>
+    <a href="../m4/index.html" class="navitem">모듈 4. 프롬프트 엔지니어링의 필수 사항</a>
+    <a href="../m5/index.html" class="navitem">모듈 5. Amazon Bedrock Guardrails</a>
+    <a href="../m6/index.html" class="navitem">모듈 6. Amazon 에이전트 소개</a>
+    <a href="../m7/index.html" class="navitem">모듈 7. 보안, 거버넌스 및 규정 준수</a>
+    <a href="../m8/index.html" class="navitem">모듈 8. 생성형 AI 프로젝트 구현</a>
+  </div>
+  <div class="navgrp">
+    <div class="navgrp-t">실습 (HANDS-ON)</div>
+    <a href="../lab1/index.html" class="navitem">실습 1: 프롬프트 엔지니어링</a>
+    <a href="../lab2/index.html" class="navitem">실습 2: Guardrails 구현</a>
+    <a href="../lab3/index.html" class="navitem">실습 3: HR 어시스턴트 구축</a>
+  </div>
+  <div class="navgrp" style="margin-top:auto;">
+    <a href="../../GenerativeAIEssentials_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </div>
+</aside>
   <main>
     <section class="slide-unit active" data-idx="0">
   <div class="svis">
-    <div class="slide-title-bar">
-      <span class="slide-badge">1 / 22</span>
-      <h2 class="slide-title-text">모듈 3: 멀티모달 AI 및 사용 사례</h2>
-    </div>
-    <div class="sc"><div class="m3-cover">
-  <div class="m3-cover-badge">MODULE 3</div>
-  <h1 class="m3-cover-title">멀티모달 AI 및 사용 사례</h1>
-  <p class="m3-cover-en">Multimodal AI and Use Cases</p>
-  <p class="m3-cover-meta">&copy; 2026, Amazon Web Services, Inc. 또는 계열사. All rights reserved.</p>
-  <div class="m3-cover-chips">
-    <span class="m3-chip">슬라이드 22장</span>
-    <span class="m3-chip">섹션 3개</span>
-    <span class="m3-chip">지식 확인 2문항</span>
-  </div>
-</div></div>
-  </div>
-  <div class="npanel">
-    <div class="nlbl">강사 노트</div>
-    <div class="note-section">
-  <div class="note-section-title">모듈 소개</div>
-  <p><span class="note-kw">멀티모달 AI(Multimodal AI)</span>는 텍스트, 이미지, 음성, 비디오 등 여러 유형의 콘텐츠를 동시에 처리하고 생성할 수 있는 AI 시스템입니다. 이전 모듈의 생성형 AI 기초 위에서 실제 산업 적용 사례와 평가 프레임워크를 학습합니다.</p>
+<div class="sc cover-sc">
+  <div class="cover-badge">MODULE 3</div>
+  <h1 class="cover-title">모듈 3: 멀티모달 AI 및 사용 사례</h1>
+  
 </div>
-  </div>
-</section>
+</div>
+<div class="npanel">
+<div class="note-section">
+<div class="note-section-title">모듈 소개</div>
+<p>멀티모달 AI는 텍스트, 이미지, 음성, 비디오 등 다양한 유형의 콘텐츠를 동시에 처리하고 생성할 수 있는 AI 시스템입니다.</p>
+<ul>
+<li>멀티모달 AI는 단일 모달 대비 더 풍부한 이해·생성이 가능합니다.</li>
+<li>의료, 금융, 제조, 소매 등 다양한 산업에서 실제 적용됩니다.</li>
+<li>책임 있는 AI 평가 게이트를 통해 사용 사례를 체계적으로 검토합니다.</li>
+</ul>
+</div>
+</div>
 <section class="slide-unit" data-idx="1">
   <div class="svis">
     <div class="slide-title-bar">
@@ -519,7 +628,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 <div class="m3-goal-card"><span class="m3-goal-num">3</span><p>조직의 관련 사용 사례를 파악하고 적용 방안을 도출한다.</p></div>
 </div></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">모듈 개요</div>
@@ -539,7 +648,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
     </div>
     <div class="sc"><div class="m3-section"><div class="m3-sec-badge">섹션 1 / 3</div><h2 class="m3-sec-title">멀티모달 AI 기능</h2></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">섹션 1: 멀티모달 AI 기능</div>
@@ -598,7 +707,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 </div>
 <div class="m3-banner">결합된 워크플로를 통해 멀티모달 AI의 모든 기능을 활용할 수 있습니다.</div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">4가지 콘텐츠 모달리티</div>
@@ -640,7 +749,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
   </div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">이해 vs. 생성 — 별개의 기능</div>
@@ -696,7 +805,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 </div></div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">Amazon Bedrock — 통합 멀티모달 플랫폼</div>
@@ -757,7 +866,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
   <div class="m3-banner">파이프라인 = 단계별 제어 강화 &nbsp;/&nbsp; 네이티브 멀티모달 = 실시간 대화에 최적</div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">멀티모달 파이프라인 비교</div>
@@ -781,7 +890,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
     </div>
     <div class="sc"><div class="m3-section"><div class="m3-sec-badge">섹션 2 / 3</div><h2 class="m3-sec-title">산업 애플리케이션 및 사용 사례</h2></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">섹션 2: 산업 애플리케이션 및 사용 사례</div>
@@ -828,7 +937,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
   </div>
 </div></div><div class="m3-banner">HIPAA 규정 준수: BAA 체결 필수 &middot; IAM 최소 권한 &middot; AWS KMS 암호화 &middot; AWS CloudTrail 감사 로그 &mdash; Amazon Bedrock은 HIPAA 적격 서비스</div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">의료 AI — 3가지 핵심 사용 사례</div>
@@ -887,7 +996,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 </div>
 <div class="m3-banner">각 열을 클릭하면 이유 설명이 표시됩니다. &nbsp;|&nbsp; 실시간 사기 탐지 = 목적별 ML &nbsp;/&nbsp; 사후 분석 = 생성형 AI</div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">금융 서비스 — AI 아키텍처 구분</div>
@@ -942,7 +1051,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
   </div>
 </div></div><div class="m3-banner">핵심: 예측 유지 보수 &middot; 시각적 품질 검사 = 목적별 ML &nbsp;/&nbsp; 운영 인텔리전스 = 생성형 AI</div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">제조 AI — 3가지 핵심 사용 사례</div>
@@ -998,7 +1107,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
   </div>
 </div></div><div class="m3-banner">생성형 AI와 전용 ML 서비스가 함께 작동하여 대규모로 개인화 및 콘텐츠를 제공합니다.</div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">소매업 및 미디어 — AI 사용 사례</div>
@@ -1020,7 +1129,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
     </div>
     <div class="sc"><div class="m3-flow-steps" id="flow-s13"><div class="m3-flow-step" onclick="togFlowStep(this, 'fdet-s13-0')" id="fstep-s13-0"><div class="m3-flow-step-num">1</div><div class="m3-flow-step-label">데이터</div><div class="m3-flow-step-svc">Amazon S3</div><div class="m3-flow-step-detail" id="fdet-s13-0"><div class="m3-flow-step-detail-inner">의료: 임상 기록 | 금융: 트랜잭션 로그 | 제조: 센서 측정값 | 소매: 콘텐츠 카탈로그</div></div></div><div class="m3-flow-step-arrow">&rarr;</div><div class="m3-flow-step" onclick="togFlowStep(this, 'fdet-s13-1')" id="fstep-s13-1"><div class="m3-flow-step-num">2</div><div class="m3-flow-step-label">검색 (RAG)</div><div class="m3-flow-step-svc">Amazon Bedrock Knowledge Bases</div><div class="m3-flow-step-detail" id="fdet-s13-1"><div class="m3-flow-step-detail-inner">의료: 환자 지식 기반 | 금융: 규제 지식 기반 | 제조: 장비 지식 기반 | 소매: 콘텐츠 지식 기반</div></div></div><div class="m3-flow-step-arrow">&rarr;</div><div class="m3-flow-step" onclick="togFlowStep(this, 'fdet-s13-2')" id="fstep-s13-2"><div class="m3-flow-step-num">3</div><div class="m3-flow-step-label">생성</div><div class="m3-flow-step-svc">Foundation Model</div><div class="m3-flow-step-detail" id="fdet-s13-2"><div class="m3-flow-step-detail-inner">의료·소매: Nova Lite(멀티모달) | 금융: Nova Pro(복잡 분석) | 제조: Nova Micro(빠른 텍스트)</div></div></div><div class="m3-flow-step-arrow">&rarr;</div><div class="m3-flow-step" onclick="togFlowStep(this, 'fdet-s13-3')" id="fstep-s13-3"><div class="m3-flow-step-num">4</div><div class="m3-flow-step-label">가드레일</div><div class="m3-flow-step-svc">Bedrock Guardrails</div><div class="m3-flow-step-detail" id="fdet-s13-3"><div class="m3-flow-step-detail-inner">의료: PII 삭제 | 금융: 주제 제한 | 제조: 안전 임곗값 | 소매: 콘텐츠 필터링</div></div></div></div><div class="m3-banner">4개 산업 동일 아키텍처 패턴 &mdash; 구성만 변경. 의료/금융/제조/소매 모두 동일 구조 적용.</div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">공통 아키텍처 패턴 4단계</div>
@@ -1046,7 +1155,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
     </div>
     <div class="sc"><div class="m3-section"><div class="m3-sec-badge">섹션 3 / 3</div><h2 class="m3-sec-title">사용 사례 평가 프레임워크</h2></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">섹션 3: 사용 사례 평가 프레임워크</div>
@@ -1105,7 +1214,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 </div>
 <div class="m3-banner">4가지 차원 모두 동시에 평가해야 합니다. 하나라도 미충족 시 재검토 필요.</div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">4차원 평가 프레임워크</div>
@@ -1185,7 +1294,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
   </div>
 </div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">단순하게 시작 — 3단계 접근</div>
@@ -1309,7 +1418,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
       </div>
     </div>
   </div>
-<div class="npanel">
+<div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">책임 있는 AI 8차원 — 개념 정의</div>
@@ -1343,7 +1452,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
     </div>
     <div class="sc"><div class="m3-section"><h2 class="m3-sec-title">지식 확인</h2></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">지식 확인</div>
@@ -1364,7 +1473,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 <button class="m3-quiz-btn" data-key="D" onclick="selectQuiz(this, 's19')"><span class="m3-quiz-key">D</span><span class="m3-quiz-text">모델은 텍스트 및 이미지를 이해할 수 있으며 구체적으로 요청하면 이미지를 생성할 수도 있습니다.</span></button>
 </div><div class="m3-quiz-hint">정답을 선택하고 다음 슬라이드에서 확인하세요.</div></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">지식 확인 1 힌트</div>
@@ -1384,7 +1493,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 <div class="m3-quiz-btn m3-quiz-wrong"><span class="m3-quiz-key">D</span><span class="m3-quiz-text">모델은 텍스트 및 이미지를 이해할 수 있으며 구체적으로 요청하면 이미지를 생성할 수도 있습니다.</span></div>
 </div><div class="m3-quiz-expl">멀티모달 AI에 대한 가장 흔한 오해 중 하나는 1가지 유형의 콘텐츠를 이해할 수 있는 모델이라면 해당 유형의 콘텐츠를 생성할 수도 있다고 가정하는 것입니다. 실제로 입력 모달리티(Input Modality)와 출력 모달리티(Output Modality)는 모델마다 다른 별개의 기능입니다.</div></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">정답 해설 — 지식 확인 1</div>
@@ -1409,7 +1518,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 <button class="m3-quiz-btn" data-key="D" onclick="selectQuiz(this, 's21')"><span class="m3-quiz-key">D</span><span class="m3-quiz-text">실시간 사기 행위 탐지는 지연 시간이 짧은 결정론적 채점을 위해 목적별 ML 서비스를 사용하고, 사기 행위 사후 분석은 내러티브 보고 및 패턴 요약을 위해 생성형 AI를 사용합니다.</span></button>
 </div><div class="m3-quiz-hint">정답을 선택하고 다음 슬라이드에서 확인하세요.</div></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">지식 확인 2 힌트</div>
@@ -1429,7 +1538,7 @@ html.dark .m3-plan-btn.active{background:var(--brand1);}
 <div class="m3-quiz-btn m3-quiz-correct"><span class="m3-quiz-key">D</span><span class="m3-quiz-text">실시간 사기 행위 탐지는 지연 시간이 짧은 결정론적 채점을 위해 목적별 ML 서비스를 사용하고, 사기 행위 사후 분석은 내러티브 보고 및 패턴 요약을 위해 생성형 AI를 사용합니다. &#10003;</span></div>
 </div><div class="m3-quiz-expl">목적별 ML 서비스(Amazon SageMaker, AutoGluon 등)는 짧은 지연 시간과 높은 결정성으로 실시간 사기 행위 탐지를 처리합니다. 사기 행위가 탐지되면 생성형 AI(Amazon Bedrock, Bedrock Agents)가 패턴 요약, 내러티브 조사 보고서 작성, 규제 당국 제출 문서 초안 작성 등 사후 분석을 지원합니다.</div></div></div>
   </div>
-  <div class="npanel">
+  <div class="<div class="npanel">
     <div class="nlbl">강사 노트</div>
     <div class="note-section">
   <div class="note-section-title">정답 해설 — 지식 확인 2</div>

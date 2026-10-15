@@ -96,6 +96,18 @@ h3.subtask-title{font-size:16px;font-weight:700;color:var(--text);margin:24px 0 
 .btn-primary:hover{background:#0770a1;}
 .btn-secondary{background:#fff;color:var(--text2);border:1.5px solid var(--border);border-radius:7px;padding:9px 20px;font-size:14px;cursor:pointer;}
 .btn-secondary:hover{border-color:var(--text2);}
+
+
+
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  width:calc(100% - 24px);margin:0 12px;
+  padding:10px 14px;border-radius:10px;
+  background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.3);
+  color:#b91c1c;font-size:13px;font-weight:700;
+  text-decoration:none;cursor:pointer;transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
 </style>
 </head>
 <body>
@@ -153,6 +165,10 @@ h3.subtask-title{font-size:16px;font-weight:700;color:var(--text);margin:24px 0 
     <a class="toc-link task" onclick="scrollTo('task5')">태스크 5: Playground 테스트</a>
     <a class="toc-link" onclick="scrollTo('summary')">마무리</a>
     <a class="toc-link" onclick="scrollTo('end')">실습 종료</a>
+
+  <div style="margin-top:auto;padding:12px 0 8px;border-top:1px solid var(--border);">
+    <a href="../index.html" class="exit-classroom-btn">🚪 강의실로 돌아가기</a>
+  </div>
   </div>
 </div>
 <div class="main">
