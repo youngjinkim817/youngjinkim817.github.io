@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>강의 미리보기 — 로컬 검토용</title>
+<style>
+  body { font-family: 'Apple SD Gothic Neo', sans-serif; background: #f8f7ff;
+         display: flex; flex-direction: column; align-items: center;
+         justify-content: center; min-height: 100vh; margin: 0; }
+  .card { background: #fff; border: 2px solid #c7d2fe; border-radius: 16px;
+          padding: 32px 40px; text-align: center; max-width: 480px; width: 90%; }
+  h1 { color: #211E62; font-size: 20px; margin-bottom: 8px; }
+  p  { color: #4338CA; font-size: 14px; margin-bottom: 24px; }
+  .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  a { display: block; padding: 14px 10px; background: #211E62; color: #fff;
+      border-radius: 10px; text-decoration: none; font-size: 14px; font-weight: 600;
+      transition: background .15s; }
+  a:hover { background: #3d3ab3; }
+  .note { margin-top: 20px; font-size: 12px; color: #6B7280; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>강의 미리보기</h1>
+  <p>로컬 검토용 런처 — 버튼 클릭 시 PIN 없이 바로 접속</p>
+  <div class="btn-grid">
+    <a href="m1/index.html" onclick="setToken()">M1. 책임 있는 AI 기초</a>
+    <a href="m2/index.html" onclick="setToken()">M2. 생성형 AI 소개</a>
+    <a href="m3/index.html" onclick="setToken()">M3. 멀티모달 AI</a>
+    <a href="m4/index.html" onclick="setToken()">M4. 프롬프트 엔지니어링</a>
+    <a href="m5/index.html" onclick="setToken()">M5. 책임 있는 AI 실천</a>
+    <a href="m6/index.html" onclick="setToken()">M6. Amazon 에이전트 소개</a>
+    <a href="m7/index.html" onclick="setToken()">M7. 보안 · 거버넌스 · 규정 준수</a>
+    <a href="m8/index.html" onclick="setToken()">M8. 생성형 AI 프로젝트 구현</a>
+  </div>
+  <p class="note">이 파일은 로컬 검토 전용입니다. 실제 배포에는 사용되지 않습니다.</p>
+</div>
+<script>
+function setToken() {
+  sessionStorage.setItem('gaeClassAccess', '1');
+}
+</script>
+</body>
+</html>

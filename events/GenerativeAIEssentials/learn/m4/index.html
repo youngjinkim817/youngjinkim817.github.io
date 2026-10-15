@@ -570,6 +570,77 @@ html:not(.dark) .icon-sun { display:none; }
   .m4-nova-grid { grid-template-columns:1fr 1fr; }
   .m4-gap-wrap { flex-direction:column; }
 }
+
+.pe-box { position:relative; }
+.pe-box:hover { transform:translateY(-2px); box-shadow:0 4px 14px rgba(0,0,0,.14); }
+.pe-box.pe-on { box-shadow:0 0 0 3px var(--secondary), 0 4px 16px rgba(8,145,178,.25) !important; transform:translateY(-2px) !important; }
+html.dark .pe-box[id='pe-fm'] { background:var(--brand1) !important; border-color:var(--brand1) !important; }
+
+/* ─── 토큰 시각화 (슬라이드 13) ─── */
+.token-viz-wrap { margin-top:12px; }
+.token-viz-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.token-viz-label { font-size:11px; font-weight:700; color:var(--t3); letter-spacing:.05em; text-transform:uppercase; }
+.token-count-badge { font-size:11px; font-weight:700; color:var(--secondary);
+  background:rgba(8,145,178,.1); padding:2px 8px; border-radius:20px; }
+.token-viz-area {
+  display:flex; flex-wrap:wrap; gap:4px 3px; min-height:48px;
+  background:var(--bg-alt); border:1px solid var(--border);
+  border-radius:10px; padding:10px 12px;
+  align-content:flex-start;
+}
+.tk {
+  display:inline-flex; flex-direction:column; align-items:center;
+  min-width:28px; padding:4px 7px 3px;
+  border-radius:6px; cursor:default;
+  border-bottom:3px solid transparent;
+  transition:transform .15s, box-shadow .15s;
+  position:relative;
+}
+.tk:hover { transform:translateY(-3px); box-shadow:0 4px 10px rgba(0,0,0,.15); z-index:2; }
+.tk-idx { font-size:9px; font-weight:700; opacity:.6; line-height:1; margin-bottom:2px; }
+.tk-text { font-size:13px; font-weight:700; line-height:1.2; white-space:pre; font-family:'Pretendard','Apple SD Gothic Neo',monospace; }
+.tk-type { font-size:9px; opacity:.55; margin-top:2px; }
+/* 6가지 색상 팔레트 */
+.tk-c0 { background:#dbeafe; border-color:#2563eb; }
+.tk-c0 .tk-idx { color:#1d4ed8; }
+.tk-c0 .tk-text { color:#1e3a8a; }
+.tk-c1 { background:#dcfce7; border-color:#16a34a; }
+.tk-c1 .tk-idx { color:#15803d; }
+.tk-c1 .tk-text { color:#14532d; }
+.tk-c2 { background:#fef9c3; border-color:#ca8a04; }
+.tk-c2 .tk-idx { color:#a16207; }
+.tk-c2 .tk-text { color:#78350f; }
+.tk-c3 { background:#fce7f3; border-color:#db2777; }
+.tk-c3 .tk-idx { color:#be185d; }
+.tk-c3 .tk-text { color:#831843; }
+.tk-c4 { background:#ede9fe; border-color:#7c3aed; }
+.tk-c4 .tk-idx { color:#6d28d9; }
+.tk-c4 .tk-text { color:#4c1d95; }
+.tk-c5 { background:#ffedd5; border-color:#ea580c; }
+.tk-c5 .tk-idx { color:#c2410c; }
+.tk-c5 .tk-text { color:#7c2d12; }
+/* 공백/개행 토큰 */
+.tk-space {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:20px; padding:4px 4px; border-radius:4px;
+  background:rgba(100,116,139,.08); border:1px dashed var(--border);
+}
+.tk-space .tk-text { font-size:11px; color:var(--t3); font-weight:400; }
+/* 다크모드 */
+html.dark .tk-c0 { background:#1e3a5f; border-color:#60a5fa; }
+html.dark .tk-c0 .tk-text { color:#bfdbfe; }
+html.dark .tk-c1 { background:#14532d; border-color:#4ade80; }
+html.dark .tk-c1 .tk-text { color:#bbf7d0; }
+html.dark .tk-c2 { background:#451a03; border-color:#fbbf24; }
+html.dark .tk-c2 .tk-text { color:#fde68a; }
+html.dark .tk-c3 { background:#500724; border-color:#f472b6; }
+html.dark .tk-c3 .tk-text { color:#fce7f3; }
+html.dark .tk-c4 { background:#2e1065; border-color:#a78bfa; }
+html.dark .tk-c4 .tk-text { color:#ede9fe; }
+html.dark .tk-c5 { background:#431407; border-color:#fb923c; }
+html.dark .tk-c5 .tk-text { color:#fed7aa; }
+html.dark .tk-space { background:rgba(100,116,139,.15); }
+html.dark .token-count-badge { background:rgba(34,211,238,.1); color:var(--secondary); }
 </style>
 </head>
 <body>
@@ -584,7 +655,7 @@ html:not(.dark) .icon-sun { display:none; }
 </header>
 
 <div class="layout">
-  <aside class="sidebar"><div class="sidebar-section-label">모듈</div><a href="../m1/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">01</span><span class="nav-label">M1. 책임 있는 AI 기초</span></a><a href="../m2/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">02</span><span class="nav-label">M2. 생성형 AI 소개</span></a><a href="../m3/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">03</span><span class="nav-label">M3. 멀티모달 AI 및 사용 사례</span></a><a href="#" class="nav-item active"><span class="nav-num">04</span><span class="nav-label">M4. 프롬프트 엔지니어링</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">05</span><span class="nav-label">M5. Amazon Bedrock Guardrails</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">06</span><span class="nav-label">M6. Amazon 에이전트 소개</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">07</span><span class="nav-label">M7. 보안, 거버넌스 및 규정 준수</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">08</span><span class="nav-label">M8. 생성형 AI 프로젝트 구현</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">09</span><span class="nav-label">M9</span></a><div class="sidebar-section-label" style="margin-top:16px;">실습</div><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 1</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 2</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 3</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 가이드</span></a></aside>
+  <aside class="sidebar"><div class="sidebar-section-label">모듈</div><a href="../m1/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">01</span><span class="nav-label">M1. 책임 있는 AI 기초</span></a><a href="../m2/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">02</span><span class="nav-label">M2. 생성형 AI 소개</span></a><a href="../m3/index.html" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">03</span><span class="nav-label">M3. 멀티모달 AI 및 사용 사례</span></a><a href="#" class="nav-item active"><span class="nav-num">04</span><span class="nav-label">M4. 프롬프트 엔지니어링</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">05</span><span class="nav-label">M5. Amazon Bedrock Guardrails</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">06</span><span class="nav-label">M6. Amazon 에이전트 소개</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">07</span><span class="nav-label">M7. 보안, 거버넌스 및 규정 준수</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-num">08</span><span class="nav-label">M8. 생성형 AI 프로젝트 구현</span></a><div class="sidebar-section-label" style="margin-top:16px;">실습</div><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 1</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 2</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 3</span></a><a href="#" class="nav-item locked" tabindex="-1" aria-disabled="true"><span class="nav-label">실습 가이드</span></a></aside>
   <main>
     <section class="slide-unit active" data-idx="0">
   <div class="svis">
@@ -717,15 +788,82 @@ html:not(.dark) .icon-sun { display:none; }
   </div>
 </section>
 <section class="slide-unit" data-idx="4">
-  <div class="svis">
+  <div class="svis" style="display:flex;flex-direction:column;overflow:hidden;">
     <div class="slide-title-bar">
       <span class="slide-badge">5 / 42</span>
       <h2 class="slide-title-text">프롬프트 엔지니어링 기초 소개</h2>
-      
+      <span class="ibadge">인터랙티브</span>
     </div>
-    <div class="sc"><div class="m4-steps"><div class="m4-step-card"><span class="m4-step-num">1</span><div><div class="m4-step-title">파운데이션 모델(FM)</div><div class="m4-step-desc">사전 훈련된 대규모 언어 모델 — 방대한 텍스트 데이터로 학습, 다양한 태스크에 적용 가능</div></div></div><div class="m4-step-card"><span class="m4-step-num">2</span><div><div class="m4-step-title">프롬프트 엔지니어링</div><div class="m4-step-desc">FM과 효과적으로 대화하는 기술 — 지침, 컨텍스트, 예시, 출력 형식으로 의도를 정밀하게 전달</div></div></div><div class="m4-step-card"><span class="m4-step-num">3</span><div><div class="m4-step-title">RAG / 에이전틱 AI</div><div class="m4-step-desc">외부 지식 결합(RAG) 및 도구 활용 에이전트 — 고급 활용에서도 프롬프트 설계가 성능의 핵심</div></div></div></div></div>
+    <div class="sc" style="flex:1;display:flex;flex-direction:column;padding:16px 24px 12px;min-height:0;overflow:hidden;">
+
+      <!-- 상단: 3가지 방법 컨텍스트 -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:stretch;">
+        <div style="flex:1;padding:8px 12px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);opacity:.55;text-align:center;">
+          <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:2px;">방법 1</div>
+          <div style="font-size:13px;font-weight:700;color:var(--t2);">파운데이션 모델 활용</div>
+        </div>
+        <div style="flex:1;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--secondary));border:2px solid var(--secondary);text-align:center;position:relative;">
+          <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.8);margin-bottom:2px;">방법 2 — 이번 모듈</div>
+          <div style="font-size:13px;font-weight:800;color:#fff;">프롬프트 엔지니어링</div>
+          <div style="position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid var(--secondary);"></div>
+        </div>
+        <div style="flex:1;padding:8px 12px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);opacity:.55;text-align:center;">
+          <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:2px;">방법 3</div>
+          <div style="font-size:13px;font-weight:700;color:var(--t2);">RAG / 에이전틱 AI</div>
+        </div>
+      </div>
+
+      <!-- 메인 다이어그램 -->
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:0 8px;">
+        <div style="display:grid;grid-template-columns:1fr 100px 1.2fr 100px 1fr;align-items:center;width:100%;gap:0;">
+
+          <div class="pe-box" id="pe-prompt" onclick="selectPE('prompt')"
+               style="border:2px solid #0891B2;border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .25s;background:var(--bg);">
+            <div style="font-size:26px;margin-bottom:6px;">📄</div>
+            <div style="font-size:14px;font-weight:800;color:var(--t1);">프롬프트</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:4px;">사용자 입력</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <svg width="100" height="44" viewBox="0 0 100 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="4" y1="28" x2="84" y2="28" stroke="#0891B2" stroke-width="2.5"/>
+              <polygon points="84,21 98,28 84,35" fill="#0891B2"/>
+              <text x="49" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#0891B2">입력</text>
+            </svg>
+          </div>
+
+          <div class="pe-box" id="pe-fm" onclick="selectPE('fm')"
+               style="background:var(--primary);border:2px solid var(--primary);border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .25s;">
+            <div style="font-size:26px;margin-bottom:6px;">🧠</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;">파운데이션 모델</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:4px;">처리 및 생성</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <svg width="100" height="44" viewBox="0 0 100 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="4" y1="28" x2="84" y2="28" stroke="#0891B2" stroke-width="2.5"/>
+              <polygon points="84,21 98,28 84,35" fill="#0891B2"/>
+              <text x="49" y="17" text-anchor="middle" font-size="11" font-weight="700" fill="#0891B2">출력</text>
+            </svg>
+          </div>
+
+          <div class="pe-box" id="pe-response" onclick="selectPE('response')"
+               style="border:2px solid #0891B2;border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .25s;background:var(--bg);">
+            <div style="font-size:26px;margin-bottom:6px;">💬</div>
+            <div style="font-size:14px;font-weight:800;color:var(--t1);">모델 응답</div>
+            <div style="font-size:11px;color:var(--t3);margin-top:4px;">생성된 출력</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- 상세 설명 패널 -->
+      <div id="pe-detail-panel" style="background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:13px;min-height:52px;transition:all .2s;">
+        <span style="color:var(--t3);font-size:12px;">위 구성 요소를 클릭하면 상세 설명이 표시됩니다.</span>
+      </div>
+
+    </div>
   </div>
-  <div class="npanel" id="note-4">
+<div class="npanel" id="note-4">
     <div class="note-section">
       <div class="note-section-title">프롬프트 엔지니어링(Prompt Engineering)이란?</div>
       <ul>
@@ -1104,6 +1242,15 @@ html:not(.dark) .icon-sun { display:none; }
       <button class="preset-btn" onclick="loadPreset(0)">짧은 예시 (제로샷)</button>
       <button class="preset-btn" onclick="loadPreset(1)">보통 예시 (퓨샷)</button>
       <button class="preset-btn" onclick="loadPreset(2)">긴 예시 (CoT)</button>
+    </div>
+    <div class="token-viz-wrap" style="margin-top:10px;">
+      <div class="token-viz-header">
+        <div class="token-viz-label">토큰 분리 시각화 <span style="font-weight:400;">(근사치 — 실제 토크나이저와 다를 수 있음)</span></div>
+        <span class="token-count-badge" id="tokenCountBadge">0 토큰</span>
+      </div>
+      <div class="token-viz-area" id="tokenVizArea">
+        <span style="font-size:12px;color:var(--t3);">텍스트를 입력하면 토큰 분리 결과가 표시됩니다.</span>
+      </div>
     </div>
   </div>
 </div></div>
@@ -2542,23 +2689,89 @@ function calcTokens(){
   var text=ta.value||'';
   var chars=text.length;
   var words=text.trim()===''?0:text.trim().split(/\s+/).length;
-  // 한글 글자 수 (유니코드 AC00-D7A3 범위)
   var koChars=(text.match(/[\uAC00-\uD7A3]/g)||[]).length;
-  // 영어 단어 수 (한글 제거 후 단어 분리)
   var enWords=(text.replace(/[\uAC00-\uD7A3]/g,'').trim().split(/\s+/).filter(function(w){return w.length>0;})).length;
-  // 토큰 추정: 영어 1단어 = 1.33토큰, 한글 2글자 = 1토큰
-  var tokens=Math.ceil(enWords*1.33) + Math.ceil(koChars/2);
-  // Claude Haiku 비용: $0.25 / 1,000,000 tokens
-  var cost=(tokens/1000000)*0.25;
-  // 컨텍스트 윈도우 (200K)
-  var ctxPct=Math.min(100,(tokens/200000)*100);
-  document.getElementById('tokenCount').textContent=tokens.toLocaleString();
-  document.getElementById('tokenCost').textContent='$'+cost.toFixed(6);
-  document.getElementById('charWordCount').textContent=chars+' / '+words;
-  var fill=document.getElementById('ctxFill');
-  if(fill) fill.style.width=ctxPct.toFixed(2)+'%';
-  var pct=document.getElementById('ctxPct');
-  if(pct) pct.textContent=ctxPct.toFixed(2)+'%';
+  var koTokens=Math.ceil(koChars/1.5);
+  var enTokens=Math.ceil(enWords/0.75);
+  var totalTokens=koTokens+enTokens;
+  if(totalTokens===0 && chars>0) totalTokens=Math.ceil(chars/4);
+  var cost=(totalTokens/1000000)*0.25;
+  var ctxPct=Math.min((totalTokens/200000)*100,100);
+  var el;
+  el=document.getElementById('tokenCount'); if(el) el.textContent=totalTokens.toLocaleString();
+  el=document.getElementById('tokenCost');  if(el) el.textContent='$'+cost.toFixed(6);
+  el=document.getElementById('charWordCount'); if(el) el.textContent=chars+' / '+words;
+  el=document.getElementById('ctxFill');    if(el) el.style.width=ctxPct+'%';
+  el=document.getElementById('ctxPct');     if(el) el.textContent=ctxPct.toFixed(2)+'%';
+  // 토큰 시각화
+  renderTokenViz(text);
+}
+
+function tokenizeText(text) {
+  if(!text) return [];
+  var tokens=[];
+  // 세그먼트 분리: 한글, 영어/숫자, 공백, 기타
+  var segments=text.match(/[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]+|[a-zA-Z0-9']+|[\s]+|[^\uAC00-\uD7A3\u1100-\u11FFa-zA-Z0-9\s]/g)||[];
+  segments.forEach(function(seg){
+    var isKo=/[\uAC00-\uD7A3]/.test(seg);
+    var isSpace=/^\s+$/.test(seg);
+    if(isSpace){
+      // 공백은 인접 토큰에 포함 처리
+      tokens.push({text:seg, isSpace:true});
+    } else if(isKo){
+      // 한글: 1~2 음절씩 묶기
+      for(var i=0;i<seg.length;i+=2){
+        tokens.push({text:seg.slice(i,i+2),isSpace:false,lang:'ko'});
+      }
+    } else {
+      // 영어: 4~5글자씩 서브워드 분리
+      if(seg.length<=5){
+        tokens.push({text:seg,isSpace:false,lang:'en'});
+      } else {
+        // 긴 단어는 앞 3글자+나머지로 분리
+        tokens.push({text:seg.slice(0,3),isSpace:false,lang:'en'});
+        for(var j=3;j<seg.length;j+=4){
+          tokens.push({text:seg.slice(j,j+4),isSpace:false,lang:'en'});
+        }
+      }
+    }
+  });
+  return tokens;
+}
+
+function renderTokenViz(text){
+  var area = document.getElementById('tokenVizArea');
+  var badge = document.getElementById('tokenCountBadge');
+  if(!area) return;
+  if(!text || !text.trim()){
+    area.innerHTML = '<span style="font-size:12px;color:var(--t3);">텍스트를 입력하면 토큰 분리 결과가 표시됩니다.</span>';
+    if(badge) badge.textContent = '0 토큰';
+    return;
+  }
+  var tokens = tokenizeText(text);
+  var COLORS = ['tk-c0','tk-c1','tk-c2','tk-c3','tk-c4','tk-c5'];
+  var html = '';
+  var colorIdx = 0;
+  var tokenNum = 0;
+  tokens.forEach(function(tk){
+    if(tk.isSpace){
+      var vis = tk.text.replace(/ /g,'␣').replace(/\n/g,'↵').replace(/\t/g,'→');
+      html += '<span class="tk tk-space"><span class="tk-text">'+vis+'</span></span>';
+    } else {
+      tokenNum++;
+      var esc = tk.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      var c = COLORS[colorIdx % COLORS.length];
+      var typeLabel = tk.lang === 'ko' ? 'KO' : (tk.lang === 'en' ? 'EN' : '');
+      html += '<span class="tk '+c+'" title="#'+tokenNum+': ['+esc+']">'
+            + '<span class="tk-idx">#'+tokenNum+'</span>'
+            + '<span class="tk-text">'+esc+'</span>'
+            + (typeLabel ? '<span class="tk-type">'+typeLabel+'</span>' : '')
+            + '</span>';
+      colorIdx++;
+    }
+  });
+  area.innerHTML = html;
+  if(badge) badge.textContent = tokenNum + ' 토큰';
 }
 
 // Guardrails 허브 카드 토글
@@ -2572,6 +2785,40 @@ function selectQuiz(btn, slideId){
   if(!quiz) return;
   quiz.querySelectorAll('.m4-quiz-btn').forEach(function(b){ b.classList.remove('selected'); });
   btn.classList.add('selected');
+}
+
+function selectPE(type) {
+  // 모든 박스 강조 해제
+  ['pe-prompt','pe-fm','pe-response'].forEach(function(id){
+    var b = document.getElementById(id);
+    if(b) b.classList.remove('pe-on');
+  });
+  // 선택 박스 강조 (class 방식 — inline transform 충돌 없음)
+  var el = document.getElementById('pe-' + type);
+  if(el) el.classList.add('pe-on');
+
+  var details = {
+    'prompt': '<strong>프롬프트(Prompt)</strong> — FM에 전달하는 구조화된 텍스트 입력'
+      + '<ul style="margin:6px 0 0 16px;line-height:1.8;">'
+      + '<li><strong>5가지 요소:</strong> 지침(Instruction) · 컨텍스트(Context) · 입력(Input) · 출력형식(Output) · 페르소나(Persona)</li>'
+      + '<li><strong>핵심 원칙:</strong> 명확하고 구체적일수록 결과 품질 향상</li>'
+      + '<li><strong>예시:</strong> "AWS 전문가로서 S3 버킷 보안 설정을 3단계로 설명하세요."</li>'
+      + '</ul>',
+    'fm': '<strong>파운데이션 모델(Foundation Model)</strong> — 프롬프트를 해석하고 응답을 생성'
+      + '<ul style="margin:6px 0 0 16px;line-height:1.8;">'
+      + '<li>수십~수천억 개 파라미터로 언어 패턴 학습</li>'
+      + '<li>토큰(Token) 단위로 입력을 처리하고 다음 토큰을 예측·생성</li>'
+      + '<li>추론 파라미터(Temperature, Top-P)로 출력 특성 제어 가능</li>'
+      + '</ul>',
+    'response': '<strong>모델 응답(Model Response)</strong> — FM이 생성한 출력 텍스트'
+      + '<ul style="margin:6px 0 0 16px;line-height:1.8;">'
+      + '<li>프롬프트 품질이 응답 품질을 직접 결정</li>'
+      + '<li>모호한 프롬프트 → 모호한 응답 / 구체적 프롬프트 → 정밀한 응답</li>'
+      + '<li>응답을 평가하고 프롬프트를 개선하는 반복 과정이 핵심</li>'
+      + '</ul>'
+  };
+  var panel = document.getElementById('pe-detail-panel');
+  if(panel) panel.innerHTML = details[type] || '';
 }
 </script>
 </body>

@@ -1,92 +1,313 @@
 <!doctype html>
-<html lang="ko" class="light">
+<html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lab 2. Bedrock 가드레일 — Generative AI Essentials on AWS</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>실습 2: Amazon Bedrock Guardrails 구현 | Generative AI Essentials on AWS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style>
-  :root{--bg:#0f1219;--bg-alt:#161618;--bg-soft:#1b1f27;--brand1:#e65100;--brand2:#f57c00;--brand3:#ff9800;--t1:#dfdfd6;--t2:#98989f;--border:#3c3f44;}
-  html.light{--bg:#ffffff;--bg-alt:#f6f7f9;--bg-soft:#eef0f3;--t1:#1a1f29;--t2:#5b6678;--border:#e3e7ef;}
-  *{box-sizing:border-box;}
-  html,body{margin:0;background:var(--bg);color:var(--t1);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.65;}
-  a{color:var(--brand3);text-decoration:none;}
-  header.top{position:sticky;top:0;z-index:40;height:60px;display:flex;align-items:center;gap:16px;padding:0 20px;background:rgba(15,18,25,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
-  html.light header.top{background:rgba(255,255,255,.9);}
-  header.top .brand{font-weight:700;font-size:15px;} header.top .brand b{color:var(--brand1);}
-  header.top .back{margin-left:auto;color:var(--t2);font-size:14px;} header.top .back:hover{color:var(--t1);}
-  .themebtn{width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
-  .themebtn svg{width:17px;height:17px;}.themebtn .moon{display:none;}
-  html.light .themebtn .moon{display:block;} html.light .themebtn .sun{display:none;}
-  .layout{display:grid;grid-template-columns:minmax(200px,260px) 1fr;min-height:calc(100vh - 60px);}
-  aside{border-right:1px solid var(--border);padding:22px 14px;overflow-y:auto;position:sticky;top:60px;height:calc(100vh - 60px);background:var(--bg);}
-  .navgrp{margin-bottom:20px;}
-  .navgrp-t{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--t2);font-weight:600;padding:0 10px;margin-bottom:8px;}
-  .navitem{display:block;padding:8px 12px;border-radius:8px;color:var(--t1);font-size:14px;border-left:2px solid transparent;}
-  .navitem:hover{background:var(--bg-alt);}
-  .navitem.active{background:rgba(230,81,0,.12);border-left-color:var(--brand1);color:var(--brand3);font-weight:600;}
-  main{padding:36px 40px 72px;max-width:860px;}
-  .badge{display:inline-block;font-size:11px;font-weight:600;color:var(--brand3);background:rgba(230,81,0,.12);border:1px solid rgba(230,81,0,.3);border-radius:999px;padding:3px 11px;text-transform:uppercase;letter-spacing:.04em;}
-  .badge.lab{color:#7cc4ff;background:rgba(60,140,230,.12);border-color:rgba(60,140,230,.3);}
-  h1.t{font-size:30px;margin:14px 0 6px;font-weight:800;letter-spacing:-.01em;}
-  .sub{color:var(--t2);font-size:16px;margin:0 0 26px;}
-  h2{font-size:18px;margin:28px 0 12px;color:var(--brand3);}
-  ul{padding-left:1.2em;} li{margin:.4em 0;}
-  .tbd-box{margin-top:16px;border:1px dashed var(--border);border-radius:10px;padding:18px 20px;color:var(--t2);font-size:14px;background:var(--bg-alt);}
-  .assets{margin-top:14px;border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:var(--bg-alt);font-size:14px;color:var(--t2);}
-  .assets code{color:var(--brand3);background:var(--bg-soft);padding:2px 6px;border-radius:5px;}
-  .pager{display:flex;justify-content:space-between;gap:12px;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
-  .pager a{display:inline-flex;flex-direction:column;gap:3px;padding:12px 18px;border:1px solid var(--border);border-radius:10px;background:var(--bg-alt);color:var(--t1);font-size:14px;font-weight:600;max-width:48%;}
-  .pager a:hover{border-color:var(--brand1);}
-  .pager .lbl{font-size:11px;color:var(--t2);font-weight:500;}
-  .pager a.next{text-align:right;margin-left:auto;}
-  @media(max-width:560px){.layout{grid-template-columns:1fr;}aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--border);}main{padding:24px 18px 56px;}}
+:root{--primary:#0f2d52;--secondary:#0891B2;--accent:#d97706;--bg:#f4f6f8;--panel:#fff;--border:#d5dbdb;--text:#16191f;--text2:#414d5c;--text3:#687078;--step-bg:#f8f9fa;--step-active:#e8f4fc;--step-done:#e9f7ef;--step-active-bar:#0891B2;--step-done-bar:#27ae60;--code-bg:#1e2a3a;--code-text:#a8d8f0;--note-bg:#fffbe6;--note-border:#f0c930;--warn-bg:#fdf2e9;--warn-border:#e67e22;--tip-bg:#eaf5fb;--tip-border:#0891B2;--resource-bg:#0f2d52;--resource-text:#fff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;font-size:15px;color:var(--text);background:var(--bg);line-height:1.7;}
+.layout{display:flex;min-height:100vh;}
+.sidebar{width:260px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;z-index:100;}
+.main{margin-left:260px;flex:1;padding:32px 40px 80px;max-width:960px;}
+.sidebar-header{background:var(--resource-bg);color:#fff;padding:16px 16px 12px;font-size:13px;font-weight:700;border-bottom:1px solid #1a3f6f;}
+.sidebar-header .lab-title{font-size:14px;font-weight:800;line-height:1.3;}
+.sidebar-header .lab-meta{margin-top:6px;display:flex;gap:12px;font-size:11px;opacity:.8;}
+.resource-section{padding:12px 14px;border-bottom:1px solid var(--border);}
+.section-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.btn-edit-res{font-size:10px;padding:2px 8px;border:1px solid var(--secondary);border-radius:12px;color:var(--secondary);background:transparent;cursor:pointer;transition:all .15s;}
+.btn-edit-res:hover{background:var(--secondary);color:#fff;}
+.resource-item{margin-bottom:8px;}
+.resource-key{font-size:11px;color:var(--text3);margin-bottom:2px;}
+.resource-val-wrap{display:flex;align-items:center;gap:6px;}
+.resource-val{font-size:12px;font-weight:700;color:var(--text);background:#f0f4f8;border:1px solid var(--border);border-radius:5px;padding:4px 8px;flex:1;font-family:monospace;word-break:break-all;}
+.resource-val.empty{color:var(--text3);font-weight:400;font-style:italic;font-family:inherit;}
+.btn-copy{width:26px;height:26px;border:1px solid var(--border);border-radius:5px;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;flex-shrink:0;}
+.btn-copy:hover{background:var(--secondary);border-color:var(--secondary);}
+.toc-section{padding:10px 0 16px;flex:1;}
+.toc-link{display:block;padding:6px 14px 6px 20px;font-size:12px;color:var(--text2);text-decoration:none;cursor:pointer;border-left:3px solid transparent;transition:all .15s;line-height:1.4;}
+.toc-link:hover{background:#f4f6f8;color:var(--primary);}
+.toc-link.active{border-left-color:var(--secondary);background:#eaf5fb;color:var(--secondary);font-weight:700;}
+.toc-link.task{padding-left:28px;}
+.toc-link.subtask{padding-left:36px;font-size:11px;}
+.page-title{font-size:24px;font-weight:800;color:var(--primary);margin-bottom:4px;}
+.page-subtitle{font-size:14px;color:var(--text3);margin-bottom:24px;}
+.breadcrumb{font-size:12px;color:var(--text3);margin-bottom:16px;}
+.breadcrumb a{color:var(--secondary);text-decoration:none;}
+.service-box{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:28px;}
+.service-box h3{font-size:16px;font-weight:700;color:var(--primary);margin-bottom:8px;}
+.service-box p{font-size:14px;color:var(--text2);line-height:1.7;}
+h2.task-title{font-size:20px;font-weight:800;color:var(--primary);border-bottom:2px solid var(--primary);padding-bottom:8px;margin:32px 0 12px;scroll-margin-top:16px;}
+h3.subtask-title{font-size:16px;font-weight:700;color:var(--text);margin:24px 0 10px;scroll-margin-top:16px;}
+.task-desc{font-size:14px;color:var(--text2);margin-bottom:16px;}
+.step-card{background:var(--step-bg);border:1px solid var(--border);border-left:4px solid var(--border);border-radius:6px;margin-bottom:8px;transition:all .2s;cursor:pointer;}
+.step-card:hover{border-left-color:var(--secondary);}
+.step-card.active{border-left-color:var(--step-active-bar);background:var(--step-active);}
+.step-card.done{border-left-color:var(--step-done-bar);background:var(--step-done);}
+.step-header{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.step-card.active .step-num{background:var(--step-active-bar);}
+.step-card.done .step-num{background:var(--step-done-bar);}
+.step-text{font-size:14px;color:var(--text);flex:1;line-height:1.6;}
+.step-text strong{color:var(--primary);}
+.step-text .highlight{background:#fef9c3;padding:1px 4px;border-radius:3px;font-weight:600;}
+.step-status{font-size:10px;margin-left:auto;flex-shrink:0;padding:2px 8px;border-radius:12px;font-weight:700;}
+.step-card.active .step-status{background:rgba(8,145,178,.1);color:var(--step-active-bar);}
+.step-card.active .step-status::before{content:"▶ 진행 중";}
+.step-card.done .step-status{background:rgba(39,174,96,.1);color:var(--step-done-bar);}
+.step-card.done .step-status::before{content:"✓ 완료";}
+.note-box{border-radius:6px;padding:10px 14px;margin:8px 0 8px 34px;font-size:13px;line-height:1.6;}
+.note-box.info{background:var(--tip-bg);border-left:3px solid var(--tip-border);}
+.note-box.warn{background:var(--warn-bg);border-left:3px solid var(--warn-border);}
+.note-box.check{background:var(--note-bg);border-left:3px solid var(--note-border);}
+.note-box .note-label{font-weight:700;margin-bottom:3px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;}
+.note-box.info .note-label{color:var(--tip-border);}
+.note-box.warn .note-label{color:var(--warn-border);}
+.note-box.check .note-label{color:#d4a107;}
+.code-wrap{margin:8px 0 8px 34px;position:relative;}
+.code-block{background:var(--code-bg);color:var(--code-text);border-radius:8px;padding:14px 16px;font-family:'Consolas','Monaco',monospace;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;}
+.code-copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:5px;color:#a8d8f0;font-size:11px;padding:3px 8px;cursor:pointer;transition:all .15s;}
+.code-copy-btn:hover{background:rgba(255,255,255,.2);}
+.expected-output{background:#f0fff4;border:1px solid #c3e6cb;border-radius:6px;padding:12px 16px;margin:8px 0 8px 34px;font-size:13px;}
+.expected-output .label{font-size:11px;font-weight:700;color:#27ae60;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+.expected-output pre{font-family:'Consolas',monospace;font-size:12px;color:#155724;white-space:pre-wrap;word-break:break-word;}
+.task-complete{background:#e8f8f5;border:1px solid #a9dfbf;border-radius:8px;padding:14px 18px;margin:20px 0;font-size:14px;}
+.task-complete .label{font-weight:700;color:#1e8449;margin-bottom:4px;}
+.summary-list{padding-left:18px;}
+.summary-list li{margin-bottom:6px;font-size:14px;color:var(--text2);}
+.lab-end-box{background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:16px 20px;margin-top:32px;}
+.lab-end-box h3{color:#b91c1c;font-size:16px;margin-bottom:10px;}
+.progress-bar-wrap{position:fixed;top:0;left:260px;right:0;height:4px;background:#e2e8f0;z-index:99;}
+.progress-bar-fill{height:100%;background:var(--secondary);transition:width .3s ease;width:0%;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .2s;}
+.modal-overlay.open{opacity:1;visibility:visible;}
+.modal-box{background:#fff;border-radius:12px;padding:24px 28px;width:460px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.2);}
+.modal-title{font-size:18px;font-weight:800;color:var(--primary);margin-bottom:4px;}
+.modal-desc{font-size:13px;color:var(--text3);margin-bottom:18px;}
+.modal-field{margin-bottom:14px;}
+.modal-field label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:5px;}
+.modal-field input{width:100%;border:1.5px solid var(--border);border-radius:7px;padding:8px 12px;font-size:14px;font-family:inherit;transition:border .15s;}
+.modal-field input:focus{outline:none;border-color:var(--secondary);}
+.placeholder-hint{font-size:11px;color:var(--text3);margin-top:3px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;}
+.btn-primary{background:var(--secondary);color:#fff;border:none;border-radius:7px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-primary:hover{background:#0770a1;}
+.btn-secondary{background:#fff;color:var(--text2);border:1.5px solid var(--border);border-radius:7px;padding:9px 20px;font-size:14px;cursor:pointer;}
+.btn-secondary:hover{border-color:var(--text2);}
 </style>
 </head>
 <body>
-  <header class="top">
-    <span class="brand">Generative AI Essentials <b>on AWS</b></span>
-    <a class="back" href="../../GenerativeAIEssentials_intro_v1.html">← 강의 소개</a>
-    <button class="themebtn" id="themeToggle" aria-label="배경 전환" title="배경 전환"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
-  </header>
-  <div class="layout">
-    <aside>
-      <div class="navgrp"><div class="navgrp-t">모듈</div>
-        <a class="navitem" href="../m1/">모듈 1. 책임 있는 AI</a>
-        <a class="navitem" href="../m2/">모듈 2. 생성형 AI 소개</a>
-        <a class="navitem" href="../m3/">모듈 3. 멀티모달 AI</a>
-        <a class="navitem" href="../m4/">모듈 4. 프롬프트 엔지니어링 · 실습</a>
-        <a class="navitem" href="../m5/">모듈 5. Bedrock 가드레일 · 실습</a>
-        <a class="navitem" href="../m6/">모듈 6. 에이전틱 AI</a>
-        <a class="navitem" href="../m7/">모듈 7. 보안 및 거버넌스</a>
-        <a class="navitem" href="../m8/">모듈 8. 프로젝트 계획 · 실습</a>
-        <a class="navitem" href="../m9/">모듈 9. 과정 요약 · Q&A</a>
-      </div>
-      <div class="navgrp"><div class="navgrp-t">실습 (Hands-on)</div>
-        <a class="navitem" href="../lab1/">Lab 1. 프롬프트 엔지니어링</a>
-        <a class="navitem active" href="../lab2/">Lab 2. Bedrock 가드레일</a>
-        <a class="navitem" href="../lab3/">Lab 3. 프로젝트 계획</a>
-        <a class="navitem" href="../guide/">가이드 데모</a>
-      </div>
-    </aside>
-    <main>
-      <span class="badge lab">Hands-on</span>
-      <h1 class="t">Lab 2. Bedrock 가드레일</h1>
-      <p class="sub">가드레일 생성·적용</p>
-      <h2>학습 내용</h2>
-      <ul>
-          <li>Guardrail 생성(콘텐츠 필터·금지 주제·PII)</li>
-          <li>모델에 적용하고 응답 비교</li>
-          <li>차단·마스킹 동작 확인</li>
-      </ul>
-      <div class="tbd-box">상세 학습 콘텐츠와 슬라이드·설명은 이 영역에 추가됩니다. (강의 전 업데이트 예정)</div>
-      <h2>학습 자료</h2>
-      <div class="assets">이 모듈의 이미지·자료는 <code>lab2/assets/</code> 폴더에 넣고 아래처럼 참조합니다.<br>예: <code>&lt;img src="./assets/diagram1.png"&gt;</code> · <code>&lt;a href="./assets/handout.pdf"&gt;</code></div>
-      <div class="pager">
-        <a class="prev" href="../lab1/"><span class="lbl">← 이전</span>Lab 1. 프롬프트 엔지니어링</a>
-        <a class="next" href="../lab3/"><span class="lbl">다음 →</span>Lab 3. 프로젝트 계획</a>
-      </div>
-    </main>
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+<div class="modal-overlay" id="resourceModal">
+  <div class="modal-box">
+    <div class="modal-title">실습 리소스 값 입력</div>
+    <div class="modal-desc">실습 시작 시 제공된 AWS 리전을 확인하여 입력하세요.</div>
+    <div class="modal-field">
+      <label>리전 (Region)</label>
+      <input id="inp-region" placeholder="us-east-1" value="us-east-1">
+      <div class="placeholder-hint">예: us-east-1, ap-northeast-2</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">닫기</button>
+      <button class="btn-primary" onclick="applyResources()">저장</button>
+    </div>
   </div>
-  <script>var tb=document.getElementById('themeToggle');if(tb)tb.addEventListener('click',function(){document.documentElement.classList.toggle('light');});</script>
+</div>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="lab-title">실습 2: Amazon Bedrock Guardrails 구현</div>
+    <div class="lab-meta"><span>⏱ 30분</span><span>🌐 한국어</span></div>
+  </div>
+  <div class="resource-section">
+    <div class="section-label">리소스<button class="btn-edit-res" onclick="openModal()">값 입력</button></div>
+    <div class="resource-item">
+      <div class="resource-key">리전 (Region)</div>
+      <div class="resource-val-wrap">
+        <div class="resource-val" id="disp-region">us-east-1</div>
+        <button class="btn-copy" onclick="copyRes('disp-region')" title="복사">
+          <svg width="12" height="12" viewBox="0 0 12 12"><path fill="#687078" d="M8 0H2C1.45 0 1 .45 1 1v7h1V1h6V0zm1.5 2h-5C3.95 2 3.5 2.45 3.5 3v7c0 .55.45 1 1 1h5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm0 8h-5V3h5v7z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="toc-section">
+    <div class="section-label" style="padding:0 14px;">실습 콘텐츠</div>
+    <a class="toc-link" onclick="scrollTo('overview')">실습 개요</a>
+    <a class="toc-link task" onclick="scrollTo('task1')">태스크 1: 가드레일 구성</a>
+    <a class="toc-link subtask" onclick="scrollTo('task1-1')">1.1 모델 검토</a>
+    <a class="toc-link subtask" onclick="scrollTo('task1-2')">1.2 가드레일 생성</a>
+    <a class="toc-link task" onclick="scrollTo('task2')">태스크 2: 악용 방지</a>
+    <a class="toc-link subtask" onclick="scrollTo('task2-1')">2.1 차단 전 테스트</a>
+    <a class="toc-link subtask" onclick="scrollTo('task2-2')">2.2 유해 카테고리 활성화</a>
+    <a class="toc-link subtask" onclick="scrollTo('task2-3')">2.3 프롬프트 재테스트</a>
+    <a class="toc-link task" onclick="scrollTo('task3')">태스크 3: 주제 거부</a>
+    <a class="toc-link subtask" onclick="scrollTo('task3-1')">3.1 의료 조언 테스트</a>
+    <a class="toc-link subtask" onclick="scrollTo('task3-2')">3.2 거부 주제 추가</a>
+    <a class="toc-link subtask" onclick="scrollTo('task3-3')">3.3 재테스트</a>
+    <a class="toc-link task" onclick="scrollTo('task4')">태스크 4: 컨텍스트 근거</a>
+    <a class="toc-link subtask" onclick="scrollTo('task4-1')">4.1 근거 검사 활성화</a>
+    <a class="toc-link subtask" onclick="scrollTo('task4-2')">4.2 근거 검사 테스트</a>
+    <a class="toc-link subtask" onclick="scrollTo('task4-3')">4.3 가드레일 버전 생성</a>
+    <a class="toc-link task" onclick="scrollTo('task5')">태스크 5: Playground 테스트</a>
+    <a class="toc-link" onclick="scrollTo('summary')">마무리</a>
+    <a class="toc-link" onclick="scrollTo('end')">실습 종료</a>
+  </div>
+</div>
+<div class="main">
+  <div class="breadcrumb"><a href="../../learn/index.html">강의실 홈</a> › 실습 가이드</div>
+  <div class="page-title">실습 2: Amazon Bedrock Guardrails 구현</div>
+  <div class="page-subtitle">책임 있는 AI를 위한 가드레일 생성, 구성, 테스트</div>
+  <div class="note-box info" style="margin:0 0 24px">
+    <div class="note-label">진행 위치 표시</div>
+    각 단계를 클릭하면 <strong>진행 중</strong> 표시가 적용됩니다. 완료된 단계를 다시 클릭하면 <strong>완료</strong>로 변경됩니다.
+  </div>
+  <div class="service-box" id="overview">
+    <h3>이 실습에서 사용되는 AWS 서비스</h3>
+    <h4 style="margin:12px 0 4px;color:var(--primary)">Amazon Bedrock</h4>
+    <p>Amazon Bedrock은 단일 API로 선도적인 AI 기업의 고성능 파운데이션 모델(FM)을 사용할 수 있는 완전관리형 서비스입니다. Amazon Bedrock은 보안, 개인 정보 보호 및 책임감 있는 AI를 사용하여 생성형 AI 애플리케이션을 구축할 수 있는 다양한 기능을 제공합니다.</p>
+  </div>
+
+  <h2 class="task-title" id="task1">태스크 1: Amazon Bedrock 가드레일 구성</h2>
+  <p class="task-desc">책임감 있는 AI 담당자로서 가드레일을 생성합니다. 욕설이 AI 처리에 사용되거나 응답에 나타나지 않도록 방지합니다.</p>
+  <div class="note-box info"><div class="note-label">📌 참고</div>지원되는 AWS 리전, 언어 및 모델 목록은 <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html" target="_blank" style="color:var(--secondary)">Amazon Bedrock 가드레일</a> 설명서를 참조하십시오.</div>
+  <div class="note-box warn"><div class="note-label">⚠ 언어 지원 안내</div>Content filters 및 Denied topics는 기본 Classic Tier에서 영어, 프랑스어, 스페인어만 지원합니다. 다른 언어(한국어 등)로 테스트하려면 <strong>Standard Tier</strong>를 선택하고 Cross-Region inference를 활성화하세요.</div>
+
+  <h3 class="subtask-title" id="task1-1">태스크 1.1: 이 실습에서 사용되는 모델 검토 <span style="font-size:12px;font-weight:400;color:var(--text3)">(선택 사항)</span></h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">1</div><div class="step-text">AWS Management Console 검색 상자에서 <strong>Amazon Bedrock</strong>을 검색하고 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">2</div><div class="step-text">왼쪽 패널을 펼친 다음 <strong>Discover</strong> 섹션에서 <strong>Model catalog</strong>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">3</div><div class="step-text"><strong>Providers</strong>에서 <strong>Amazon</strong>을 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">4</div><div class="step-text">검색 상자에 <strong>Nova Lite</strong>를 입력하여 모델 카드를 확인하고 해당 기능에 대해 알아봅니다.</div><div class="step-status"></div></div></div>
+
+  <h3 class="subtask-title" id="task1-2">태스크 1.2: Amazon Bedrock 가드레일 생성</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">5</div><div class="step-text">Amazon Bedrock 콘솔의 <strong>Build</strong>에서 <strong>Guardrails</strong>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">6</div><div class="step-text"><span class="highlight">Create guardrail</span>을 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">7</div><div class="step-text"><em>가드레일 세부 정보 제공</em> 페이지에서 다음과 같이 구성합니다:<br>• <strong>이름:</strong> PrimaryGuardrail<br>• <strong>설명:</strong> Promote responsible AI model usage<br>• <strong>차단된 프롬프트 메시지:</strong> 아래 코드 블록 참조<br>• <span class="highlight">Next</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-1">죄송합니다. AnyOrganization은 이 질문에 답변할 수 없습니다. 행동 강령에 위반될 수 있습니다. 추가 지원이 필요하시면 담당자에게 문의해 주십시오.</div><button class="code-copy-btn" onclick="copyCode('code-hol2-1')">복사</button></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">8</div><div class="step-text"><em>Configure content filters</em> 페이지에서 <span class="highlight">Next</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">9</div><div class="step-text"><em>Add denied topics</em> 페이지에서 <span class="highlight">Next</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">10</div><div class="step-text"><em>Add word filters</em> 페이지에서 <strong>Filter profanity</strong>를 선택한 다음 <span class="highlight">Skip to Review and create</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">11</div><div class="step-text">아래로 스크롤하여 <span class="highlight">Create guardrail</span>을 선택합니다. 표시되는 <em>test</em> 패널을 열어 두고 다음 태스크에서 사용합니다.</div><div class="step-status"></div></div></div>
+  <div class="task-complete"><div class="label">✅ 태스크 1 완료</div>모델 카드를 검토하고 Amazon Bedrock에서 가드레일을 생성했습니다.</div>
+
+  <h2 class="task-title" id="task2">태스크 2: Amazon Bedrock 악용 방지</h2>
+  <p class="task-desc">가드레일 콘솔 테스트 환경을 통해 LLM으로 가드레일을 테스트합니다. 유해 카테고리 필터를 설정하여 문제를 해결합니다.</p>
+
+  <h3 class="subtask-title" id="task2-1">태스크 2.1: 차단되지 않은 프롬프트 테스트</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">12</div><div class="step-text">PrimaryGuardrail Test 패널에서 <span class="highlight">Select model</span>을 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">13</div><div class="step-text"><strong>Amazon</strong> → <strong>Nova Lite 1.0</strong> → <span class="highlight">Apply</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">14</div><div class="step-text"><strong>Prompt</strong> 대화 상자에서 다음을 붙여 넣습니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-2">무술에서 사용되는 다양한 격투 기술에 대해 알려주세요.</div><button class="code-copy-btn" onclick="copyCode('code-hol2-2')">복사</button></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">15</div><div class="step-text"><span class="highlight">Run</span>을 선택합니다. <strong>Guardrail action</strong> 상태: <em>No action taken</em> — 가드레일이 트리거되지 않았습니다.</div><div class="step-status"></div></div></div>
+
+  <h3 class="subtask-title" id="task2-2">태스크 2.2: 가드레일에서 유해 카테고리 활성화</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">16</div><div class="step-text">PrimaryGuardrail 페이지에서 <strong>Working Draft</strong> 링크를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">17</div><div class="step-text"><em>유해 카테고리</em> 옆의 <span class="highlight">Edit</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">18</div><div class="step-text"><strong>Configure harmful categories filters</strong> 옵션을 토글합니다. 혐오, 모욕, 성적 내용, 폭력, 위법 행위 카테고리 필터를 모두 <strong>높음</strong>으로 설정합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">19</div><div class="step-text"><span class="highlight">Save and exit</span>을 선택합니다.</div><div class="step-status"></div></div></div>
+
+  <h3 class="subtask-title" id="task2-3">태스크 2.3: 프롬프트 다시 테스트</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">20</div><div class="step-text">테스트 패널에서 다음 프롬프트를 실행합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-3">다른 사람을 해칠 수 있는 무술의 다양한 격투 기술에 대해 알려주세요.</div><button class="code-copy-btn" onclick="copyCode('code-hol2-3')">복사</button></div>
+  <div class="note-box check"><div class="note-label">✅ 예상 출력</div>Guardrail action 상태: <strong>Intervened (1 instances)</strong> — 가드레일이 요청을 차단합니다. Final response에 설정한 차단 메시지가 반환됩니다.</div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">21</div><div class="step-text"><span class="highlight">View trace</span>를 선택하여 가드레일 추적을 확인합니다.</div><div class="step-status"></div></div></div>
+  <div class="task-complete"><div class="label">✅ 태스크 2 완료</div>유해 카테고리 관련 프롬프트 및 응답을 방지하도록 가드레일 설정을 업데이트했습니다.</div>
+
+  <h2 class="task-title" id="task3">태스크 3: Amazon Bedrock 가드레일을 사용하여 주제 거부</h2>
+  <p class="task-desc">모델이 의학적 질문에 답변하지 않아야 한다고 판단하여 거부 주제 필터를 추가합니다.</p>
+
+  <h3 class="subtask-title" id="task3-1">태스크 3.1: 차단되지 않은 의료 조언 프롬프트 테스트</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">22</div><div class="step-text">가드레일 테스트 패널에서 다음 프롬프트를 실행합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-4">아프면 의료 도움을 받아야 하나요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-4')">복사</button></div>
+  <div class="note-box check"><div class="note-label">📌 참고</div>Model response 및 Final response 모두에서 의학적 조언이 반환됩니다.</div>
+
+  <h3 class="subtask-title" id="task3-2">태스크 3.2: 가드레일 설정에 거부되는 주제 추가</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">23</div><div class="step-text">테스트 패널 크기를 줄여 <strong>Working draft: PrimaryGuardrail</strong> 화면을 표시합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">24</div><div class="step-text"><strong>Denied topics</strong> 섹션까지 스크롤하여 <span class="highlight">Edit</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">25</div><div class="step-text"><span class="highlight">Add denied topic</span>을 선택하고 다음을 구성합니다:<br>• <strong>이름:</strong> Medical Advice<br>• <strong>정의:</strong> 아래 코드 블록 참조</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-5">의료 조언(Medical Advice)은 건강 유지 또는 개선을 목적으로 인체, 질병, 치료 의학, 의료 절차에 관한 문의, 지침, 권고를 나타냅니다.</div><button class="code-copy-btn" onclick="copyCode('code-hol2-5')">복사</button></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">26</div><div class="step-text"><strong>Add sample phrases</strong>를 확장하여 다음 문구들을 추가합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-6">어디서 의료 도움을 받을 수 있나요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-6')">복사</button></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-7">열이 나는데 어떻게 해야 하나요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-7')">복사</button></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-8">감기 증상이 어떻게 되나요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-8')">복사</button></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">27</div><div class="step-text">문구 3개를 모두 추가한 후 <span class="highlight">Confirm</span>을 선택하고 <span class="highlight">Save and exit</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+
+  <h3 class="subtask-title" id="task3-3">태스크 3.3: 의료 조언 프롬프트 다시 테스트</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">28</div><div class="step-text">테스트 패널에서 다음 프롬프트를 다시 실행합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-9">아프면 의료 도움을 받아야 하나요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-9')">복사</button></div>
+  <div class="note-box check"><div class="note-label">✅ 예상 출력</div>이번에는 가드레일이 요청을 차단합니다. <strong>View trace</strong>에서 '의학적 조언' 주제가 감지되어 차단되었다고 표시됩니다.</div>
+  <div class="task-complete"><div class="label">✅ 태스크 3 완료</div>가드레일에 거부되는 주제 필터를 추가하고 업데이트된 구성을 테스트했습니다.</div>
+
+  <h2 class="task-title" id="task4">태스크 4: 가드레일에서 컨텍스트 기반 근거 활성화</h2>
+  <p class="task-desc">LLM 응답에서 할루시네이션 가능성을 줄이기 위해 컨텍스트 기반 근거 검사를 활성화합니다.</p>
+
+  <h3 class="subtask-title" id="task4-1">태스크 4.1: 컨텍스트 기반 근거 활성화</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">29</div><div class="step-text">테스트 패널 크기를 줄여 <strong>Working draft: PrimaryGuardrail</strong> 화면을 표시합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">30</div><div class="step-text"><strong>Contextual grounding check</strong>까지 스크롤하여 <span class="highlight">Edit</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">31</div><div class="step-text"><strong>Enable grounding check</strong>를 선택하고 <strong>Grounding score threshold</strong>를 <span class="highlight">0.5</span>로 설정합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">32</div><div class="step-text"><strong>Enable relevance check</strong>를 선택하고 <strong>Relevance score threshold</strong>를 <span class="highlight">0.5</span>로 설정합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">33</div><div class="step-text"><span class="highlight">Save and exit</span>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">34</div><div class="step-text">Test 창에서 <strong>Use ApplyGuardrail API</strong> 확인란을 선택했다가 다시 해제합니다. <strong>Reference source</strong> 섹션이 나타납니다.</div><div class="step-status"></div></div></div>
+
+  <h3 class="subtask-title" id="task4-2">태스크 4.2: 컨텍스트 기반 근거 테스트</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">35</div><div class="step-text"><strong>Reference source</strong> 대화 상자에 다음 텍스트를 붙여 넣습니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-10">AnyOrganization은 퍼즐 게임 플랫폼으로 잘 알려진 게임 회사입니다. 시애틀에 본사를 둔 AnyOrganization은 최고의 게임 디자인 인재를 보유하고 있습니다. 최근 출시된 게임들은 최고 게임 디자인, 최고 게임 내러티브, 최고 게임 비주얼 아트 세 가지 분야에서 세계적인 상을 수상했습니다. 현재 AnyOrganization은 가상 보드 게임, 트리비아, 타워 디펜스 등 새로운 게임 장르에 진출하고 있으며, 올해 말 3개의 신작을 출시할 예정입니다.</div><button class="code-copy-btn" onclick="copyCode('code-hol2-10')">복사</button></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">36</div><div class="step-text">프롬프트에 다음을 붙여 넣고 <span class="highlight">Run</span>을 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-11">AnyOrganization이 수상한 게임 부문은 무엇인가요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-11')">복사</button></div>
+  <div class="note-box check"><div class="note-label">✅ 예상 출력</div>응답이 허용됩니다. Guardrail action: No action taken.</div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">37</div><div class="step-text">참조 소스를 변경하지 않고 다음 새 프롬프트를 실행합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-12">AnyOrganization의 직원 수는 얼마나 되나요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-12')">복사</button></div>
+  <div class="note-box check"><div class="note-label">✅ 예상 출력</div>이번에는 Guardrail action: <strong>Intervened</strong> — 참조 소스에 없는 정보이므로 Grounding score 임계값이 위반되어 차단됩니다.</div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">38</div><div class="step-text"><span class="highlight">View trace</span>를 선택하고 <strong>Contextual grounding</strong> 섹션에서 Grounding score 임계값 위반을 확인합니다.</div><div class="step-status"></div></div></div>
+
+  <h3 class="subtask-title" id="task4-3">태스크 4.3: 가드레일 버전 생성</h3>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">39</div><div class="step-text">콘솔 상단 탐색경로에서 <strong>PrimaryGuardrail</strong>을 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">40</div><div class="step-text"><em>Versions</em> 패널에서 <span class="highlight">Create version</span>을 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">41</div><div class="step-text">설명을 <strong>1.0</strong>으로 설정하고 <span class="highlight">Create version</span>을 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="task-complete"><div class="label">✅ 태스크 4 완료</div>컨텍스트 기반 근거 설정을 활성화·테스트하고 가드레일 버전을 생성했습니다.</div>
+
+  <h2 class="task-title" id="task5">태스크 5: Bedrock Playground를 사용한 가드레일 테스트</h2>
+  <p class="task-desc">Amazon Bedrock Playground에서 가드레일 버전을 적용하여 테스트합니다.</p>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">42</div><div class="step-text">왼쪽 패널에서 <strong>Test → Playground</strong>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">43</div><div class="step-text"><strong>Amazon → Nova Lite 1.0 → Apply</strong>를 선택합니다.</div><div class="step-status"></div></div></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">44</div><div class="step-text">이전 테스트 프롬프트 중 하나를 먼저 실행합니다.</div><div class="step-status"></div></div></div>
+  <div class="code-wrap"><div class="code-block" id="code-hol2-13">아프면 의료 도움을 받아야 하나요?</div><button class="code-copy-btn" onclick="copyCode('code-hol2-13')">복사</button></div>
+  <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">45</div><div class="step-text"><strong>Open configurations</strong> 아이콘을 선택합니다. Guardrails에서 <strong>Primary Guardrail</strong>과 <strong>Version 1</strong>을 선택하고 동일한 프롬프트를 다시 실행합니다.</div><div class="step-status"></div></div></div>
+  <div class="task-complete"><div class="label">✅ 태스크 5 완료</div>Amazon Bedrock Playground에서 가드레일 버전을 테스트했습니다.</div>
+
+  <h2 class="task-title" id="summary">마무리</h2>
+  <ul class="summary-list">
+    <li>Amazon Bedrock 가드레일을 만들었습니다.</li>
+    <li>유해 카테고리 필터를 구성하고 테스트했습니다.</li>
+    <li>거부되는 주제를 추가하고 테스트했습니다.</li>
+    <li>컨텍스트 기반 근거 검사를 활성화하여 할루시네이션을 줄였습니다.</li>
+    <li>가드레일 버전을 만들어 Bedrock Playground에서 테스트했습니다.</li>
+  </ul>
+  <div class="lab-end-box" id="end">
+    <h3>실습 종료</h3>
+    <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">46</div><div class="step-text"><strong>AWS Management Console</strong>로 돌아갑니다.</div><div class="step-status"></div></div></div>
+    <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">47</div><div class="step-text">오른쪽 상단에서 <strong>AWSLabsUser</strong>를 선택하고 <strong>Sign out</strong>을 선택합니다.</div><div class="step-status"></div></div></div>
+    <div class="step-card" onclick="toggleStep(this)"><div class="step-header"><div class="step-num">48</div><div class="step-text"><strong>실습 종료</strong>를 선택하고 확인합니다.</div><div class="step-status"></div></div></div>
+  </div>
+</div>
+<script>
+var stepStates={};var totalSteps=48;
+function toggleStep(el){var id=el.id||('s'+Object.keys(stepStates).length);if(!el.id)el.id=id;var cur=stepStates[id]||'none';if(cur==='none'){document.querySelectorAll('.step-card.active').forEach(function(c){if(c.id!==id){stepStates[c.id]='none';c.classList.remove('active');}});el.classList.add('active');el.classList.remove('done');stepStates[id]='active';}else if(cur==='active'){el.classList.remove('active');el.classList.add('done');stepStates[id]='done';}else{el.classList.remove('done');stepStates[id]='none';}updateProgress();saveState();}
+function updateProgress(){var done=Object.values(stepStates).filter(function(v){return v==='done';}).length;document.getElementById('progressBar').style.width=Math.round((done/totalSteps)*100)+'%';}
+function saveState(){localStorage.setItem('lab2_steps',JSON.stringify(stepStates));localStorage.setItem('lab2_res',JSON.stringify({region:document.getElementById('disp-region').textContent}));}
+function loadState(){var s=localStorage.getItem('lab2_steps');if(s){stepStates=JSON.parse(s);Object.keys(stepStates).forEach(function(id){var el=document.getElementById(id);if(!el)return;if(stepStates[id]==='active')el.classList.add('active');if(stepStates[id]==='done')el.classList.add('done');});updateProgress();}var r=localStorage.getItem('lab2_res');if(r){var res=JSON.parse(r);if(res.region)setResVal('disp-region',res.region);}}
+function openModal(){document.getElementById('resourceModal').classList.add('open');var r=document.getElementById('disp-region').textContent;document.getElementById('inp-region').value=r;}
+function closeModal(){document.getElementById('resourceModal').classList.remove('open');}
+function applyResources(){var region=document.getElementById('inp-region').value.trim()||'us-east-1';setResVal('disp-region',region);closeModal();saveState();}
+function setResVal(id,val){var el=document.getElementById(id);el.textContent=val;el.classList.toggle('empty',val==='입력 필요');}
+function copyRes(id){var val=document.getElementById(id).textContent;if(val==='입력 필요')return;navigator.clipboard.writeText(val).then(function(){showToast('복사됨!');});}
+function copyCode(id){var text=document.getElementById(id).textContent;navigator.clipboard.writeText(text).then(function(){showToast('복사됨!');});}
+function showToast(msg){var t=document.createElement('div');t.style.cssText='position:fixed;bottom:24px;right:24px;background:#1e2a3a;color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;z-index:999;';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.style.opacity='0';setTimeout(function(){t.remove();},300);},1500);}
+function scrollTo(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+window.addEventListener('scroll',function(){var anchors=['overview','task1','task1-1','task1-2','task2','task2-1','task2-2','task2-3','task3','task3-1','task3-2','task3-3','task4','task4-1','task4-2','task4-3','task5','summary','end'];var current='';anchors.forEach(function(id){var el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=80)current=id;});document.querySelectorAll('.toc-link').forEach(function(a){a.classList.remove('active');});});
+document.getElementById('resourceModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+window.addEventListener('DOMContentLoaded',function(){loadState();var r=localStorage.getItem('lab2_res');if(!r)setTimeout(openModal,500);});
+</script>
 </body>
 </html>
