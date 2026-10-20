@@ -263,6 +263,47 @@ html.dark .exit-classroom-btn:hover {
   border-color: #f87171;
 }
 
+
+/* ── 계층형 Day 네비게이션 ── */
+.navday { margin-bottom: 2px; }
+.navday-hd {
+  display: flex; align-items: flex-start; gap: 8px;
+  width: 100%; padding: 7px 10px 7px 6px; border-radius: 8px;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--t1); text-align: left; font-family: inherit;
+  transition: background .15s;
+}
+.navday-hd:hover { background: rgba(33,30,98,.06); }
+.navday-arr {
+  width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px;
+  color: var(--t3); transition: transform .22s ease;
+  fill: none; stroke: currentColor; stroke-width: 2.5;
+}
+.navday.open > .navday-hd .navday-arr { transform: rotate(90deg); }
+.navday-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.navday-badge { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #0891B2; }
+.navday-name { font-size: 12px; font-weight: 600; line-height: 1.35; }
+.navday-body { padding: 2px 0 6px 22px; border-left: 2px solid #c7d2fe; margin-left: 13px; display: none; }
+.navday.open > .navday-body { display: block; }
+.nav-module {
+  display: block; padding: 7px 10px; border-radius: 6px;
+  font-size: 13px; font-weight: 500; color: var(--t1);
+  border-left: 2px solid transparent; text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.nav-module:hover { background: rgba(33,30,98,.06); color: #211E62; }
+.nav-module.active { background: #ede9fe; border-left-color: #211E62; color: #211E62; font-weight: 700; }
+.nav-module.locked { opacity: .4; pointer-events: none; }
+html.dark .navday-badge { color: #22D3EE !important; }
+html.dark .navday-name  { color: #F1F5F9 !important; }
+html.dark .navday-arr   { color: #64748B !important; }
+html.dark .navday-body  { border-left-color: #3a3a6a !important; }
+html.dark .navday-hd:hover { background: rgba(129,140,248,.1) !important; }
+html.dark .nav-module   { color: #F1F5F9 !important; }
+html.dark .nav-module:hover { background: rgba(129,140,248,.1) !important; color: #818CF8 !important; }
+html.dark .nav-module.active { background: rgba(129,140,248,.15) !important; border-left-color: #818CF8 !important; color: #818CF8 !important; }
+.nav-sep { border: none; border-top: 1px solid #c7d2fe; margin: 10px 0; }
+html.dark .nav-sep { border-top-color: #3a3a6a !important; }
 /* ── 메인 콘텐츠 ── */
 main {
   padding: 36px 44px 80px;
@@ -643,13 +684,45 @@ html.dark .step-num { color: #0a0a0a !important; }
 
   <!-- ── 사이드바 ── -->
   <aside>
-    <!-- 랩 정보 -->
+    <!-- ── 랩 정보 ── -->
     <div class="aside-header">
-      <div class="aside-lab-tag">Hands-on Lab</div>
+      <div class="aside-lab-tag">Hands-on Lab · Day 1</div>
       <div class="aside-lab-name">Workshop 1<br>Kiro Basic</div>
     </div>
 
-    <!-- 진행 현황 -->
+    <!-- ── 모듈 네비게이션 (계층형) ── -->
+    <div style="padding: 10px 0 6px;">
+      <div class="navday open" id="navday-1">
+        <button class="navday-hd" onclick="toggleDay('navday-1')" aria-expanded="true">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="navday-info">
+            <span class="navday-badge">Day 1</span>
+            <span class="navday-name">Generative AI 이해하기</span>
+          </div>
+        </button>
+        <div class="navday-body">
+          <a class="nav-module" href="../../../day1/m1/">M1. Kiro 소개</a>
+          <a class="nav-module" href="../../../day1/m2/">M2. AI 이해하기</a>
+          <a class="nav-module active" href="#">Workshop 1. Kiro Basic</a>
+        </div>
+      </div>
+      <div class="navday" id="navday-2">
+        <button class="navday-hd" onclick="toggleDay('navday-2')" aria-expanded="false">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          <div class="navday-info">
+            <span class="navday-badge">Day 2</span>
+            <span class="navday-name">Developing GenAI App on AWS</span>
+          </div>
+        </button>
+        <div class="navday-body">
+          <a class="nav-module locked" href="#">M3. Amazon Bedrock RAG</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="nav-sep">
+
+    <!-- ── 진행 현황 ── -->
     <div class="prog-box">
       <div class="prog-label">
         <span>진행 현황</span>
@@ -660,54 +733,37 @@ html.dark .step-num { color: #0a0a0a !important; }
       </div>
     </div>
 
-    <!-- 목차 스크롤 영역 -->
+    <!-- ── 태스크 목차 ── -->
     <div class="toc-scroll">
-
-      <!-- toc-section: 태스크 목차 -->
       <div class="toc-section">
         <div class="toc-section-title">실습 태스크</div>
         <a class="toc-link" href="#task1" id="toc-task1" data-task="1">
-          <span class="toc-num">1</span>
-          <span class="toc-text">작업 폴더 생성</span>
-          <span class="toc-done-ic">✓</span>
+          <span class="toc-num">1</span><span class="toc-text">작업 폴더 생성</span><span class="toc-done-ic">✓</span>
         </a>
         <a class="toc-link" href="#task2" id="toc-task2" data-task="2">
-          <span class="toc-num">2</span>
-          <span class="toc-text">Kiro 설치</span>
-          <span class="toc-done-ic">✓</span>
+          <span class="toc-num">2</span><span class="toc-text">Kiro 설치</span><span class="toc-done-ic">✓</span>
         </a>
         <a class="toc-link" href="#task3" id="toc-task3" data-task="3">
-          <span class="toc-num">3</span>
-          <span class="toc-text">Kiro 로그인</span>
-          <span class="toc-done-ic">✓</span>
+          <span class="toc-num">3</span><span class="toc-text">Kiro 로그인</span><span class="toc-done-ic">✓</span>
         </a>
         <a class="toc-link" href="#task4" id="toc-task4" data-task="4">
-          <span class="toc-num">4</span>
-          <span class="toc-text">개발 도구 설치 확인</span>
-          <span class="toc-done-ic">✓</span>
+          <span class="toc-num">4</span><span class="toc-text">개발 도구 설치 확인</span><span class="toc-done-ic">✓</span>
         </a>
         <a class="toc-link" href="#task5" id="toc-task5" data-task="5">
-          <span class="toc-num">5</span>
-          <span class="toc-text">Vibe Coding으로 이커머스 사이트 생성</span>
-          <span class="toc-done-ic">✓</span>
+          <span class="toc-num">5</span><span class="toc-text">Vibe Coding으로 이커머스 사이트 생성</span><span class="toc-done-ic">✓</span>
         </a>
         <a class="toc-link" href="#task6" id="toc-task6" data-task="6">
-          <span class="toc-num">6</span>
-          <span class="toc-text">Spec 기반 쇼핑 챗봇 추가</span>
-          <span class="toc-done-ic">✓</span>
+          <span class="toc-num">6</span><span class="toc-text">Spec 기반 쇼핑 챗봇 추가</span><span class="toc-done-ic">✓</span>
         </a>
       </div>
-      <!-- /toc-section 닫기 (품질 규칙 1 준수) -->
-
-    </div><!-- /toc-scroll -->
-
-    <!-- 강의실로 돌아가기 버튼 — toc-section 외부, 별도 div (품질 규칙 준수) -->
-    <div class="aside-footer">
-      <a href="../../index.html" class="exit-classroom-btn">
-        🚪 강의실로 돌아가기
-      </a>
     </div>
 
+    <!-- ── 강의실 나가기 ── -->
+    <div class="aside-footer">
+      <a href="../../../AgenticAIWorkshop_intro_v1.html" class="exit-classroom-btn">
+        🚪 강의실 나가기
+      </a>
+    </div>
   </aside><!-- /aside -->
 
   <!-- ── 메인 콘텐츠 ── -->
@@ -1460,6 +1516,15 @@ function saveTaskStates(states) {
 }
 
 // 진행 현황 업데이트
+/* ── Day 토글 ── */
+function toggleDay(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+  var btn = el.querySelector('.navday-hd');
+  if (btn) btn.setAttribute('aria-expanded', el.classList.contains('open'));
+}
+
 function updateProgress() {
   const states = loadTaskStates();
   let completed = 0;

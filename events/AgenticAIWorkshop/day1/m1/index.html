@@ -308,6 +308,42 @@ html.dark .sticknav{border-top-color:#3a3a6a !important;}
 html.dark .note-section-title{border-bottom-color:#3a3a6a !important;}
 html.dark .note-case{border-left-color:#22D3EE !important;}
 html.dark [class*="card"],[class*="step"],[class*="plan-card"]{border-color:#3a3a6a !important;}
+/* ── 계층형 Day 네비게이션 ── */
+.navday { margin-bottom: 2px; }
+.navday-hd {
+  display: flex; align-items: flex-start; gap: 8px;
+  width: 100%; padding: 8px 10px 8px 6px; border-radius: 8px;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--t1); text-align: left; font-family: inherit;
+  transition: background .15s;
+}
+.navday-hd:hover { background: var(--tag); }
+.navday-arr {
+  width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px;
+  color: var(--t3); transition: transform .22s ease;
+  fill: none; stroke: currentColor; stroke-width: 2.5;
+}
+.navday.open > .navday-hd .navday-arr { transform: rotate(90deg); }
+.navday-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.navday-badge {
+  font-size: 10px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--secondary);
+}
+.navday-name { font-size: 12px; font-weight: 600; color: var(--t1); line-height: 1.35; }
+.navday-body {
+  padding: 2px 0 6px 22px;
+  border-left: 2px solid var(--border);
+  margin-left: 13px;
+  display: none;
+}
+.navday.open > .navday-body { display: block; }
+/* 다크 모드 navday */
+html.dark .navday-badge { color: var(--secondary) !important; }
+html.dark .navday-name  { color: #F1F5F9 !important; }
+html.dark .navday-arr   { color: #64748B !important; }
+html.dark .navday-body  { border-left-color: #3a3a6a !important; }
+html.dark .navday-hd:hover { background: rgba(129,140,248,.1) !important; }
+
 /* ── 반응형 ── */
 @media(max-width:900px){
   .layout{grid-template-columns:1fr;}
@@ -342,32 +378,45 @@ html.dark [class*="card"],[class*="step"],[class*="plan-card"]{border-color:#3a3
 
 <!-- ── 사이드바 ── -->
 <aside>
-  <div class="navgrp">
-    <div class="navgrp-t">모듈 (Day 1)</div>
-    <a class="navitem active" href="#">M1. Kiro 소개</a>
-    <a class="navitem" href="../m2/index.html">M2. AI 이해하기</a>
-    <a class="navitem locked" href="#">M3. Amazon Bedrock</a>
-    <a class="navitem locked" href="#">M4. Agentic AI</a>
-    <a class="navitem locked" href="#">M5. Kiro 고급 기능</a>
+  <!-- ── Day 1 (현재, 펼침) ── -->
+  <div class="navday open" id="navday-1">
+    <button class="navday-hd" onclick="toggleDay('navday-1')" aria-expanded="true">
+      <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="navday-info">
+        <span class="navday-badge">Day 1</span>
+        <span class="navday-name">Generative AI 이해하기</span>
+      </div>
+    </button>
+    <div class="navday-body">
+      <a class="navitem active" href="#">M1. Kiro 소개</a>
+      <a class="navitem" href="../m2/">M2. AI 이해하기</a>
+      <a class="navitem" href="../../hol/ws1/">Workshop 1. Kiro Basic</a>
+    </div>
   </div>
-  <div class="navgrp">
-    <div class="navgrp-t">워크숍</div>
-    <a class="navitem" href="../../workshop1/index.html">Workshop 1. Kiro Basic</a>
-    <a class="navitem locked" href="#">Workshop 2. Bedrock</a>
-    <a class="navitem locked" href="#">Workshop 3. Agentic AI</a>
+
+  <!-- ── Day 2 (잠김, 접힘) ── -->
+  <div class="navday" id="navday-2">
+    <button class="navday-hd" onclick="toggleDay('navday-2')" aria-expanded="false">
+      <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="navday-info">
+        <span class="navday-badge">Day 2</span>
+        <span class="navday-name">Developing GenAI App on AWS</span>
+      </div>
+    </button>
+    <div class="navday-body">
+      <a class="navitem locked" href="#">M3. Amazon Bedrock RAG</a>
+    </div>
   </div>
-  <!-- 진행 현황 -->
-  <div class="prog-box">
+
+  <!-- ── 슬라이드 진행 현황 ── -->
+  <div class="prog-box" style="margin-top:20px;">
     <div class="prog-box-label">슬라이드 진행</div>
-    <div class="prog-counts">
-      <span id="progText">1 / 18</span>
-    </div>
-    <div class="prog-bar">
-      <div class="prog-bar-fill" id="progFill" style="width:5.6%"></div>
-    </div>
+    <div class="prog-counts"><span id="progText">1 / 18</span></div>
+    <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:5.6%"></div></div>
   </div>
+
   <div style="margin-top:auto;padding:0 0 8px;">
-    <a href="../../index.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+    <a href="../../AgenticAIWorkshop_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
   </div>
 </aside>
 
@@ -1490,6 +1539,15 @@ html.dark [class*="card"],[class*="step"],[class*="plan-card"]{border-color:#3a3
 // ── 슬라이드 네비게이션 ──
 const TOTAL = 18;
 let cur = 0;
+
+/* ── Day 토글 ── */
+function toggleDay(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+  var btn = el.querySelector('.navday-hd');
+  if (btn) btn.setAttribute('aria-expanded', el.classList.contains('open'));
+}
 
 function goTo(n) {
   // 현재 슬라이드 숨기기
