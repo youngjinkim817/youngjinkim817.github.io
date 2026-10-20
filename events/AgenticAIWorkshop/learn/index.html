@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>강의실 — Agentic AI Workshop</title>
+</head>
+<body>
+<script>
+  // PIN 접근 제어: 세션 토큰 없으면 게이트로 리다이렉트
+  if (!sessionStorage.getItem('aawClassAccess')) {
+    window.location.replace('../AgenticAIWorkshop_gate_v1.html');
+  } else {
+    // 첫 모듈(Day 1)로 이동
+    window.location.replace('./day1/');
+  }
+</script>
+<p>이동 중… <a href="../AgenticAIWorkshop_gate_v1.html">여기를 클릭하세요.</a></p>
+</body>
+</html>

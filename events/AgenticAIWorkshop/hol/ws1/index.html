@@ -653,7 +653,7 @@ html.dark .step-num { color: #0a0a0a !important; }
     <div class="prog-box">
       <div class="prog-label">
         <span>진행 현황</span>
-        <span class="prog-count" id="progCount">0 / 6</span>
+        <span class="prog-count" id="progText">0 / 6</span>
       </div>
       <div class="prog-bar-track">
         <div class="prog-bar-fill" id="progFill" style="width:0%"></div>
@@ -1479,9 +1479,9 @@ function updateProgress() {
   // 진행 바 업데이트
   const pct = Math.round((completed / TOTAL_TASKS) * 100);
   const progFill = document.getElementById('progFill');
-  const progCount = document.getElementById('progCount');
+  const progText = document.getElementById('progText');
   if (progFill) progFill.style.width = pct + '%';
-  if (progCount) progCount.textContent = completed + ' / ' + TOTAL_TASKS;
+  if (progText) progText.textContent = completed + ' / ' + TOTAL_TASKS;
 
   // 전체 완료 메시지 표시
   const completionMsg = document.getElementById('completion-msg');
