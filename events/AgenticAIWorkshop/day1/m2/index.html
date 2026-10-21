@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M2. AI 기술 이해 — Agentic AI Workshop</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+:root{--bg:#fff;--bg-alt:#f8f7ff;--bg-soft:#ede9fe;--primary:#211E62;--secondary:#0891B2;--t1:#1e1b4b;--t2:#4338CA;--t3:#6B7280;--border:#c7d2fe;--tag:#ede9fe;--sh:0 2px 8px rgba(33,30,98,.08);}
+html.dark{--bg:#0a0a0a;--bg-alt:#111111;--bg-soft:#1a1a2e;--primary:#818CF8;--secondary:#22D3EE;--t1:#F1F5F9;--t2:#94A3B8;--t3:#64748B;--border:#1e293b;--tag:#1e1b4b;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--t1);font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;font-size:16px;line-height:1.75;}
+/* 헤더 */
+header.top{position:sticky;top:0;z-index:200;height:58px;display:flex;align-items:center;gap:14px;padding:0 18px;background:#fff;border-bottom:2px solid var(--border);}
+html.dark header.top{background:#0a0a0a;border-bottom-color:#3a3a6a;}
+.brand{font-weight:800;font-size:17px;color:var(--primary);}
+.brand b{color:var(--secondary);}
+.themebtn{margin-left:auto;width:32px;height:32px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.themebtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;}.themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;}html.dark .themebtn .sun{display:block;}
+/* 레이아웃 */
+.layout{display:grid;grid-template-columns:234px 1fr;min-height:calc(100vh - 58px);}
+/* 사이드바 */
+aside{border-right:1px solid var(--border);padding:14px 10px;overflow-y:auto;position:sticky;top:58px;height:calc(100vh - 58px);background:var(--bg);display:flex;flex-direction:column;gap:2px;}
+html.dark aside{border-right-color:#3a3a6a;}
+.navday{margin-bottom:2px;}
+.navday-hd{display:flex;align-items:flex-start;gap:7px;width:100%;padding:7px 8px;border-radius:8px;background:transparent;border:none;cursor:pointer;text-align:left;font-family:inherit;color:var(--t1);}
+.navday-hd:hover{background:var(--tag);}
+.navday-arr{width:13px;height:13px;flex-shrink:0;margin-top:3px;color:var(--t3);transition:transform .2s;fill:none;stroke:currentColor;stroke-width:2.5;}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:11.5px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 4px 20px;border-left:2px solid var(--border);margin-left:12px;display:none;}
+.navday.open>.navday-body{display:block;}
+html.dark .navday-body{border-left-color:#3a3a6a;}
+.nav-module{display:block;padding:6px 10px;border-radius:6px;font-size:13px;font-weight:500;color:var(--t1);border-left:2px solid transparent;text-decoration:none;transition:background .12s;}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.nav-module.locked{opacity:.4;pointer-events:none;}
+html.dark .nav-module{color:#F1F5F9!important;}
+html.dark .nav-module.active{background:rgba(129,140,248,.15)!important;border-left-color:#818CF8!important;color:#818CF8!important;}
+.prog-box{margin-top:12px;padding:10px 12px;background:var(--bg-alt);border-radius:10px;border:1px solid var(--border);}
+.prog-box-label{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.prog-counts{font-size:13px;font-weight:700;color:var(--primary);margin-bottom:5px;}
+.prog-bar{height:3px;background:#e0e0e8;border-radius:2px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;transition:width .3s;}
+.exit-btn{display:flex;align-items:center;gap:7px;margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.2);color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;}
+.exit-btn:hover{background:rgba(239,68,68,.14);}
+/* 메인 */
+main{padding:14px 18px 68px;width:100%;}
+/* 슬라이드 뷰어 — iframe으로 slides.html 전체 표시 */
+.svis{background:#0b1020;border-radius:12px;border:1px solid var(--border);box-shadow:var(--sh);position:relative;overflow:hidden;width:100%;aspect-ratio:16/9;}
+html.dark .svis{border-color:#3a3a6a;}
+#slideFrame{width:100%;height:100%;border:none;display:block;}
+/* 전체화면 버튼 */
+.svis-expand{position:absolute;bottom:9px;right:9px;z-index:50;height:27px;padding:0 11px;border-radius:7px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;backdrop-filter:blur(6px);font-family:inherit;}
+.svis-expand:hover{background:rgba(255,255,255,.18);}
+/* 노트 패널 */
+.npanel{background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-top:10px;box-shadow:var(--sh);font-size:14px;line-height:1.82;}
+html.dark .npanel{background:#111111;border-color:#3a3a6a;}
+.np-hd{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:10px;}
+html.dark .np-hd{border-bottom-color:#3a3a6a;}
+.np-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--secondary);}
+.np-title{font-size:13px;font-weight:700;color:var(--primary);}
+html.dark .np-title{color:#818CF8;}
+.note-section{margin-bottom:12px;}
+.note-section-title{font-size:11px;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);padding-bottom:3px;margin-bottom:7px;}
+html.dark .note-section-title{border-bottom-color:#3a3a6a;color:#22D3EE;}
+.note-kw{font-weight:700;color:var(--secondary);}
+html.dark .note-kw{color:#22D3EE;}
+.note-case{background:rgba(8,145,178,.07);border-left:3px solid var(--secondary);border-radius:0 8px 8px 0;padding:9px 13px;margin:8px 0;}
+html.dark .note-case{background:rgba(34,211,238,.07);border-left-color:#22D3EE;}
+.note-case-label{font-size:10px;font-weight:800;color:var(--secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+html.dark .note-case-label{color:#22D3EE;}
+.npanel ul,.npanel ol{padding-left:18px;margin:3px 0;}
+.npanel li{margin-bottom:3px;}
+code{background:rgba(8,145,178,.1);color:var(--secondary);border-radius:4px;padding:1px 6px;font-size:12px;}
+/* 하단 네비 */
+.sticknav{position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--bg-alt);border-top:1px solid var(--border);padding:6px 20px;display:flex;align-items:center;justify-content:center;gap:14px;box-shadow:0 -4px 14px rgba(0,0,0,.07);}
+html.dark .sticknav{background:#0a0a0a;border-top-color:#3a3a6a;}
+.sticknav button{background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);padding:6px 18px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s;font-family:inherit;}
+.sticknav button:hover:not(:disabled){background:var(--primary);border-color:var(--primary);color:#fff;}
+.sticknav button:disabled{opacity:.3;cursor:default;}
+.sticknav-cnt{font-size:14px;color:var(--secondary);min-width:52px;text-align:center;font-weight:700;}
+/* 전체화면 오버레이 */
+#fsOverlay{position:fixed;inset:0;z-index:900;background:#0b1020;display:none;flex-direction:column;}
+#fsOverlay.on{display:flex;}
+.fs-bar{height:40px;flex-shrink:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:space-between;padding:0 14px;}
+.fs-info{color:rgba(255,255,255,.7);font-size:12px;font-weight:600;}
+.fs-nav-btns{display:flex;align-items:center;gap:8px;}
+.fs-nav-btns button{height:28px;padding:0 12px;border-radius:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+.fs-nav-btns button:hover{background:rgba(255,255,255,.2);}
+.fs-cnt{color:rgba(255,255,255,.8);font-size:12px;font-weight:700;min-width:48px;text-align:center;}
+.fs-close{height:28px;padding:0 12px;border-radius:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.fs-close:hover{background:rgba(255,255,255,.22);}
+#fsFrame{flex:1;width:100%;border:none;display:block;}
+html.dark *{--border:#3a3a6a!important;}
+html.dark body,html.dark aside,html.dark main,html.dark .sticknav{background-color:#0a0a0a;}
+html.dark .navday-name{color:#F1F5F9!important;}
+html.dark .sticknav-cnt{color:#22D3EE!important;}
+</style>
+</head>
+<body>
+<script>
+if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+  window.location.replace('../../AgenticAIWorkshop_gate_v1.html');
+}
+</script>
+<header class="top">
+  <span class="brand">Agentic AI <b>Workshop</b></span>
+  <button class="themebtn" id="themeToggle">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+<div class="layout">
+  <aside>
+    <div class="navday open" id="nd1">
+      <button class="navday-hd" onclick="toggleDay('nd1')">
+        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <div><div class="navday-badge">Day 1</div><div class="navday-name">Generative AI 이해하기</div></div>
+      </button>
+      <div class="navday-body">
+        <a class="nav-module" href="../m1/">M1. Kiro 소개</a>
+        <a class="nav-module active" href="#">M2. AI 이해하기</a>
+        <a class="nav-module" href="../../hol/ws1/">Workshop 1. Kiro Basic</a>
+      </div>
+    </div>
+    <div class="navday" id="nd2">
+      <button class="navday-hd" onclick="toggleDay('nd2')">
+        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        <div><div class="navday-badge">Day 2</div><div class="navday-name">Developing GenAI App on AWS</div></div>
+      </button>
+      <div class="navday-body">
+        <a class="nav-module locked" href="#">M3. Amazon Bedrock RAG</a>
+      </div>
+    </div>
+    <div class="prog-box" style="margin-top:12px;">
+      <div class="prog-box-label">슬라이드 진행</div>
+      <div class="prog-counts"><span id="progText">1 / 38</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:2.6%"></div></div>
+    </div>
+    <a href="../../AgenticAIWorkshop_intro_v1.html" class="exit-btn">🚪 강의실 나가기</a>
+  </aside>
+  <main>
+    <div class="svis" id="svis">
+      <iframe id="slideFrame" src="./slides.html"></iframe>
+      <button class="svis-expand" id="expandBtn" onclick="openFS()">⛶ 전체화면</button>
+    </div>
+    <div class="npanel">
+      <div class="np-hd">
+        <span class="np-label">📝 슬라이드 노트</span>
+        <span class="np-title" id="npTitle"></span>
+      </div>
+      <div id="npBody"></div>
+    </div>
+  </main>
+</div>
+<div class="sticknav">
+  <button id="btnPrev" onclick="nav(-1)" disabled>← 이전</button>
+  <span class="sticknav-cnt" id="snCnt">1 / 38</span>
+  <button id="btnNext" onclick="nav(1)">다음 →</button>
+</div>
+<div id="fsOverlay">
+  <div class="fs-bar">
+    <span class="fs-info" id="fsInfo">M2. AI 기술 이해 — 1 / 38</span>
+    <div class="fs-nav-btns">
+      <button onclick="nav(-1)">← 이전</button>
+      <span class="fs-cnt" id="fsCnt">1 / 38</span>
+      <button onclick="nav(1)">다음 →</button>
+    </div>
+    <button class="fs-close" onclick="closeFS()">✕ 닫기</button>
+  </div>
+  <iframe id="fsFrame" src="./slides.html"></iframe>
+</div>
+
+<script>
+var N = 38, cur = 0;
+var frameReady = false;
+var fsFrameReady = false;
+
+// ── iframe 로드 완료 후 슬라이드 동기화 ──
+document.getElementById('slideFrame').addEventListener('load', function() {
+  frameReady = true;
+  slideGo(cur);
+});
+document.getElementById('fsFrame').addEventListener('load', function() {
+  fsFrameReady = true;
+  fsSlideGo(cur);
+});
+
+// ── iframe 슬라이드 이동 (window.kiroGo 직접 호출) ──
+function slideGo(n) {
+  if (!frameReady) return;
+  var fw;
+  try { fw = document.getElementById('slideFrame').contentWindow; } catch(e) { return; }
+  if (!fw) return;
+
+  // 방법 1: window.kiroGo (커스텀 래퍼)
+  if (typeof fw.kiroGo === 'function') { fw.kiroGo(n); return; }
+  // 방법 2: window.go (함수 선언 — 전역 자동 노출)
+  if (typeof fw.go === 'function') { fw.go(n); return; }
+  // 방법 3: 버튼 클릭 시뮬레이션
+  var iCur = (fw.cur !== undefined) ? fw.cur : 0;
+  var diff = n - iCur;
+  var btnId = diff >= 0 ? 'next' : 'prev';
+  try {
+    var btn = fw.document.getElementById(btnId);
+    if (btn) for (var i=0; i<Math.abs(diff); i++) btn.click();
+  } catch(e) {}
+}
+function fsSlideGo(n) {
+  if (!fsFrameReady) return;
+  var fw;
+  try { fw = document.getElementById('fsFrame').contentWindow; } catch(e) { return; }
+  if (!fw) return;
+  if (typeof fw.kiroGo === 'function') { try { fw.kiroGo(n); } catch(e) {} return; }
+  if (typeof fw.go === 'function') { try { fw.go(n); } catch(e) {} return; }
+  var iCur = (fw.cur !== undefined) ? fw.cur : 0;
+  var diff = n - iCur;
+  var btnId = diff >= 0 ? 'next' : 'prev';
+  try {
+    var btn = fw.document.getElementById(btnId);
+    if (btn) for (var i=0; i<Math.abs(diff); i++) btn.click();
+  } catch(e) {}
+}
+
+// ── 슬라이드 이동 ──
+function goTo(n) {
+  if (n < 0 || n >= N) return;
+  cur = n;
+  // 슬라이드 iframe 이동 (에러가 나도 UI 업데이트는 계속 진행)
+  try { slideGo(cur); } catch(e) {}
+  try {
+    if (document.getElementById('fsOverlay').classList.contains('on')) fsSlideGo(cur);
+  } catch(e) {}
+  // 진행 상황 업데이트
+  var d = (cur+1) + ' / ' + N;
+  try { document.getElementById('progText').textContent = d; } catch(e) {}
+  try { document.getElementById('progFill').style.width = ((cur+1)/N*100).toFixed(1)+'%'; } catch(e) {}
+  try { document.getElementById('snCnt').textContent = d; } catch(e) {}
+  try { document.getElementById('fsCnt').textContent = d; } catch(e) {}
+  try { document.getElementById('fsInfo').textContent = 'M2. AI 기술 이해 — ' + d; } catch(e) {}
+  try {
+    document.getElementById('btnPrev').disabled = cur===0;
+    document.getElementById('btnNext').disabled = cur===N-1;
+  } catch(e) {}
+  // 노트 업데이트
+  var nd = NOTES[cur];
+  if (nd) {
+    try { document.getElementById('npTitle').textContent = (cur+1)+'. '+nd.t; } catch(e) {}
+    try { document.getElementById('npBody').innerHTML = nd.h; } catch(e) {}
+  }
+}
+function nav(d) { goTo(cur + d); }
+
+// ── 전체화면 ──
+function openFS() {
+  document.getElementById('fsOverlay').classList.add('on');
+  document.getElementById('expandBtn').textContent = '✕ 닫기';
+  document.getElementById('expandBtn').onclick = closeFS;
+  setTimeout(function() { fsSlideGo(cur); }, 500);
+}
+function closeFS() {
+  document.getElementById('fsOverlay').classList.remove('on');
+  document.getElementById('expandBtn').textContent = '⛶ 전체화면';
+  document.getElementById('expandBtn').onclick = openFS;
+}
+
+// ── Day 토글 ──
+function toggleDay(id) { document.getElementById(id).classList.toggle('open'); }
+
+// ── 테마 ──
+(function() {
+  if (localStorage.getItem('aawTheme')==='dark') document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var d = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('aawTheme', d?'dark':'light');
+  });
+})();
+
+// ── 키보드 ──
+document.addEventListener('keydown', function(e) {
+  if (e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); nav(1); }
+  if (e.key==='ArrowLeft') { e.preventDefault(); nav(-1); }
+  if (e.key==='Escape') closeFS();
+});
+
+// ── 슬라이드 노트 데이터 (38개) ──
+var NOTES = [
+  // [01] 겹겹의 포함 관계 — 한 장으로 보는 AI 지도
+  {t:'겹겹의 포함 관계 — 한 장으로 보는 AI 지도',h:"<div class='note-section'><div class='note-section-title'>핵심 개념 — 포함 관계</div><p><span class='note-kw'>AI(Artificial Intelligence)</span> ⊃ <span class='note-kw'>ML(Machine Learning)</span> ⊃ <span class='note-kw'>DL(Deep Learning)</span> ⊃ <span class='note-kw'>GenAI(Generative AI)</span> 순서로 포함됩니다. 바깥 개념이 안쪽 개념을 포괄합니다.</p></div><div class='note-section'><div class='note-section-title'>등장 연대</div><ul><li><span class='note-kw'>AI (1950s)</span>: 앨런 튜링의 '기계가 생각할 수 있는가?' 질문이 출발점. 규칙 기반 시스템 시대</li><li><span class='note-kw'>ML (1980s)</span>: 명시적 규칙 대신 데이터로부터 스스로 학습하는 방법론 등장</li><li><span class='note-kw'>DL (2010s)</span>: GPU 연산 폭발적 성장 + 빅데이터 결합. 이미지·음성 인식 혁명</li><li><span class='note-kw'>GenAI (2022~)</span>: Transformer 기반 파운데이션 모델이 대중화. ChatGPT 공개</li></ul></div><div class='note-case'><div class='note-case-label'>왜 지금 GenAI가 주목받나</div><p>세 가지 요소가 동시에 수렴했기 때문입니다. <strong>컴퓨팅 성능</strong>(GPU·TPU 급성장), <strong>빅데이터</strong>(인터넷 텍스트·이미지 수십억 건), <strong>알고리즘 혁신</strong>(Transformer·Attention) — 이 세 가지가 2022년경 임계점을 넘었습니다.</p></div>"},
+
+  // [02] 일반적인 프로그램과 머신러닝의 차이
+  {t:'일반적인 프로그램과 머신러닝의 차이',h:"<div class='note-section'><div class='note-section-title'>패러다임 전환</div><p><span class='note-kw'>전통 프로그래밍(Traditional Programming)</span>은 개발자가 작성한 규칙(Rule)과 입력 데이터(Data)를 넣으면 출력(Output)이 나옵니다. <span class='note-kw'>머신러닝(Machine Learning)</span>은 반대로 데이터(Data)와 정답(Output)을 넣으면 규칙, 즉 모델(Model)이 만들어집니다.</p></div><div class='note-section'><div class='note-section-title'>비교 정리</div><ul><li><strong>전통 프로그래밍</strong>: 규칙 + 데이터 → 출력. 개발자가 모든 경우를 코딩</li><li><strong>머신러닝</strong>: 데이터 + 출력(정답) → 규칙(모델). 데이터에서 패턴 자동 학습</li></ul></div><div class='note-case'><div class='note-case-label'>사용 사례: 스팸 필터</div><p><strong>규칙 기반</strong>: '무료', '긴급', '당첨' 같은 단어 목록을 개발자가 직접 작성 → 새 스팸 패턴 등장 시 규칙을 계속 추가해야 함.<br><strong>ML 방식</strong>: 수천 건의 스팸/정상 이메일 데이터로 학습 → 새 패턴도 자동으로 인식.</p></div>"},
+
+  // [03] Build A Rule Engine (Machine)
+  {t:'Build A Rule Engine (Machine)',h:"<div class='note-section'><div class='note-section-title'>규칙 기반 엔진의 한계</div><p>단순한 문제는 if/else 규칙으로 충분합니다. 하지만 현실 문제는 변수가 수백~수천 개이고 상황이 계속 바뀝니다. 규칙이 폭발적으로 증가하면서 <span class='note-kw'>규칙 폭발(Rule Explosion)</span> 문제가 발생합니다.</p></div><div class='note-section'><div class='note-section-title'>한계가 드러나는 영역</div><ul><li><span class='note-kw'>날씨 예측</span>: 기온·기압·습도·위성 이미지 등 수백 개 변수 조합 — 규칙으로 대응 불가</li><li><span class='note-kw'>사기 탐지(Fraud Detection)</span>: 사기 패턴이 매일 바뀜 — 규칙 추가로는 따라잡기 어려움</li><li><span class='note-kw'>자연어 이해</span>: 같은 단어도 문맥에 따라 의미 다름 — 규칙으로 정의 불가능</li></ul></div><div class='note-case'><div class='note-case-label'>핵심 인사이트</div><p>규칙의 수가 늘어날수록 유지보수 비용도 함께 증가합니다. <strong>ML은 이 유지보수 부담을 데이터로 대체</strong>하는 접근법입니다.</p></div>"},
+
+  // [04] We Call This Approach: Machine Learning
+  {t:'We Call This Approach: Machine Learning',h:"<div class='note-section'><div class='note-section-title'>머신러닝 정의</div><p><span class='note-kw'>머신러닝(Machine Learning)</span>은 명시적으로 프로그래밍하지 않고 데이터로부터 스스로 학습하는 시스템입니다. Arthur Samuel(1959)이 처음 정의했습니다: \"명시적으로 프로그래밍하지 않고 컴퓨터가 학습할 수 있게 하는 연구 분야.\"</p></div><div class='note-section'><div class='note-section-title'>세 가지 핵심 요소</div><ul><li><span class='note-kw'>데이터(Data)</span>: 학습의 원료. 품질이 결과를 결정</li><li><span class='note-kw'>알고리즘(Algorithm)</span>: 학습 방법론. 문제 유형에 따라 선택</li><li><span class='note-kw'>컴퓨팅(Computing)</span>: 학습에 필요한 계산 자원. GPU/TPU</li></ul></div><div class='note-section'><div class='note-section-title'>학습과 예측의 분리</div><p><span class='note-kw'>학습(Training)</span> 단계에서 모델을 만들고, 이후 <span class='note-kw'>예측(Prediction/Inference)</span> 단계에서 새 데이터에 적용합니다. 두 단계는 시간적으로 분리됩니다.</p></div>"},
+
+  // [05] 알고리즘 (Algorithm)
+  {t:'알고리즘 (Algorithm)',h:"<div class='note-section'><div class='note-section-title'>알고리즘이란</div><p><span class='note-kw'>알고리즘(Algorithm)</span>은 ML에서 '학습 방법론'입니다. 데이터에서 패턴을 찾아내는 수학적 절차입니다. 문제 유형에 따라 적합한 알고리즘이 다릅니다.</p></div><div class='note-section'><div class='note-section-title'>주요 알고리즘</div><ul><li><span class='note-kw'>선형 회귀(Linear Regression)</span>: 연속형 수치 예측. 주택 가격, 매출 예측</li><li><span class='note-kw'>의사결정트리(Decision Tree)</span>: 규칙 기반 분류. 해석이 쉬움</li><li><span class='note-kw'>랜덤 포레스트(Random Forest)</span>: 여러 트리의 앙상블. 안정적 성능</li><li><span class='note-kw'>SVM(Support Vector Machine)</span>: 경계면 최적화 분류</li><li><span class='note-kw'>신경망(Neural Network)</span>: 딥러닝의 기초. 비선형 패턴 학습</li></ul></div><div class='note-case'><div class='note-case-label'>알고리즘 선택 기준</div><p>분류(Category) 문제 vs 회귀(Numeric) 문제 vs 군집(Grouping) 문제에 따라 알고리즘을 선택합니다. <strong>데이터 크기와 해석 가능성도 선택에 영향</strong>을 줍니다.</p></div>"},
+
+  // [06] 모델 훈련 (Model Training)
+  {t:'모델 훈련 (Model Training)',h:"<div class='note-section'><div class='note-section-title'>훈련 과정</div><p><span class='note-kw'>모델 훈련(Model Training)</span>은 데이터를 통해 모델 내부의 파라미터를 최적화하는 과정입니다. 크게 네 단계로 반복됩니다.</p></div><div class='note-section'><div class='note-section-title'>훈련 단계 (반복 루프)</div><ol><li><span class='note-kw'>순전파(Forward Pass)</span>: 입력 데이터를 모델에 통과시켜 예측값 계산</li><li><span class='note-kw'>손실 계산(Loss)</span>: 예측값과 정답의 차이 측정. 손실함수(Loss Function) 사용</li><li><span class='note-kw'>역전파(Backpropagation)</span>: 손실을 줄이는 방향으로 그래디언트(Gradient) 계산</li><li><span class='note-kw'>파라미터 업데이트</span>: 학습률(Learning Rate)만큼 파라미터 조정</li></ol></div><div class='note-section'><div class='note-section-title'>주요 개념</div><ul><li><span class='note-kw'>에포크(Epoch)</span>: 전체 학습 데이터를 한 번 순회하는 단위</li><li><span class='note-kw'>과적합(Overfitting)</span>: 훈련 데이터에는 잘 맞지만 새 데이터에 못 맞춤</li><li><span class='note-kw'>과소적합(Underfitting)</span>: 학습이 충분하지 않아 훈련 데이터도 못 맞춤</li></ul></div>"},
+
+  // [07] 파라미터 (Parameter) — 매개변수
+  {t:'파라미터 (Parameter) — 매개변수',h:"<div class='note-section'><div class='note-section-title'>파라미터란</div><p><span class='note-kw'>파라미터(Parameter)</span>는 학습 과정에서 자동으로 조정되는 모델 내부의 숫자값입니다. 주로 <span class='note-kw'>가중치(Weight)</span>와 <span class='note-kw'>편향(Bias)</span>으로 구성됩니다. 파라미터가 많을수록 복잡한 패턴을 학습할 수 있습니다.</p></div><div class='note-section'><div class='note-section-title'>규모 비교</div><ul><li><span class='note-kw'>전통 ML 모델</span>: 수백 ~ 수만 개</li><li><span class='note-kw'>GPT-3 (2020)</span>: 1,750억 개 (175B)</li><li><span class='note-kw'>GPT-4 (2023)</span>: 추정 수조 개 이상</li></ul></div><div class='note-section'><div class='note-section-title'>파라미터 vs 하이퍼파라미터</div><ul><li><span class='note-kw'>파라미터</span>: 학습으로 자동 조정. 가중치·편향</li><li><span class='note-kw'>하이퍼파라미터(Hyperparameter)</span>: 사람이 직접 설정. 학습률·에포크 수·레이어 수</li></ul></div><div class='note-case'><div class='note-case-label'>트레이드오프</div><p>파라미터가 많을수록 복잡한 패턴 학습이 가능하지만, <strong>훈련에 필요한 데이터 양과 컴퓨팅 비용도 함께 증가</strong>합니다.</p></div>"},
+
+  // [08] 데이터 세트 (Dataset)
+  {t:'데이터 세트 (Dataset)',h:"<div class='note-section'><div class='note-section-title'>데이터 세트 분리</div><p>ML 모델을 평가하기 위해 데이터를 세 부분으로 분리합니다.</p><ul><li><span class='note-kw'>훈련 세트(Training Set)</span>: 약 70%. 모델 학습에 사용</li><li><span class='note-kw'>검증 세트(Validation Set)</span>: 약 15%. 학습 중 성능 모니터링·하이퍼파라미터 조정</li><li><span class='note-kw'>테스트 세트(Test Set)</span>: 약 15%. 최종 성능 평가. 훈련 중 절대 노출 금지</li></ul></div><div class='note-section'><div class='note-section-title'>데이터 품질 원칙</div><p><strong>\"Garbage In, Garbage Out.\"</strong> 아무리 좋은 알고리즘도 데이터 품질이 낮으면 좋은 모델이 나오지 않습니다.</p><ul><li><span class='note-kw'>결측값(Missing Value)</span>: 제거 또는 대체 필요</li><li><span class='note-kw'>정규화(Normalization)</span>: 스케일 통일</li><li><span class='note-kw'>인코딩(Encoding)</span>: 범주형 데이터를 숫자로 변환</li></ul></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon SageMaker Ground Truth</strong>: 사람이 레이블을 붙이는 작업을 자동화·관리합니다. 대규모 레이블링 프로젝트에 활용됩니다.</p></div>"},
+
+  // [09] 학습과 추론 (Training & Inference)
+  {t:'학습과 추론 (Training & Inference)',h:"<div class='note-section'><div class='note-section-title'>두 단계의 차이</div><ul><li><span class='note-kw'>학습(Training)</span>: 데이터에서 패턴 학습. 수 시간~수 주 소요. GPU 클러스터 대규모 사용. 고비용</li><li><span class='note-kw'>추론(Inference)</span>: 학습된 모델로 새 데이터 예측. 밀리초 단위. 상대적 저비용</li></ul></div><div class='note-section'><div class='note-section-title'>비용 구조</div><p>파운데이션 모델의 학습 비용은 수백억 원에 달합니다. 반면 추론은 API 호출당 토큰 수에 따라 과금됩니다. <strong>대부분의 기업은 학습 단계를 건너뛰고 추론만 활용</strong>합니다.</p></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon Bedrock</strong>: 이미 훈련된 파운데이션 모델을 API로 제공합니다. 훈련 비용 없이 즉시 추론 활용 가능. 이번 워크숍의 핵심 서비스입니다.</p></div>"},
+
+  // [10] 모델 학습 방법
+  {t:'모델 학습 방법',h:"<div class='note-section'><div class='note-section-title'>세 가지 학습 패러다임</div><p>ML 모델은 데이터와 피드백 구조에 따라 세 가지 방식으로 학습합니다.</p><ul><li><span class='note-kw'>지도 학습(Supervised Learning)</span>: 정답 레이블이 있는 데이터. 분류·회귀</li><li><span class='note-kw'>비지도 학습(Unsupervised Learning)</span>: 레이블 없이 구조 발견. 군집화·차원 축소</li><li><span class='note-kw'>강화 학습(Reinforcement Learning)</span>: 보상 신호로 최적 행동 학습. 에이전트·환경</li></ul></div><div class='note-section'><div class='note-section-title'>실무 분포</div><p>대부분의 상용 ML 프로젝트는 <span class='note-kw'>지도 학습</span>을 사용합니다. 레이블 데이터 확보가 핵심 과제입니다.</p></div><div class='note-case'><div class='note-case-label'>LLM과의 연결</div><p>대형 언어 모델(LLM)에는 세 가지 방식이 모두 사용됩니다. 사전훈련(비지도), 파인튜닝(지도), <strong>RLHF(Reinforcement Learning from Human Feedback)</strong>로 사람의 선호에 맞게 정렬합니다.</p></div>"},
+
+  // [11] 지도 학습 (Supervised Learning)
+  {t:'지도 학습 (Supervised Learning)',h:"<div class='note-section'><div class='note-section-title'>정의</div><p><span class='note-kw'>지도 학습(Supervised Learning)</span>은 정답(레이블)이 붙은 데이터로 학습하는 방법입니다. 입력과 정답의 쌍을 수천~수백만 개 학습해 새 입력에 대한 정답을 예측합니다.</p></div><div class='note-section'><div class='note-section-title'>두 가지 유형</div><ul><li><span class='note-kw'>분류(Classification)</span>: 이산형 카테고리 예측. 스팸/정상, 양성/음성, 객체 인식</li><li><span class='note-kw'>회귀(Regression)</span>: 연속형 수치 예측. 주택 가격, 내일 매출, 기온 예측</li></ul></div><div class='note-section'><div class='note-section-title'>장단점</div><ul><li><strong>장점</strong>: 정확도 높음, 평가 기준 명확</li><li><strong>단점</strong>: 레이블 생성 비용이 높음. 전문가 레이블링 필요</li></ul></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon SageMaker</strong>: 지도 학습 모델 훈련·배포·모니터링 통합 플랫폼. XGBoost·Linear Learner 등 내장 알고리즘 제공.</p></div>"},
+
+  // [12] 비지도 학습 (Unsupervised Learning)
+  {t:'비지도 학습 (Unsupervised Learning)',h:"<div class='note-section'><div class='note-section-title'>정의</div><p><span class='note-kw'>비지도 학습(Unsupervised Learning)</span>은 레이블 없이 데이터의 숨겨진 구조와 패턴을 발견하는 학습 방법입니다. 데이터 자체에서 그룹·규칙·이상을 찾아냅니다.</p></div><div class='note-section'><div class='note-section-title'>주요 기법</div><ul><li><span class='note-kw'>군집화(Clustering)</span>: 유사한 데이터를 그룹으로 묶기. K-means 알고리즘. 고객 세분화</li><li><span class='note-kw'>차원 축소(Dimensionality Reduction)</span>: PCA — 고차원 데이터를 저차원으로 압축. 시각화·전처리</li><li><span class='note-kw'>이상 탐지(Anomaly Detection)</span>: 정상 패턴을 학습 후 벗어난 값 탐지. 사기 탐지·장비 이상</li><li><span class='note-kw'>연관 규칙(Association Rule)</span>: 함께 구매되는 상품 패턴 발견. 장바구니 분석</li></ul></div><div class='note-case'><div class='note-case-label'>사용 사례</div><p>이커머스 고객을 구매 패턴으로 자동 세분화 → 맞춤 마케팅. 레이블 데이터 없이도 <strong>고객군 자동 발견</strong>이 가능합니다.</p></div>"},
+
+  // [13] 강화 학습 (Reinforcement Learning)
+  {t:'강화 학습 (Reinforcement Learning)',h:"<div class='note-section'><div class='note-section-title'>핵심 구조</div><p><span class='note-kw'>강화 학습(Reinforcement Learning)</span>은 에이전트(Agent)가 환경(Environment)과 상호작용하며 보상(Reward)을 최대화하는 행동을 학습합니다.</p><ul><li><span class='note-kw'>에이전트(Agent)</span>: 행동을 선택하는 학습 주체</li><li><span class='note-kw'>환경(Environment)</span>: 에이전트가 상호작용하는 세계</li><li><span class='note-kw'>행동(Action)</span>: 에이전트가 선택 가능한 행동 목록</li><li><span class='note-kw'>보상(Reward)</span>: 행동의 좋고 나쁨을 알려주는 신호</li></ul></div><div class='note-section'><div class='note-section-title'>실제 적용 사례</div><ul><li><span class='note-kw'>AlphaGo</span>: 바둑 최고 수준 달성</li><li><span class='note-kw'>자율주행</span>: 도로 상황에서 최적 조향 학습</li><li><span class='note-kw'>로보틱스</span>: 로봇 팔 조작 동작 최적화</li></ul></div><div class='note-case'><div class='note-case-label'>LLM과의 연결 — RLHF</div><p><strong>RLHF(Reinforcement Learning from Human Feedback)</strong>: 사람이 선호하는 응답에 높은 보상을 주어 LLM을 정렬(Align)합니다. ChatGPT·Claude 모두 이 방식을 적용합니다. PPO(Proximal Policy Optimization) 알고리즘이 주로 사용됩니다.</p></div>"},
+
+  // [14] 딥러닝 개요
+  {t:'딥러닝 개요',h:"<div class='note-section'><div class='note-section-title'>딥러닝이란</div><p><span class='note-kw'>딥러닝(Deep Learning)</span>은 여러 층(Layer)의 신경망(Neural Network)을 쌓아 복잡한 패턴을 자동으로 학습하는 기법입니다. '딥(Deep)'은 여러 층이 있다는 뜻입니다.</p></div><div class='note-section'><div class='note-section-title'>발전 계보</div><ul><li><span class='note-kw'>퍼셉트론(Perceptron, 1958)</span>: 단층 신경망. 선형 분류만 가능</li><li><span class='note-kw'>MLP(Multi-Layer Perceptron)</span>: 은닉층 추가. 비선형 패턴 학습 가능</li><li><span class='note-kw'>딥러닝(2010s~)</span>: GPU 병렬 처리 + 대량 데이터로 수십~수백 층 학습</li></ul></div><div class='note-section'><div class='note-section-title'>핵심 특징</div><ul><li><span class='note-kw'>은닉층(Hidden Layer)</span>: 중간 층에서 자동으로 특성(Feature) 추출</li><li><span class='note-kw'>GPU 병렬 처리</span>: 수백만 개 파라미터 동시 계산</li><li><span class='note-kw'>ImageNet 혁명 (2012)</span>: AlexNet이 오류율 26% → 15%로 낮추며 딥러닝 시대 개막</li></ul></div><div class='note-case'><div class='note-case-label'>주요 아키텍처</div><p>CNN(이미지), RNN(시계열), Transformer(언어·멀티모달) — 각 도메인에 특화된 딥러닝 구조들이 발전했습니다.</p></div>"},
+
+  // [15] 머신러닝과 딥러닝의 차이
+  {t:'머신러닝과 딥러닝의 차이',h:"<div class='note-section'><div class='note-section-title'>핵심 차이 — 특성 추출</div><p>가장 큰 차이는 <span class='note-kw'>특성 추출(Feature Extraction)</span>입니다. 전통 ML은 도메인 전문가가 수동으로 특성을 정의해야 합니다. 딥러닝은 은닉층이 자동으로 특성을 추출합니다.</p></div><div class='note-section'><div class='note-section-title'>항목별 비교</div><ul><li><span class='note-kw'>특성 추출</span>: ML = 수동(전문가 설계) | DL = 자동(층에서 학습)</li><li><span class='note-kw'>필요 데이터량</span>: ML = 수백~수천 건 | DL = 수만~수백만 건</li><li><span class='note-kw'>해석 가능성</span>: ML = 높음(의사결정트리 등) | DL = 낮음(블랙박스)</li><li><span class='note-kw'>컴퓨팅 자원</span>: ML = CPU로 충분 | DL = GPU/TPU 필수</li><li><span class='note-kw'>훈련 시간</span>: ML = 빠름 | DL = 느림(대규모 데이터·계산)</li></ul></div><div class='note-case'><div class='note-case-label'>선택 기준</div><p>소량 데이터 + 해석 필요 → 전통 ML.<br>대용량 비정형 데이터(이미지·텍스트·음성) + 성능 최우선 → <strong>딥러닝</strong>.</p></div>"},
+
+  // [16] 생성형 AI 기술의 시작 : 파운데이션 모델
+  {t:'생성형 AI 기술의 시작 : 파운데이션 모델',h:"<div class='note-section'><div class='note-section-title'>역사적 흐름</div><ul><li><span class='note-kw'>2017</span>: Google이 \"Attention Is All You Need\" 논문 발표 → Transformer 아키텍처 등장</li><li><span class='note-kw'>2018</span>: BERT(Google)·GPT-1(OpenAI) 발표 — 사전훈련 전이학습 시대 시작</li><li><span class='note-kw'>2020</span>: GPT-3(1750억 파라미터) 발표. <span class='note-kw'>창발 능력(Emergent Capability)</span> 발견</li><li><span class='note-kw'>2022</span>: ChatGPT 공개 — 5일 만에 100만 사용자. GenAI 대중화</li></ul></div><div class='note-section'><div class='note-section-title'>두 가지 핵심 개념</div><ul><li><span class='note-kw'>창발(Emergence)</span>: 모델 크기가 임계점을 넘으면 학습하지 않은 능력이 갑자기 나타나는 현상</li><li><span class='note-kw'>스케일링 법칙(Scaling Law)</span>: 파라미터·데이터·컴퓨팅이 늘어날수록 성능이 예측 가능하게 향상되는 법칙</li></ul></div>"},
+
+  // [17] 파운데이션 모델 소개
+  {t:'파운데이션 모델 소개',h:"<div class='note-section'><div class='note-section-title'>파운데이션 모델이란</div><p><span class='note-kw'>파운데이션 모델(Foundation Model)</span>은 대규모 데이터로 사전훈련(Pre-training)된 범용 모델입니다. 텍스트 요약·번역·코드 생성·질의응답 등 다양한 태스크를 하나의 모델로 처리합니다.</p></div><div class='note-section'><div class='note-section-title'>핵심 능력</div><ul><li><span class='note-kw'>Zero-shot</span>: 예시 없이 새 태스크 수행. \"이 문장을 프랑스어로 번역해줘\"</li><li><span class='note-kw'>Few-shot</span>: 2~5개 예시만으로 패턴 파악 후 수행</li><li><span class='note-kw'>In-context Learning</span>: 프롬프트 안에 포함된 정보로 즉시 학습</li></ul></div><div class='note-case'><div class='note-case-label'>Amazon Bedrock FM 목록</div><p>Amazon Titan·Nova, Anthropic Claude(Haiku/Sonnet/Opus), Meta Llama, Mistral, Stability AI(이미지) 등 주요 FM을 API로 제공합니다. <strong>모델 선택 자유도가 핵심 장점</strong>입니다.</p></div>"},
+
+  // [18] 일반적인 머신 러닝 모델 vs. 파운데이션 모델 (1)
+  {t:'일반적인 머신 러닝 모델 vs. 파운데이션 모델 (1)',h:"<div class='note-section'><div class='note-section-title'>개발 비용 비교</div><ul><li><span class='note-kw'>전통 ML 모델</span>: 태스크별로 각각 구축. 스팸 필터·추천 엔진·번역 모델 모두 따로. 총 수백만~수억 원</li><li><span class='note-kw'>파운데이션 모델</span>: 초기 훈련 수백억~수천억 원이지만 API로 공유. 사용자는 토큰당 과금만</li></ul></div><div class='note-section'><div class='note-section-title'>범용성 비교</div><ul><li><span class='note-kw'>전통 ML</span>: 하나의 모델 = 하나의 태스크 특화</li><li><span class='note-kw'>FM</span>: 하나의 모델 = 텍스트 생성 + 번역 + 요약 + 코드 + QA 등 수십 가지</li></ul></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon Bedrock</strong>: FM을 API로 제공. 훈련 비용 없이 즉시 활용 가능. 토큰당 과금으로 비용 효율적입니다.</p></div>"},
+
+  // [19] 일반적인 머신 러닝 모델 vs. 파운데이션 모델 (2)
+  {t:'일반적인 머신 러닝 모델 vs. 파운데이션 모델 (2)',h:"<div class='note-section'><div class='note-section-title'>실제 사례 비교</div><ul><li><span class='note-kw'>스팸 분류</span>: 전통 ML — 로지스틱 회귀, 수천 개 레이블 데이터 필요 / FM — 프롬프트만으로 판별</li><li><span class='note-kw'>고객 리뷰 분석</span>: 전통 ML — 감성 분류 모델 별도 학습 / FM — \"이 리뷰 감성 분석해줘\" 즉시 수행</li></ul></div><div class='note-section'><div class='note-section-title'>과금 방식 비교</div><ul><li><span class='note-kw'>전통 ML (SageMaker 엔드포인트)</span>: 24시간 인스턴스 유지 비용 발생</li><li><span class='note-kw'>FM API (Bedrock)</span>: 요청당 입력+출력 토큰 수 기준 과금. 미사용 시 비용 없음</li></ul></div><div class='note-case'><div class='note-case-label'>FM의 한계와 보완</div><p>FM은 <strong>최신 정보 부재</strong>(훈련 컷오프)와 <strong>도메인 전문 지식 부족</strong> 문제가 있습니다. 이를 보완하는 것이 RAG(검색 증강)와 파인튜닝입니다. 이후 슬라이드에서 상세 설명합니다.</p></div>"},
+
+  // [20] LLM 동작 방식
+  {t:'LLM 동작 방식',h:"<div class='note-section'><div class='note-section-title'>처리 흐름</div><ol><li><span class='note-kw'>입력 텍스트 수신</span>: 프롬프트 전체를 처리</li><li><span class='note-kw'>토큰화(Tokenization)</span>: 텍스트를 토큰 단위로 분할</li><li><span class='note-kw'>임베딩(Embedding)</span>: 각 토큰을 고차원 벡터로 변환</li><li><span class='note-kw'>Transformer 처리</span>: Self-Attention으로 토큰 간 관계 계산</li><li><span class='note-kw'>다음 토큰 확률 계산</span>: 어휘 사전 전체에 대한 확률 분포</li><li><span class='note-kw'>샘플링(Sampling)</span>: 확률에 따라 다음 토큰 선택</li><li><span class='note-kw'>반복 출력</span>: 종료 조건까지 반복</li></ol></div><div class='note-section'><div class='note-section-title'>자기회귀(Autoregressive) 방식</div><p>LLM은 한 번에 하나의 토큰을 생성하며, 이전에 생성한 토큰을 다음 토큰 예측의 입력으로 사용합니다. <span class='note-kw'>Temperature</span> 파라미터로 확률 분포의 날카로움(정확성)을 조절합니다.</p></div>"},
+
+  // [21] Transformer 모델 아키텍처
+  {t:'Transformer 모델 아키텍처',h:"<div class='note-section'><div class='note-section-title'>핵심 혁신 — Self-Attention</div><p><span class='note-kw'>Self-Attention</span>은 문장 내 모든 토큰이 서로의 관계를 계산하는 메커니즘입니다. 멀리 떨어진 단어 간의 의존관계도 한 번에 포착합니다. 예: \"그 은행은 강가에 있다\" — '은행'의 의미를 '강가'와 연결해 금융기관이 아닌 강둑으로 해석.</p></div><div class='note-section'><div class='note-section-title'>주요 구성 요소</div><ul><li><span class='note-kw'>Query · Key · Value (Q·K·V)</span>: Attention 계산의 세 가지 행렬. Q와 K의 유사도로 V를 가중 합산</li><li><span class='note-kw'>Multi-Head Attention</span>: 여러 Attention을 병렬로 수행. 다양한 관계 동시 포착</li><li><span class='note-kw'>Positional Encoding</span>: 단어 순서 정보를 벡터에 주입. Transformer는 순서를 기본으로 인식하지 않음</li></ul></div><div class='note-section'><div class='note-section-title'>아키텍처 유형</div><ul><li><span class='note-kw'>Encoder-Decoder</span>: 번역·요약. 입력을 인코딩 후 출력 디코딩 (BERT 계열)</li><li><span class='note-kw'>Decoder-only</span>: 텍스트 생성. 다음 토큰 예측만 수행 (GPT·Claude 계열)</li></ul></div>"},
+
+  // [22] 임베딩 (Embedding)
+  {t:'임베딩 (Embedding)',h:"<div class='note-section'><div class='note-section-title'>임베딩이란</div><p><span class='note-kw'>임베딩(Embedding)</span>은 텍스트(단어·문장·문서)를 고차원 숫자 벡터로 변환하는 기술입니다. 의미가 유사한 텍스트는 벡터 공간에서 가까운 위치에 놓입니다.</p></div><div class='note-section'><div class='note-section-title'>핵심 특성</div><ul><li><span class='note-kw'>차원</span>: 768~4096 차원의 벡터. 차원이 클수록 더 많은 의미 표현</li><li><span class='note-kw'>의미 유사성</span>: '왕 - 남성 + 여성 ≈ 여왕' 벡터 연산으로 표현</li><li><span class='note-kw'>코사인 유사도(Cosine Similarity)</span>: 두 벡터의 유사성 측정. -1(반대)~+1(동일)</li></ul></div><div class='note-section'><div class='note-section-title'>RAG에서의 역할</div><p>문서를 임베딩 벡터로 변환해 <span class='note-kw'>벡터 DB(Vector Database)</span>에 저장합니다. 질문도 동일하게 변환 후 벡터 거리로 유사 문서를 검색합니다.</p></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon Bedrock Titan Embeddings</strong>: 텍스트 임베딩 API. <strong>Amazon OpenSearch Serverless</strong>: 벡터 DB로 활용. Day 2 RAG 실습에서 직접 사용합니다.</p></div>"},
+
+  // [23] 토큰 (Token)
+  {t:'토큰 (Token)',h:"<div class='note-section'><div class='note-section-title'>토큰이란</div><p><span class='note-kw'>토큰(Token)</span>은 LLM이 텍스트를 처리하는 기본 단위입니다. 단어 전체일 수도 있고, 단어의 일부(서브워드)일 수도 있습니다.</p></div><div class='note-section'><div class='note-section-title'>토큰 환산 기준</div><ul><li><span class='note-kw'>영어</span>: 1단어 ≈ 1.3토큰. 1,000토큰 ≈ 750 영어 단어</li><li><span class='note-kw'>한국어</span>: 1음절 ≈ 1~2토큰. '안녕하세요' = 약 5~7토큰 (영어보다 많은 토큰 소모)</li></ul></div><div class='note-section'><div class='note-section-title'>비용과의 관계</div><p>LLM API 비용은 <strong>입력 토큰 수 + 출력 토큰 수</strong>로 계산됩니다. 프롬프트 최적화는 비용 절감의 핵심 전략입니다.</p></div><div class='note-case'><div class='note-case-label'>Context Window 한도</div><p>토큰 수는 <strong>Context Window</strong>와 직결됩니다. Claude 3.5는 최대 200K 토큰, 약 150,000 영어 단어(책 한 권 분량)를 한 번에 처리합니다.</p></div>"},
+
+  // [24] 핵심 원리 — 다음에 올 토큰을 확률로 고른다
+  {t:'핵심 원리 — 다음에 올 토큰을 확률로 고른다',h:"<div class='note-section'><div class='note-section-title'>자기회귀 언어 모델</div><p>LLM의 핵심 원리는 간단합니다: <strong>P(다음 토큰 | 이전 모든 토큰)</strong> — 이전 맥락이 주어졌을 때 다음에 올 토큰의 조건부 확률을 계산합니다. 이를 반복해 문장을 생성합니다.</p></div><div class='note-section'><div class='note-section-title'>샘플링 전략</div><ul><li><span class='note-kw'>Temperature</span>: 0에 가까울수록 확정적(항상 가장 높은 확률 선택), 1 이상이면 창의적(다양한 토큰 선택)</li><li><span class='note-kw'>Top-k</span>: 상위 k개 토큰 중에서만 선택. 품질과 다양성 균형</li><li><span class='note-kw'>Top-p (Nucleus Sampling)</span>: 누적 확률 p% 이내 토큰 중 선택. 동적 후보군</li></ul></div><div class='note-case'><div class='note-case-label'>할루시네이션(Hallucination)의 원인</div><p>LLM은 '사실'이 아니라 '그럴듯한 다음 토큰'을 선택합니다. 따라서 통계적으로 그럴듯하지만 사실이 아닌 내용을 생성할 수 있습니다. 이것이 <strong>할루시네이션</strong>의 근본 원인입니다.</p></div>"},
+
+  // [25] Context Window — 문맥 창
+  {t:'Context Window — 문맥 창',h:"<div class='note-section'><div class='note-section-title'>Context Window란</div><p><span class='note-kw'>Context Window(문맥 창)</span>는 LLM이 한 번의 요청에서 처리할 수 있는 최대 토큰 수입니다. 입력과 출력을 합산한 총 토큰 한도입니다.</p></div><div class='note-section'><div class='note-section-title'>주요 모델 비교</div><ul><li><span class='note-kw'>Claude 3.5 Sonnet</span>: 200K 토큰 ≈ 약 150,000 영어 단어</li><li><span class='note-kw'>GPT-4 (128K)</span>: 약 96,000 영어 단어</li><li><span class='note-kw'>Gemini 1.5 Pro</span>: 1M 토큰 ≈ 약 750,000 영어 단어</li></ul></div><div class='note-section'><div class='note-section-title'>Context Window에 포함되는 항목</div><ul><li>시스템 프롬프트 + 이전 대화 기록 + 참조 문서 + 현재 질문 + 생성된 응답</li></ul></div><div class='note-case'><div class='note-case-label'>Lost in the Middle 현상</div><p>Context Window가 길어질수록 중간 부분의 정보를 LLM이 상대적으로 덜 활용하는 현상이 관측됩니다. <strong>RAG로 필요한 정보만 주입</strong>하는 것이 효율적입니다.</p></div>"},
+
+  // [26] Multimodal — 다중 양식
+  {t:'Multimodal — 다중 양식',h:"<div class='note-section'><div class='note-section-title'>멀티모달이란</div><p><span class='note-kw'>멀티모달(Multimodal)</span>은 텍스트 외에 이미지·오디오·비디오 등 여러 형태(모달리티)를 함께 처리하는 AI 능력입니다.</p></div><div class='note-section'><div class='note-section-title'>주요 모달리티별 모델</div><ul><li><span class='note-kw'>텍스트+이미지</span>: GPT-4V, Claude 3, Amazon Nova — 이미지 이해·설명·분석</li><li><span class='note-kw'>이미지 생성</span>: DALL-E, Stable Diffusion, Amazon Titan Image Generator</li><li><span class='note-kw'>음성 인식(STT)</span>: OpenAI Whisper, Amazon Transcribe</li><li><span class='note-kw'>텍스트 음성(TTS)</span>: Amazon Polly, OpenAI TTS</li></ul></div><div class='note-case'><div class='note-case-label'>실제 활용 사례</div><p><strong>의료</strong>: X-레이 이미지 + 증상 텍스트를 함께 분석해 진단 보조.<br><strong>이커머스</strong>: 제품 사진을 보고 상품 설명·카탈로그를 자동 생성.<br><strong>제조</strong>: 공장 카메라 영상으로 불량품 실시간 탐지.</p></div>"},
+
+  // [27] 파운데이션 모델 살펴보기
+  {t:'파운데이션 모델 살펴보기',h:"<div class='note-section'><div class='note-section-title'>Amazon Bedrock FM 상세</div><ul><li><span class='note-kw'>Amazon Titan Text</span>: AWS 자체 개발. 영어 중심 범용 텍스트</li><li><span class='note-kw'>Amazon Nova</span>: 최신 AWS FM. 텍스트·이미지·비디오 멀티모달</li><li><span class='note-kw'>Anthropic Claude</span>: Haiku(속도), Sonnet(균형), Opus(성능). 긴 Context 처리 강점</li><li><span class='note-kw'>Meta Llama 3</span>: 오픈소스 계열. 온프레미스 배포 가능</li><li><span class='note-kw'>Mistral</span>: 유럽 기반. 효율적인 소형 모델 강점</li><li><span class='note-kw'>Stability AI</span>: Stable Diffusion. 이미지 생성 특화</li></ul></div><div class='note-section'><div class='note-section-title'>모델 선택 기준</div><ul><li><span class='note-kw'>태스크 유형</span>: 텍스트 생성 vs 이미지 생성 vs 임베딩</li><li><span class='note-kw'>비용·레이턴시</span>: Haiku(빠름·저가) vs Opus(느림·고가)</li><li><span class='note-kw'>컨텍스트 창 크기</span>: 긴 문서 처리 필요 시 200K 이상 모델</li><li><span class='note-kw'>데이터 거주지(Data Residency)</span>: 특정 리전에서만 처리 필요 시</li></ul></div>"},
+
+  // [28] (섹션 구분) AI를 잘 쓰는 법
+  {t:'AI를 잘 쓰는 법',h:"<div class='note-section'><div class='note-section-title'>섹션 개요</div><p>파운데이션 모델은 강력하지만 완벽하지 않습니다. 최신 정보가 없고, 특정 도메인 지식이 부족하며, 회사 내부 데이터를 알지 못합니다. <strong>AI를 잘 쓰는 법</strong>은 이 한계를 극복하는 전략입니다.</p></div><div class='note-section'><div class='note-section-title'>5가지 전략 개요 (비용·복잡도 순)</div><ol><li><span class='note-kw'>프롬프트 엔지니어링(Prompt Engineering)</span>: 즉시, 무료. 입력 텍스트 최적화</li><li><span class='note-kw'>컨텍스트 학습(In-Context Learning)</span>: 즉시, 낮음. 프롬프트에 예시 포함</li><li><span class='note-kw'>RAG(Retrieval-Augmented Generation)</span>: 중간 복잡도. 외부 지식 검색 후 주입</li><li><span class='note-kw'>파인튜닝(Fine-tuning)</span>: 높음. 도메인 데이터로 추가 학습</li><li><span class='note-kw'>사전훈련(Pre-training)</span>: 매우 높음. 새 모델 처음부터 훈련</li></ol></div><div class='note-case'><div class='note-case-label'>실무 조언</div><p><strong>대부분의 실용적 문제는 프롬프트 + RAG로 충분</strong>합니다. 파인튜닝은 특정 스타일·어투·전문 용어가 필요할 때 고려합니다.</p></div>"},
+
+  // [29] (섹션 구분) 커스터마이징 전략
+  {t:'커스터마이징 전략',h:"<div class='note-section'><div class='note-section-title'>올바른 도구 선택</div><p>과도한 커스터마이징은 비용 낭비입니다. 문제에 맞는 최소한의 전략을 선택하는 것이 핵심입니다.</p></div><div class='note-section'><div class='note-section-title'>전략 선택 순서</div><ol><li><span class='note-kw'>프롬프트 엔지니어링</span> → 명확한 지시만으로도 해결되는지 먼저 확인</li><li><span class='note-kw'>RAG</span> → 최신 데이터나 도메인 지식을 추가해야 하는 경우</li><li><span class='note-kw'>파인튜닝</span> → 특정 응답 스타일·어투·전문 용어를 모델에 내재화해야 하는 경우</li><li><span class='note-kw'>사전훈련</span> → 기존 모델로 커버되지 않는 완전히 새로운 도메인이 필요한 경우</li></ol></div><div class='note-case'><div class='note-case-label'>핵심 원칙</div><p>단계를 건너뛰지 마세요. <strong>프롬프트로 70% 해결 → RAG로 25% 보완 → 나머지 5%만 파인튜닝</strong>이 현실적인 분포입니다.</p></div>"},
+
+  // [30] 생성형 AI 커스터마이징
+  {t:'생성형 AI 커스터마이징',h:"<div class='note-section'><div class='note-section-title'>5가지 커스터마이징 방법 비교</div><ul><li><span class='note-kw'>프롬프트 엔지니어링</span>: 구현 시간 즉시, 비용 최저, 범용 태스크에 적합</li><li><span class='note-kw'>컨텍스트 학습(In-Context)</span>: 구현 시간 즉시, 비용 낮음, 소수 예시 제공</li><li><span class='note-kw'>RAG</span>: 구현 시간 중간, 비용 중간, 최신 정보·도메인 지식 추가</li><li><span class='note-kw'>파인튜닝</span>: 구현 시간 높음, 비용 높음, 특화된 동작·스타일 변경</li><li><span class='note-kw'>사전훈련</span>: 구현 시간 매우 높음, 비용 매우 높음, 완전히 새로운 도메인</li></ul></div><div class='note-case'><div class='note-case-label'>Day 2 실습 예고</div><p>내일(Day 2)에는 <strong>RAG</strong>를 직접 구현합니다. Amazon Bedrock Knowledge Bases와 OpenSearch Serverless를 사용해 회사 문서로 질의응답 시스템을 구축합니다.</p></div>"},
+
+  // [31] (섹션 구분) 프롬프트 엔지니어링
+  {t:'프롬프트 엔지니어링',h:"<div class='note-section'><div class='note-section-title'>섹션 개요</div><p><span class='note-kw'>프롬프트 엔지니어링(Prompt Engineering)</span>은 LLM에게 전달하는 입력 텍스트(프롬프트)를 최적화하여 원하는 결과를 얻는 기술입니다.</p></div><div class='note-section'><div class='note-section-title'>왜 중요한가</div><p>같은 모델, 같은 질문이라도 프롬프트 품질에 따라 결과가 크게 달라집니다. 잘 설계된 프롬프트는 잘못된 프롬프트보다 <strong>10배 이상 더 유용한 결과</strong>를 만들어냅니다.</p></div><div class='note-case'><div class='note-case-label'>개발자 필수 역량</div><p>AI 시대의 개발자에게 프롬프트 엔지니어링은 기본 역량입니다. 코드를 직접 짜는 시간보다 <strong>AI에게 올바른 지시를 내리는 역량</strong>이 더 중요해지고 있습니다.</p></div>"},
+
+  // [32] 프롬프트란 무엇인가?
+  {t:'프롬프트란 무엇인가?',h:"<div class='note-section'><div class='note-section-title'>프롬프트 정의</div><p><span class='note-kw'>프롬프트(Prompt)</span>는 LLM에게 전달하는 입력 텍스트 전체입니다. 사용자의 질문만이 아니라 시스템 지시, 맥락 문서, 예시까지 모두 포함합니다.</p></div><div class='note-section'><div class='note-section-title'>좋은 프롬프트의 특징</div><ul><li><span class='note-kw'>명확한 지시</span>: 무엇을 원하는지 구체적으로 명시</li><li><span class='note-kw'>충분한 맥락</span>: 필요한 배경 정보 제공</li><li><span class='note-kw'>출력 형식 지정</span>: JSON, 불렛 포인트, 3줄 이내 등 명시</li></ul></div><div class='note-section'><div class='note-section-title'>나쁜 예 vs 좋은 예</div><ul><li><strong>나쁜 예</strong>: <code>이거 설명해줘</code></li><li><strong>좋은 예</strong>: <code>AWS Lambda의 콜드 스타트 문제를 초보 개발자에게 설명해줘. 핵심만 3가지 불렛으로 정리해줘.</code></li></ul></div>"},
+
+  // [33] 텍스트 프롬프트의 구성 요소
+  {t:'텍스트 프롬프트의 구성 요소',h:"<div class='note-section'><div class='note-section-title'>4대 구성 요소</div><ul><li><span class='note-kw'>지시(Instruction)</span>: 수행할 태스크. \"요약해줘\", \"번역해줘\", \"분석해줘\"</li><li><span class='note-kw'>맥락(Context)</span>: 배경 정보. \"이 문서는 고객 계약서입니다\", \"대상 독자는 비개발자입니다\"</li><li><span class='note-kw'>예시(Examples)</span>: Few-shot 예시. 원하는 입출력 형태를 보여줌</li><li><span class='note-kw'>출력 형식(Output Format)</span>: \"JSON으로\", \"3줄 이내로\", \"마크다운 테이블로\"</li></ul></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon Bedrock 프롬프트 카탈로그</strong>: 다양한 태스크에 최적화된 프롬프트 템플릿을 제공합니다. 처음 설계 시 참고하면 빠르게 시작할 수 있습니다.</p></div>"},
+
+  // [34] 시스템 프롬프트 vs 사용자 프롬프트
+  {t:'시스템 프롬프트 vs 사용자 프롬프트',h:"<div class='note-section'><div class='note-section-title'>시스템 프롬프트 (System Prompt)</div><p><span class='note-kw'>시스템 프롬프트</span>는 모델의 역할·행동 방식·제약을 설정하는 지시입니다. 대화 전체에 적용되며, 사용자에게는 노출되지 않습니다.</p><ul><li>예: <code>당신은 AWS 전문가입니다. 항상 한국어로 답하고, 코드 예시를 포함하세요.</code></li></ul></div><div class='note-section'><div class='note-section-title'>사용자 프롬프트 (User Prompt)</div><p><span class='note-kw'>사용자 프롬프트</span>는 각 대화 턴(Turn)에서 사용자가 입력하는 개별 요청입니다. 매 턴마다 변경됩니다.</p></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon Bedrock Converse API</strong>: <code>system</code> 파라미터에 시스템 프롬프트를 설정하고, <code>messages</code> 배열에 사용자 프롬프트를 담아 전달합니다. 모든 Bedrock FM에서 동일한 API 구조로 호출 가능합니다.</p></div>"},
+
+  // [35] 제로샷 · 퓨샷
+  {t:'제로샷 · 퓨샷',h:"<div class='note-section'><div class='note-section-title'>개념 정의</div><ul><li><span class='note-kw'>Zero-shot</span>: 예시 없이 지시만으로 수행. 간단한 태스크에 효율적</li><li><span class='note-kw'>One-shot</span>: 예시 1개 제공. 출력 형식 힌트 정도</li><li><span class='note-kw'>Few-shot</span>: 예시 2~5개 제공. 복잡한 패턴 전달에 효과적</li></ul></div><div class='note-section'><div class='note-section-title'>Few-shot 예시 — 감성 분석</div><p><code>리뷰: \"배송이 빨라서 좋았어요\" → 긍정<br>리뷰: \"포장이 엉망이었어요\" → 부정<br>리뷰: \"가격 대비 괜찮은 것 같아요\" → ?</code></p></div><div class='note-section'><div class='note-section-title'>트레이드오프</div><ul><li>예시 수 증가 → 정확도 향상 + 토큰 비용 증가</li><li>소규모 작업: Zero-shot / 정확도 중요: Few-shot</li></ul></div><div class='note-case'><div class='note-case-label'>Chain-of-Thought (CoT)</div><p><strong>CoT(사고 사슬)</strong>: \"Let's think step by step\"처럼 중간 추론 과정을 유도합니다. 수학 문제·논리 추론에서 정확도를 크게 향상시킵니다. 다음 슬라이드에서 상세 설명합니다.</p></div>"},
+
+  // [36] 한 걸음 더 — 정확도를 높이는 기법
+  {t:'한 걸음 더 — 정확도를 높이는 기법',h:"<div class='note-section'><div class='note-section-title'>고급 프롬프트 기법</div><ul><li><span class='note-kw'>CoT (Chain-of-Thought)</span>: \"단계적으로 생각해봐\" 지시로 추론 과정 유도. 복잡한 수학·코드 디버깅에 효과적</li><li><span class='note-kw'>ReAct (Reason + Act)</span>: 추론(Reason)과 행동(Act)을 번갈아 수행. 검색 도구 연동 에이전트에 활용</li><li><span class='note-kw'>Tree-of-Thought</span>: 여러 추론 경로를 탐색 후 최선 선택. 복잡한 계획·전략 수립</li><li><span class='note-kw'>Self-Consistency</span>: 같은 프롬프트를 여러 번 실행 후 가장 일관된 답 선택. 정확도 향상</li></ul></div><div class='note-case'><div class='note-case-label'>Kiro와의 연결</div><p>Kiro의 <strong>Spec-Driven Development</strong>는 CoT를 실용화한 것입니다. Requirements → Design → Tasks의 단계적 분해가 바로 \"단계적으로 생각해봐\"를 체계화한 구조입니다.</p></div>"},
+
+  // [37] 컨텍스트 기반 질의응답 (RAG)
+  {t:'컨텍스트 기반 질의응답 (RAG)',h:"<div class='note-section'><div class='note-section-title'>RAG 정의</div><p><span class='note-kw'>RAG(Retrieval-Augmented Generation)</span>는 외부 지식 베이스를 검색(Retrieve)하여 LLM에 제공(Augment)한 뒤 답변을 생성(Generate)하는 패턴입니다.</p></div><div class='note-section'><div class='note-section-title'>RAG 처리 흐름</div><ol><li>사용자 질문 수신</li><li>질문을 임베딩 벡터로 변환</li><li>벡터 DB에서 유사 문서 검색</li><li>관련 문서를 프롬프트 컨텍스트에 주입</li><li>LLM이 문서를 참조해 답변 생성</li></ol></div><div class='note-section'><div class='note-section-title'>RAG의 장점</div><ul><li>FM의 훈련 컷오프 이후 최신 정보 활용 가능</li><li>회사 내부 문서·기밀 데이터를 FM에 노출하지 않고 활용</li><li><span class='note-kw'>할루시네이션(Hallucination)</span> 감소 — 출처 문서 기반 답변</li></ul></div><div class='note-case'><div class='note-case-label'>AWS 서비스 연결</div><p><strong>Amazon Bedrock Knowledge Bases</strong>: S3의 문서를 자동으로 임베딩 → OpenSearch Serverless에 인덱싱. 코드 없이 RAG 파이프라인 구성. Day 2 실습에서 직접 구현합니다. RAG = 지식 추가 / 파인튜닝 = 동작 변경.</p></div>"},
+
+  // [38] 파인튜닝 — 미세 조정
+  {t:'파인튜닝 — 미세 조정',h:"<div class='note-section'><div class='note-section-title'>파인튜닝이란</div><p><span class='note-kw'>파인튜닝(Fine-tuning)</span>은 사전훈련된 파운데이션 모델을 특정 도메인이나 태스크 데이터로 추가 학습시켜 전문화하는 방법입니다.</p></div><div class='note-section'><div class='note-section-title'>파인튜닝 유형</div><ul><li><span class='note-kw'>Full Fine-tuning</span>: 모든 파라미터를 업데이트. 최고 성능, 최고 비용</li><li><span class='note-kw'>PEFT(Parameter-Efficient Fine-Tuning)</span>: 일부 파라미터만 업데이트<ul><li><span class='note-kw'>LoRA(Low-Rank Adaptation)</span>: 적은 파라미터로 효율적 파인튜닝</li><li><span class='note-kw'>QLoRA</span>: LoRA + 양자화(Quantization). 더 적은 GPU 메모리</li></ul></li></ul></div><div class='note-section'><div class='note-section-title'>파인튜닝이 필요한 경우</div><ul><li>특정 기업 어투·스타일을 모델에 내재화해야 할 때</li><li>전문 용어가 많은 도메인(법률·의료·금융) 응답 품질 향상</li><li>기밀 데이터를 모델에 직접 학습시켜야 할 때</li></ul></div><div class='note-case'><div class='note-case-label'>RAG vs 파인튜닝</div><p><strong>RAG</strong>: 지식 추가(어떤 정보를 아느냐). 동적 업데이트 가능. 비용 낮음.<br><strong>파인튜닝</strong>: 동작 변경(어떻게 응답하느냐). 정적 업데이트. 비용 높음.<br>Amazon Bedrock <strong>Custom Model Import</strong>으로 파인튜닝 모델을 Bedrock에서 서빙합니다.</p></div>"}
+];
+
+// 초기 노트 표시
+var nd0 = NOTES[0];
+document.getElementById('npTitle').textContent = '1. ' + nd0.t;
+document.getElementById('npBody').innerHTML = nd0.h;
+</script>
+</body>
+</html>
