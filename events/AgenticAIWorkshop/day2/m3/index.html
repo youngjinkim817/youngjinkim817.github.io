@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M3. Amazon Bedrock 활용 — Agentic AI Workshop</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+/* ── CSS 변수 ── */
+:root {
+  --bg:#ffffff; --bg-alt:#f8f7ff; --bg-soft:#ede9fe;
+  --primary:#211E62; --secondary:#0891B2; --accent:#D97706;
+  --t1:#1e1b4b; --t2:#4338CA; --t3:#6B7280;
+  --border:#c7d2fe; --tag:#ede9fe;
+  --sh:0 2px 8px rgba(33,30,98,.08);
+}
+html.dark {
+  --bg:#0a0a0a; --bg-alt:#111111; --bg-soft:#1a1a2e;
+  --primary:#818CF8; --secondary:#22D3EE;
+  --t1:#F1F5F9; --t2:#94A3B8; --t3:#64748B;
+  --border:#1e293b; --tag:#1e1b4b;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--t1);
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  font-size:17px;line-height:1.75;transition:background .2s,color .2s;}
+
+/* ── 헤더 ── */
+header.top{
+  position:sticky;top:0;z-index:200;height:64px;
+  display:flex;align-items:center;gap:16px;padding:0 24px;
+  background:#fff;border-bottom:2px solid var(--border);
+  transition:background .25s,border-color .25s;
+}
+html.dark header.top{background:#0a0a0a;border-bottom-color:#3a3a6a;}
+header.top .brand{font-weight:800;font-size:18px;color:var(--primary);letter-spacing:-.02em;}
+header.top .brand b{color:var(--secondary);}
+.themebtn{
+  margin-left:auto;width:34px;height:34px;border-radius:8px;
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.themebtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;} .themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;} html.dark .themebtn .sun{display:block;}
+
+/* ── 레이아웃 ── */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
+
+/* ── 사이드바 ── */
+aside{
+  border-right:1px solid var(--border);padding:18px 12px;
+  overflow-y:auto;position:sticky;top:64px;height:calc(100vh - 64px);
+  background:var(--bg);display:flex;flex-direction:column;gap:4px;
+  transition:background .25s;
+}
+html.dark aside{border-right-color:#3a3a6a;}
+
+/* navday */
+.navday{margin-bottom:2px;}
+.navday-hd{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 8px;border-radius:8px;
+  transition:background .15s;
+}
+.navday-hd:hover{background:var(--tag);}
+.navday-toggle{
+  background:transparent;border:none;cursor:pointer;padding:2px;
+  display:flex;align-items:center;flex-shrink:0;margin-top:1px;
+}
+.navday-link{
+  flex:1;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:2px;
+}
+.navday-link:hover .navday-name{color:var(--primary);}
+html.dark .navday-link:hover .navday-name{color:var(--primary)!important;}
+.navday-arr{
+  width:14px;height:14px;flex-shrink:0;margin-top:3px;color:var(--t3);
+  transition:transform .22s ease;fill:none;stroke:currentColor;stroke-width:2.5;
+}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:12px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 6px 22px;border-left:2px solid var(--border);margin-left:13px;display:none;}
+.navday.open>.navday-body{display:block;}
+html.dark .navday-body{border-left-color:#3a3a6a;}
+.nav-module{
+  display:block;padding:7px 10px;border-radius:6px;
+  font-size:13px;font-weight:500;color:var(--t1);
+  border-left:2px solid transparent;text-decoration:none;transition:background .15s;
+}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.nav-module.locked{opacity:.4;pointer-events:none;}
+
+/* 진행 현황 */
+.prog-box{
+  margin-top:16px;padding:10px 12px;
+  background:var(--bg-alt);border-radius:10px;border:1px solid var(--border);
+}
+.prog-box-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.prog-counts{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.prog-bar{height:4px;background:#e0e0e8;border-radius:2px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;transition:width .3s;}
+
+/* 나가기 버튼 */
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  margin:12px 0 8px;padding:9px 12px;border-radius:8px;
+  background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.25);
+  color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;
+  transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+
+/* ── 메인 ── */
+main{padding:20px 24px 80px;width:100%;}
+
+/* ── 슬라이드 뷰어 (svis) ── */
+.svis{
+  background:#0b1020;border:1px solid var(--border);
+  border-radius:14px;box-shadow:var(--sh);
+  position:relative;overflow:hidden;
+  aspect-ratio:16/9;width:100%;
+  transition:all .25s;
+}
+html.dark .svis{border-color:#3a3a6a;}
+
+/* svis 상단 버튼들 */
+.svis-btns{
+  position:absolute;top:10px;right:10px;z-index:50;
+  display:flex;gap:6px;
+}
+.svis-btn{
+  height:30px;padding:0 12px;border-radius:8px;
+  background:rgba(255,255,255,.85);border:1px solid var(--border);
+  color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:5px;backdrop-filter:blur(6px);
+  transition:all .15s;font-family:inherit;
+}
+.svis-btn:hover{background:var(--primary);color:#fff;}
+.svis-btn.on{background:var(--primary);color:#fff;}
+html.dark .svis-btn{background:rgba(10,10,10,.8);color:#F1F5F9;border-color:#3a3a6a;}
+
+/* ── 슬라이드 노트 패널 ── */
+.npanel{
+  background:var(--bg-alt);border:1px solid var(--border);
+  border-radius:14px;padding:20px 24px;
+  display:flex;flex-direction:column;gap:12px;
+  box-shadow:var(--sh);margin-top:14px;
+  font-size:15px;line-height:1.85;
+}
+html.dark .npanel{background:#111111;border-color:#3a3a6a;}
+.npanel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+html.dark .npanel-header{border-bottom-color:#3a3a6a;}
+.npanel-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--secondary);}
+.npanel-slide-title{font-size:15px;font-weight:700;color:var(--primary);}
+.note-section{margin-bottom:14px;}
+.note-section-title{
+  font-size:12px;font-weight:700;color:var(--secondary);
+  border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:8px;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+html.dark .note-section-title{border-bottom-color:#3a3a6a;}
+.note-kw{font-weight:700;color:var(--secondary);}
+.note-case{
+  background:rgba(8,145,178,.07);border-left:3px solid var(--secondary);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;
+}
+.note-case-label{
+  font-size:11px;font-weight:700;color:var(--secondary);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;
+}
+.npanel ul{padding-left:18px;}
+.npanel li{margin-bottom:4px;}
+.npanel-close{
+  background:none;border:none;cursor:pointer;
+  font-size:16px;color:var(--t3);line-height:1;padding:2px 6px;
+}
+
+/* ── 전체화면 오버레이 ── */
+#fsOverlay{
+  position:fixed;inset:0;z-index:900;
+  background:#0b1020;
+  flex-direction:column;
+}
+.fs-topbar{
+  height:44px;display:flex;align-items:center;justify-content:flex-end;
+  padding:0 16px;background:rgba(0,0,0,.5);flex-shrink:0;
+}
+.fs-close{
+  height:32px;padding:0 16px;border-radius:8px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.fs-close:hover{background:rgba(255,255,255,.25);}
+#fsFrame{flex:1;width:100%;border:none;}
+.fs-nav{
+  height:44px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  background:rgba(0,0,0,.5);
+}
+.fs-nav button{
+  height:34px;padding:0 20px;border-radius:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.fs-nav button:hover{background:rgba(255,255,255,.22);}
+#fsCnt{font-size:14px;font-weight:700;color:rgba(255,255,255,.8);min-width:60px;text-align:center;}
+
+/* ── 하단 네비 바 ── */
+.sticknav{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:var(--bg-alt);border-top:1px solid var(--border);
+  padding:8px 24px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+}
+html.dark .sticknav{background:#0a0a0a;border-top-color:#3a3a6a;}
+.sticknav button{
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);padding:7px 20px;border-radius:8px;
+  cursor:pointer;font-size:14px;font-weight:600;
+  transition:all .15s;font-family:inherit;
+}
+.sticknav button:hover:not(:disabled){background:var(--primary);border-color:var(--primary);color:#fff;}
+.sticknav button:disabled{opacity:.35;cursor:default;}
+.sticknav-cnt{font-size:15px;color:var(--secondary);min-width:56px;text-align:center;font-weight:700;}
+
+/* ── 다크 모드 전체 ── */
+html.dark *{--border:#3a3a6a !important;}
+html.dark body,html.dark aside,html.dark main,html.dark .sticknav{background-color:#0a0a0a;}
+html.dark .navday-name,html.dark .nav-module{color:#F1F5F9 !important;}
+html.dark .navday-badge{color:#22D3EE !important;}
+html.dark .nav-module.active{background:rgba(129,140,248,.15) !important;color:#818CF8 !important;border-left-color:#818CF8 !important;}
+html.dark .sticknav-cnt{color:#22D3EE !important;}
+</style>
+</head>
+<body>
+
+<!-- PIN 접근 제어 -->
+<script>
+if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+  window.location.replace('../../AgenticAIWorkshop_gate_v1.html');
+}
+</script>
+
+<!-- ── 헤더 ── -->
+<header class="top">
+  <span class="brand">Agentic AI <b>Workshop</b></span>
+  <button class="themebtn" id="themeToggle" aria-label="배경 전환">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<!-- ── 레이아웃 ── -->
+<div class="layout">
+
+  <!-- ── 사이드바 ── -->
+  <aside>
+    <!-- Day 1 (접힘) -->
+    <div class="navday" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')" aria-label="Day 1 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day1/" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Generative AI 이해하기</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day1/m1/">M1. Kiro 소개</a>
+        <a class="nav-module" href="../../day1/m2/">M2. AI 이해하기</a>
+        <a class="nav-module" href="../../hol/ws1/">Workshop 1. Kiro Basic</a>
+      </div>
+    </div>
+
+    <!-- Day 2 (펼침, 현재 활성) -->
+    <div class="navday open" id="navday-2">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-2')" aria-label="Day 2 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day2/" class="navday-link">
+          <span class="navday-badge">Day 2</span>
+          <span class="navday-name">Developing GenAI App on AWS</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module active" href="#">M3. Amazon Bedrock 활용</a>
+        <a class="nav-module" href="../m4/">M4. Agentic AI 이해하기</a>
+        <a class="nav-module locked" href="#">WS2. HR QnA 앱 개발</a>
+      </div>
+    </div>
+
+    <!-- 진행 현황 -->
+    <div class="prog-box" style="margin-top:16px;">
+      <div class="prog-box-label">슬라이드 진행</div>
+      <div class="prog-counts"><span id="progText">1 / 26</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:3.8%"></div></div>
+    </div>
+
+    <!-- 나가기 -->
+    <a href="../../AgenticAIWorkshop_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </aside>
+
+  <!-- ── 메인 ── -->
+  <main>
+
+    <!-- 슬라이드 뷰어 -->
+    <div class="svis" id="svis">
+      <iframe id="slideFrame"
+              src="./slides.html"
+              frameborder="0"
+              style="width:100%;height:100%;border:none;display:block;"
+              onload="frameReady=true; goTo(cur);">
+      </iframe>
+      <div class="svis-btns">
+        <button class="svis-btn" id="expandBtn" onclick="openFS()">전체화면</button>
+      </div>
+    </div>
+
+    <!-- 슬라이드 노트 패널 (항상 표시) -->
+    <div class="npanel" id="notesPanel">
+      <div class="npanel-header">
+        <span class="npanel-label">슬라이드 노트</span>
+        <span class="npanel-slide-title" id="noteTitle"></span>
+      </div>
+      <div id="noteBody"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── 하단 네비 바 ── -->
+<div class="sticknav">
+  <button id="btnPrev" onclick="goTo(cur-1)" disabled>← 이전</button>
+  <span class="sticknav-cnt" id="snCnt">1 / 26</span>
+  <button id="btnNext" onclick="goTo(cur+1)">다음 →</button>
+</div>
+
+<!-- ── 전체화면 오버레이 ── -->
+<div id="fsOverlay" style="display:none;">
+  <div class="fs-topbar">
+    <button class="fs-close" onclick="closeFS()">✕ 강의실로 돌아가기</button>
+  </div>
+  <iframe id="fsFrame" src="./slides.html"
+          style="flex:1;width:100%;border:none;display:block;"
+          onload="fsFrameReady=true; goFS(cur);">
+  </iframe>
+  <div class="fs-nav">
+    <button onclick="goFS(fsCur-1)">← 이전</button>
+    <span id="fsCnt">1 / 26</span>
+    <button onclick="goFS(fsCur+1)">다음 →</button>
+  </div>
+</div>
+
+<script>
+// ── NOTES 배열 (32개) ──
+var NOTES = [
+  {t:'책임 있는 AI — Responsible AI', h:`
+<div class="note-section">
+  <div class="note-section-title">개요</div>
+  <p><span class="note-kw">책임 있는 AI(Responsible AI)</span>는 AI 시스템을 공정하고 안전하며 투명하게 설계·운영하기 위한 원칙 체계입니다. Amazon은 8가지 차원으로 책임 있는 AI를 정의합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">8가지 차원</div>
+  <ul>
+    <li><span class="note-kw">공정성(Fairness)</span>: AI가 모든 사용자·그룹에 대해 편향 없이 동등하게 작동해야 합니다.</li>
+    <li><span class="note-kw">설명 가능성(Explainability)</span>: AI의 결정 근거를 사람이 이해할 수 있어야 합니다.</li>
+    <li><span class="note-kw">개인정보보호·보안(Privacy &amp; Security)</span>: 데이터를 안전하게 처리하고 민감 정보를 보호해야 합니다.</li>
+    <li><span class="note-kw">안전성(Safety)</span>: 해로운 출력을 방지하고 사람의 안전을 최우선으로 합니다.</li>
+    <li><span class="note-kw">제어 가능성(Controllability)</span>: 사람이 AI 행동을 감독하고 조정할 수 있어야 합니다.</li>
+    <li><span class="note-kw">진실성·견고성(Veracity &amp; Robustness)</span>: 정확하고 신뢰할 수 있는 응답을 일관되게 제공해야 합니다.</li>
+    <li><span class="note-kw">거버넌스(Governance)</span>: AI 시스템의 개발·배포·운영을 관리하는 정책과 프로세스가 필요합니다.</li>
+    <li><span class="note-kw">투명성(Transparency)</span>: AI가 어떻게 작동하는지 이해관계자에게 명확하게 공개해야 합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR QnA 앱과 책임 있는 AI</div>
+  <p>HR QnA 앱에서 Guardrail로 부적절한 콘텐츠를 필터링하고, Knowledge Base로 답변 근거를 제공하는 것이 <strong>안전성·설명 가능성·공정성</strong>의 실천입니다.</p>
+</div>`},
+  {t:'Amazon Bedrock', h:`
+<div class="note-section">
+  <div class="note-section-title">서비스 개요</div>
+  <p><span class="note-kw">Amazon Bedrock</span>은 AWS가 제공하는 <span class="note-kw">완전 관리형(Fully Managed)</span> 생성형 AI 서비스입니다. 별도의 인프라 구축 없이 다양한 <span class="note-kw">파운데이션 모델(Foundation Model)</span>을 API로 호출할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">핵심 특징</div>
+  <ul>
+    <li><span class="note-kw">서버리스(Serverless)</span>: 서버 프로비저닝 없이 사용한 만큼만 요금을 냅니다.</li>
+    <li>Anthropic Claude, Amazon Titan, Meta Llama, Stability AI 등 다양한 모델을 단일 API로 사용합니다.</li>
+    <li>모든 데이터는 AWS 환경 내에서만 처리되며 외부로 전송되지 않습니다.</li>
+    <li>기업의 데이터와 모델 커스터마이징(Fine-tuning)을 지원합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 다양한 FM 선택</div>
+  <p>HR QnA 앱은 Claude Sonnet을 기본 모델로 사용하지만, 비용·성능·언어 특성에 따라 다른 모델로 쉽게 교체할 수 있습니다. <strong>Bedrock이 멀티 모델 전략을 단순화합니다.</strong></p>
+</div>`},
+  {t:'Bedrock On-Demand 아키텍처', h:`
+<div class="note-section">
+  <div class="note-section-title">온디맨드 호출 방식</div>
+  <p><span class="note-kw">온디맨드(On-Demand)</span> 방식은 API를 호출할 때마다 요금을 지불하는 모델입니다. 사전 예약이나 고정 비용 없이 실제 사용량에 따라 과금됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">아키텍처 흐름</div>
+  <ul>
+    <li>애플리케이션이 <span class="note-kw">API 호출(API Invocation)</span>을 통해 Bedrock에 요청을 전송합니다.</li>
+    <li>Bedrock은 요청을 해당 파운데이션 모델의 <span class="note-kw">추론 엔드포인트(Inference Endpoint)</span>로 라우팅합니다.</li>
+    <li>모델이 추론을 수행하고 결과를 반환합니다.</li>
+    <li>전체 과정에서 인프라 관리는 AWS가 담당합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 가변 트래픽 처리</div>
+  <p>HR QnA 앱의 트래픽은 점심시간이나 성과 평가 시즌에 급증합니다. 온디맨드 방식은 <strong>자동으로 스케일링</strong>되어 별도의 용량 계획 없이 수요 변화에 대응합니다.</p>
+</div>`},
+  {t:'Amazon Bedrock 주요 기능', h:`
+<div class="note-section">
+  <div class="note-section-title">핵심 기능 4가지</div>
+  <ul>
+    <li><span class="note-kw">지식 베이스(Knowledge Base)</span>: 기업 문서를 벡터 DB에 저장하고 RAG로 연결하는 관리형 서비스입니다.</li>
+    <li><span class="note-kw">가드레일(Guardrail)</span>: 유해 콘텐츠 필터링, 주제 제한, PII 마스킹 등 안전 정책을 API 수준에서 적용합니다.</li>
+    <li><span class="note-kw">프롬프트 관리(Prompt Management)</span>: 프롬프트 템플릿을 버전 관리하고 재사용 가능한 형태로 중앙 관리합니다.</li>
+    <li><span class="note-kw">에이전트(Agent)</span>: LLM이 도구를 호출하며 멀티스텝 작업을 자율적으로 수행하는 오케스트레이션 레이어입니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR QnA 앱 구성</div>
+  <p>HR QnA 앱은 Knowledge Base(사내 정책 문서 RAG) + Guardrail(부적절한 질문 차단) + Prompt Management(일관된 답변 형식) + Agent(휴가 신청 자동화)를 모두 사용합니다. <strong>Bedrock 하나로 전체 스택을 구성할 수 있습니다.</strong></p>
+</div>`},
+  {t:'Bedrock 콘솔 둘러보기', h:`
+<div class="note-section">
+  <div class="note-section-title">콘솔 주요 메뉴</div>
+  <p><span class="note-kw">Bedrock 콘솔(Bedrock Console)</span>은 AWS Management Console에서 Amazon Bedrock 항목으로 진입합니다. 처음 방문 시 <span class="note-kw">모델 액세스(Model Access)</span>에서 사용할 모델을 활성화해야 합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">주요 기능 위치</div>
+  <ul>
+    <li><span class="note-kw">플레이그라운드(Playground)</span>: 코드 없이 모델을 직접 테스트할 수 있는 UI 인터페이스입니다.</li>
+    <li>Chat Playground: 멀티턴 대화를 테스트합니다.</li>
+    <li>Text Playground: 단일 완성(completion) 작업을 테스트합니다.</li>
+    <li>Image Playground: 이미지 생성 모델을 테스트합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">실습 안내: 모델 액세스 활성화</div>
+  <p>실습 전 반드시 Bedrock 콘솔 &gt; 모델 액세스에서 Claude Sonnet을 활성화해야 합니다. 활성화 요청 후 <strong>즉시 또는 수 분 내에 승인</strong>됩니다.</p>
+</div>`},
+  {t:'Bedrock Endpoint vs SageMaker Endpoint', h:`
+<div class="note-section">
+  <div class="note-section-title">두 서비스의 차이</div>
+  <p>Amazon Bedrock과 SageMaker는 모두 ML 추론을 제공하지만 설계 철학이 다릅니다. Bedrock은 파운데이션 모델 전용 서버리스 API, SageMaker는 커스텀 모델을 포함한 범용 ML 플랫폼입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">비교</div>
+  <ul>
+    <li><span class="note-kw">Bedrock API</span>: 인프라 관리 불필요, 사용량 기반 과금, 파운데이션 모델 전용입니다.</li>
+    <li><span class="note-kw">SageMaker 엔드포인트(SageMaker Endpoint)</span>: 커스텀 모델 배포 가능, 인스턴스 관리 필요, 실시간·배치 추론을 지원합니다.</li>
+    <li><span class="note-kw">서버리스 추론(Serverless Inference)</span>: SageMaker도 서버리스 옵션을 제공하지만 콜드 스타트 시간이 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 선택 기준</div>
+  <p>표준 파운데이션 모델을 사용한다면 Bedrock이 간단하고 경제적입니다. 자체 파인튜닝 모델이나 비표준 ML 작업이라면 <strong>SageMaker가 더 적합합니다.</strong></p>
+</div>`},
+  {t:'Amazon Bedrock과의 상호작용', h:`
+<div class="note-section">
+  <div class="note-section-title">API 호출 방식</div>
+  <p>Amazon Bedrock은 두 가지 주요 API를 제공합니다. <span class="note-kw">InvokeModel API</span>와 <span class="note-kw">Converse API</span>입니다. 용도에 따라 적합한 API를 선택합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">스트리밍 지원</div>
+  <ul>
+    <li>기본 API: 전체 응답을 한 번에 반환합니다. 짧은 응답에 적합합니다.</li>
+    <li><span class="note-kw">스트리밍(Streaming)</span>: 응답을 토큰 단위로 실시간 전송합니다. 긴 응답의 사용자 경험을 개선합니다.</li>
+    <li>boto3의 <code>invoke_model_with_response_stream</code>으로 스트리밍을 구현합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR QnA 응답</div>
+  <p>HR 정책 질문은 답변이 길 수 있습니다. 스트리밍을 사용하면 사용자가 답변 전체가 생성되기를 기다리지 않고 <strong>실시간으로 텍스트를 읽기 시작</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'액세스 키 — 프로그래밍 방식 접근', h:`
+<div class="note-section">
+  <div class="note-section-title">프로그래밍 방식 접근</div>
+  <p><span class="note-kw">액세스 키(Access Key)</span>는 <span class="note-kw">IAM 사용자(IAM User)</span>에게 발급되는 장기 자격 증명입니다. Access Key ID와 Secret Access Key 쌍으로 구성됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">자격 증명 관리</div>
+  <ul>
+    <li><span class="note-kw">자격 증명(Credential)</span>: AWS CLI, SDK, API 직접 호출에 사용됩니다.</li>
+    <li>실습에서는 <code>aws configure</code> 명령으로 자격 증명을 로컬에 등록합니다.</li>
+    <li>Secret Access Key는 생성 시 한 번만 표시되므로 안전하게 보관해야 합니다.</li>
+    <li>프로덕션 환경에서는 IAM Role을 사용하는 것이 권장됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 로컬 개발 환경</div>
+  <p>실습에서는 개인 IAM 사용자의 액세스 키를 사용합니다. 실제 서비스에서는 EC2·Lambda에 <strong>IAM Role을 직접 부여</strong>하여 자격 증명 관리를 단순화합니다.</p>
+</div>`},
+  {t:'개발 도구 — AWS SDK (boto3)', h:`
+<div class="note-section">
+  <div class="note-section-title">boto3 개요</div>
+  <p><span class="note-kw">boto3</span>는 Python용 <span class="note-kw">AWS SDK</span>입니다. AWS 서비스를 Python 코드로 제어하는 공식 라이브러리로, Amazon Bedrock 호출에도 boto3를 사용합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Bedrock 클라이언트 생성</div>
+  <ul>
+    <li><span class="note-kw">bedrock-runtime 클라이언트(bedrock-runtime client)</span>: 모델 추론 API(InvokeModel, Converse)에 사용합니다.</li>
+    <li><code>bedrock</code> 클라이언트: 관리 작업(모델 목록 조회 등)에 사용합니다.</li>
+    <li><code>boto3.client('bedrock-runtime', region_name='ap-northeast-2')</code>로 서울 리전 클라이언트를 생성합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: Python 코드 예시</div>
+  <p>HR QnA 앱은 boto3로 Bedrock을 호출합니다. <code>response = client.converse(modelId='...', messages=[...])</code> 형태로 <strong>몇 줄의 코드만으로</strong> LLM 호출이 가능합니다.</p>
+</div>`},
+  {t:'Bedrock 서비스 엔드포인트', h:`
+<div class="note-section">
+  <div class="note-section-title">엔드포인트 구조</div>
+  <p><span class="note-kw">서비스 엔드포인트(Service Endpoint)</span>는 AWS 서비스에 API 요청을 보내는 URL입니다. Bedrock의 경우 <code>bedrock-runtime.{리전}.amazonaws.com</code> 형식입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">리전 및 VPC 엔드포인트</div>
+  <ul>
+    <li><span class="note-kw">리전(Region)</span>: Bedrock 서비스는 리전별로 독립적으로 운영됩니다. 서울 리전은 <code>ap-northeast-2</code>입니다.</li>
+    <li><span class="note-kw">VPC 엔드포인트(VPC Endpoint)</span>: 인터넷을 거치지 않고 AWS 내부 네트워크로 Bedrock을 호출합니다. 보안 강화와 데이터 전송 비용 절감 효과가 있습니다.</li>
+    <li>boto3 클라이언트 생성 시 <code>region_name</code> 파라미터로 리전을 지정합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 멀티 리전 배포</div>
+  <p>글로벌 서비스라면 지연 시간 최소화를 위해 가까운 리전을 선택합니다. 한국 사용자 대상 서비스는 <strong>서울 리전(ap-northeast-2)</strong>이 최적입니다.</p>
+</div>`},
+  {t:'Cross-Region Model Inference', h:`
+<div class="note-section">
+  <div class="note-section-title">교차 리전 추론</div>
+  <p><span class="note-kw">교차 리전 추론(Cross-Region Inference)</span>은 특정 리전에서 모델이 사용 불가능할 때 다른 리전의 모델을 자동으로 활용하는 기능입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">추론 프로파일</div>
+  <ul>
+    <li><span class="note-kw">추론 프로파일(Inference Profile)</span>: 교차 리전 추론을 위한 설정으로, 사용 가능한 리전 목록과 우선순위를 정의합니다.</li>
+    <li><span class="note-kw">가용성(Availability)</span>: 단일 리전 장애 시에도 다른 리전으로 페일오버되어 서비스 연속성을 유지합니다.</li>
+    <li>비용은 실제 요청이 처리된 리전 기준으로 청구됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 고가용성 서비스</div>
+  <p>최신 모델이 특정 리전에서만 출시될 경우, 교차 리전 추론을 사용하면 <strong>코드 변경 없이</strong> 다른 리전의 모델을 활용할 수 있습니다.</p>
+</div>`},
+  {t:'InvokeModel vs Converse API', h:`
+<div class="note-section">
+  <div class="note-section-title">두 API 비교</div>
+  <p><span class="note-kw">InvokeModel API</span>는 각 모델의 고유한 요청 형식을 사용하는 저수준 API입니다. <span class="note-kw">Converse API</span>는 모든 모델에 동일한 인터페이스를 제공하는 고수준 API입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">선택 기준</div>
+  <ul>
+    <li>Converse API: <span class="note-kw">멀티턴 대화(Multi-turn Conversation)</span>를 구조적으로 지원합니다. 모델 전환이 쉬워 권장됩니다.</li>
+    <li>InvokeModel API: 모델별 고급 파라미터를 세밀하게 제어해야 할 때 사용합니다.</li>
+    <li>Converse API는 <code>messages</code> 배열에 역할(user/assistant)과 내용을 담아 전송합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR QnA 구현</div>
+  <p>HR QnA 앱은 Converse API를 사용합니다. 모델을 Claude에서 다른 FM으로 바꿔도 <strong>코드 변경이 최소화</strong>됩니다.</p>
+</div>`},
+  {t:'Amazon Bedrock Knowledge Base', h:`
+<div class="note-section">
+  <div class="note-section-title">Knowledge Base 개요</div>
+  <p><span class="note-kw">지식 베이스(Knowledge Base)</span>는 Amazon Bedrock에서 제공하는 관리형 RAG 서비스입니다. 기업 문서를 S3에 저장하고 벡터 DB와 연결하는 전 과정을 관리합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">핵심 구성 요소</div>
+  <ul>
+    <li><span class="note-kw">RAG(Retrieval-Augmented Generation)</span>: 외부 문서를 검색하여 LLM의 응답에 실제 근거를 제공합니다.</li>
+    <li><span class="note-kw">벡터 데이터베이스(Vector Database)</span>: 문서를 수치 벡터로 저장하는 특수 DB입니다. Amazon OpenSearch Serverless, Pinecone 등이 지원됩니다.</li>
+    <li><span class="note-kw">임베딩(Embedding)</span>: 텍스트를 고차원 벡터로 변환하는 과정입니다. Titan Embeddings 모델이 사용됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR 정책 문서 RAG</div>
+  <p>HR 정책 PDF를 S3에 업로드하고 Knowledge Base를 생성하면, 직원이 "연차는 얼마나 사용할 수 있나요?"라고 물었을 때 <strong>사내 규정을 근거로 정확하게 답변</strong>합니다.</p>
+</div>`},
+  {t:'전체 RAG 워크플로우', h:`
+<div class="note-section">
+  <div class="note-section-title">단계별 흐름</div>
+  <p>RAG의 전체 흐름은 질문 입력 → 벡터화 → 유사도 검색 → 컨텍스트 추출 → 프롬프트 증강 → 모델 생성 → 응답 반환 순서입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">핵심 개념</div>
+  <ul>
+    <li><span class="note-kw">벡터화(Vectorization)</span>: 질문 텍스트를 임베딩 모델로 벡터로 변환합니다.</li>
+    <li><span class="note-kw">유사도 검색(Similarity Search)</span>: 질문 벡터와 가장 가까운 문서 청크를 검색합니다.</li>
+    <li><span class="note-kw">증강 프롬프트(Augmented Prompt)</span>: 원본 질문 + 검색된 컨텍스트를 합쳐 모델에 전달합니다.</li>
+    <li><span class="note-kw">Top-K</span>: 검색 결과 중 상위 K개의 문서 청크를 컨텍스트로 사용합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 답변 근거 추적</div>
+  <p>Knowledge Base는 응답과 함께 출처 문서와 청크를 반환합니다. HR QnA 앱에서 <strong>"출처: HR 정책 2024년판 3.2조"</strong> 형태로 근거를 표시할 수 있습니다.</p>
+</div>`},
+  {t:'Bedrock KB로 RAG 구현하기', h:`
+<div class="note-section">
+  <div class="note-section-title">RAG 워크플로우</div>
+  <p><span class="note-kw">검색 증강 생성(RAG, Retrieval-Augmented Generation)</span>은 LLM의 지식을 외부 문서로 보강하는 패턴입니다. 모델 학습 데이터 이후의 정보도 반영할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">구현 단계</div>
+  <ul>
+    <li>문서를 적절한 크기로 분할하는 <span class="note-kw">청킹(Chunking)</span> 단계가 검색 품질에 큰 영향을 미칩니다.</li>
+    <li><span class="note-kw">의미 유사도 검색(Semantic Search)</span>: 키워드 매칭이 아닌 의미적 유사성으로 관련 문서를 검색합니다.</li>
+    <li>Knowledge Base는 청킹·임베딩·인덱싱 과정을 자동으로 처리합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 청킹 전략</div>
+  <p>HR 정책 문서는 조항 단위로 청킹하는 것이 효과적입니다. 너무 작으면 맥락이 사라지고, 너무 크면 불필요한 내용이 포함됩니다. <strong>청킹 크기는 문서 특성에 맞게 조정</strong>해야 합니다.</p>
+</div>`},
+  {t:'Amazon Bedrock Guardrails', h:`
+<div class="note-section">
+  <div class="note-section-title">가드레일 개요</div>
+  <p><span class="note-kw">가드레일(Guardrail)</span>은 Amazon Bedrock에서 AI 응답의 안전성을 보장하기 위한 정책 레이어입니다. 입력과 출력 모두에 적용할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">주요 기능</div>
+  <ul>
+    <li><span class="note-kw">콘텐츠 필터링(Content Filtering)</span>: 폭력·혐오·성인 콘텐츠 등을 강도별로 차단합니다.</li>
+    <li><span class="note-kw">PII 마스킹(PII Masking)</span>: 응답에 포함된 개인정보(이름·이메일·전화번호 등)를 자동으로 마스킹합니다.</li>
+    <li><span class="note-kw">주제 거부(Topic Denial)</span>: 특정 주제(예: 경쟁사·법적 분쟁·임금 협상)에 대한 질문을 차단합니다.</li>
+    <li>단어 필터링: 금칙어 목록을 정의하여 특정 단어가 포함된 입력·출력을 차단합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR QnA 안전 정책</div>
+  <p>HR QnA 앱에서 Guardrail로 "개인 급여 정보 요청"이나 "특정 직원에 대한 비교" 같은 민감 질문을 차단합니다. <strong>코드 수정 없이 콘솔에서 정책을 업데이트</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'Amazon Bedrock Prompt Management', h:`
+<div class="note-section">
+  <div class="note-section-title">프롬프트 관리 개요</div>
+  <p><span class="note-kw">프롬프트 관리(Prompt Management)</span>는 프롬프트 템플릿을 중앙에서 버전 관리하고 재사용하는 Bedrock 기능입니다. 여러 애플리케이션이 동일한 프롬프트를 공유합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">핵심 개념</div>
+  <ul>
+    <li><span class="note-kw">프롬프트 템플릿(Prompt Template)</span>: 고정된 구조에 변수를 포함한 재사용 가능한 프롬프트입니다.</li>
+    <li><span class="note-kw">변수 치환(Variable Substitution)</span>: <code>{{role}}</code>, <code>{{context}}</code>, <code>{{question}}</code>과 같은 변수에 런타임 값을 채워 최종 프롬프트를 생성합니다.</li>
+    <li>버전 관리로 프롬프트 변경 이력을 추적하고 이전 버전으로 롤백할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR QnA 시스템 프롬프트</div>
+  <p>"당신은 {{role}} 전문가입니다. 다음 사내 규정만 근거로 답하세요: {{context}}"라는 템플릿으로, <strong>역할과 컨텍스트만 교체</strong>하여 다양한 부서용 QnA를 만들 수 있습니다.</p>
+</div>`},
+  {t:'생성형 AI에서 Agentic AI로', h:`
+<div class="note-section">
+  <div class="note-section-title">패러다임 전환</div>
+  <p><span class="note-kw">생성형 AI(Generative AI)</span>는 질문에 답변을 생성하는 단방향 상호작용입니다. <span class="note-kw">Agentic AI</span>는 목표를 받아 스스로 계획하고 도구를 사용하며 작업을 완수하는 자율 시스템입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">전환의 의미</div>
+  <ul>
+    <li>생성형 AI: "연차 정책을 알려줘" → 텍스트 답변 반환</li>
+    <li><span class="note-kw">자율 에이전트(Autonomous Agent)</span>: "휴가를 신청해줘" → DB 조회 → 정책 확인 → 신청 처리 → 승인 요청 메일 발송</li>
+    <li>Agentic AI는 여러 단계의 작업을 사람의 개입 없이 순차적으로 완수합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR 업무 자동화</div>
+  <p>Agentic AI를 사용하면 직원이 자연어로 "다음 주 월·화 연차 신청해줘"라고만 하면 에이전트가 <strong>DB 확인부터 매니저 이메일 발송까지 자동화</strong>합니다.</p>
+</div>`},
+  {t:'생성형 AI vs Agentic AI', h:`
+<div class="note-section">
+  <div class="note-section-title">핵심 차이</div>
+  <p><span class="note-kw">대화 AI(Conversational AI)</span>는 각 질문에 독립적으로 응답합니다. Agentic AI는 목표를 위해 여러 단계를 계획하고 연속적으로 실행합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">에이전트 루프</div>
+  <ul>
+    <li><span class="note-kw">에이전트 루프(Agent Loop)</span>: 관찰(Observe) → 계획(Plan) → 행동(Act) → 관찰 사이클을 목표 달성까지 반복합니다.</li>
+    <li><span class="note-kw">도구 사용(Tool Use)</span>: 에이전트는 외부 API, DB, 검색 등을 도구로 활용합니다.</li>
+    <li>생성형 AI는 출력이 텍스트이지만, Agentic AI는 실제 시스템에 변화를 일으키는 행동을 수행합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 복잡한 업무 처리</div>
+  <p>단순 QnA는 생성형 AI로 충분하지만, 휴가 신청처럼 <strong>여러 시스템을 연동하는 워크플로우</strong>에는 Agentic AI가 필요합니다.</p>
+</div>`},
+  {t:'에이전트 = 모델 + 도구 + 컨텍스트', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전트 구성 요소</div>
+  <p>AI 에이전트는 세 가지 핵심 요소로 구성됩니다. <span class="note-kw">LLM</span>(추론·계획), <span class="note-kw">도구(Tool)</span>(외부 시스템 연동), <span class="note-kw">컨텍스트(Context)</span>(현재 상태·목표 관리).</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">상세 구성</div>
+  <ul>
+    <li>LLM: 도구를 언제 어떻게 사용할지 결정하는 두뇌 역할입니다.</li>
+    <li><span class="note-kw">메모리(Memory)</span>: 대화 이력과 작업 상태를 저장하여 연속성을 유지합니다.</li>
+    <li><span class="note-kw">오케스트레이션(Orchestration)</span>: 여러 도구와 단계를 조율하는 실행 프레임워크입니다.</li>
+    <li>지침(Instructions): 에이전트의 역할과 동작 방식을 정의하는 시스템 프롬프트입니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: Bedrock Agent 구성</div>
+  <p>HR QnA 에이전트는 Claude Sonnet(LLM) + Lambda 함수(도구) + Knowledge Base(컨텍스트)로 구성됩니다. <strong>각 요소를 독립적으로 업그레이드</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'에이전트 동작 방식', h:`
+<div class="note-section">
+  <div class="note-section-title">ReAct 루프</div>
+  <p>에이전트는 <span class="note-kw">ReAct 루프(ReAct Loop)</span> 패턴으로 동작합니다. Reasoning(추론)과 Acting(행동)을 번갈아 수행하며 목표를 향해 단계적으로 진행합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">4단계 사이클</div>
+  <ul>
+    <li><span class="note-kw">관찰(Observation)</span>: 현재 상태와 도구 실행 결과를 확인합니다.</li>
+    <li><span class="note-kw">계획(Planning)</span>: 목표 달성을 위해 다음 행동을 결정합니다.</li>
+    <li><span class="note-kw">행동(Action)</span>: 선택한 도구를 호출하거나 최종 답변을 생성합니다.</li>
+    <li>결과가 목표를 만족하지 않으면 루프를 반복합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 휴가 신청 처리</div>
+  <p>에이전트가 "다음 주 연차 신청"을 받으면: (1)잔여 연차 조회 → (2)해당 기간 일정 확인 → (3)신청 등록 → (4)매니저 알림 순서로 <strong>자율적으로 실행</strong>합니다.</p>
+</div>`},
+  {t:'도구 (Tool Use · Function Calling)', h:`
+<div class="note-section">
+  <div class="note-section-title">도구 사용 개념</div>
+  <p><span class="note-kw">도구 사용(Tool Use)</span>은 LLM이 외부 기능을 호출하는 메커니즘입니다. <span class="note-kw">함수 호출(Function Calling)</span>이라고도 합니다. LLM은 도구 명세를 보고 언제 어떤 도구를 사용할지 결정합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">도구 스키마</div>
+  <ul>
+    <li><span class="note-kw">도구 스키마(Tool Schema)</span>: 도구의 이름·설명·파라미터를 JSON 형식으로 정의합니다. LLM이 이 명세를 읽고 도구를 이해합니다.</li>
+    <li>LLM은 JSON 형태로 도구 호출 명령을 생성하고, 런타임이 실제 함수를 실행합니다.</li>
+    <li>도구 실행 결과는 LLM에게 다시 전달되어 다음 행동 결정에 사용됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 휴가 조회 도구</div>
+  <p><code>check_leave_balance(employee_id, leave_type)</code> 도구를 정의하면, LLM이 "직원 ID 123의 연차 잔여일 조회"가 필요할 때 <strong>자동으로 이 함수를 호출</strong>합니다.</p>
+</div>`},
+  {t:'Amazon Bedrock Agents', h:`
+<div class="note-section">
+  <div class="note-section-title">Bedrock 에이전트 개요</div>
+  <p><span class="note-kw">Bedrock 에이전트(Bedrock Agent)</span>는 Amazon Bedrock에서 제공하는 관리형 AI 에이전트 서비스입니다. 인프라 구축 없이 에이전트를 구성하고 배포합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">핵심 구성 요소</div>
+  <ul>
+    <li><span class="note-kw">액션 그룹(Action Group)</span>: 에이전트가 수행할 수 있는 작업을 정의합니다. OpenAPI 스키마로 API 명세를 제공합니다.</li>
+    <li><span class="note-kw">Lambda 연동(Lambda Integration)</span>: 액션 그룹의 실제 실행 로직을 AWS Lambda 함수로 구현합니다.</li>
+    <li><span class="note-kw">지식 베이스 연동(KB Integration)</span>: Knowledge Base를 에이전트에 연결하여 RAG 기반 답변을 제공합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR QnA 에이전트</div>
+  <p>HR QnA 에이전트는 Knowledge Base(정책 문서 RAG) + 액션 그룹(휴가 조회·신청 Lambda)으로 구성됩니다. <strong>콘솔에서 점클릭으로</strong> 전체 에이전트를 구성할 수 있습니다.</p>
+</div>`},
+  {t:'Bedrock Multi-Agent Collaboration', h:`
+<div class="note-section">
+  <div class="note-section-title">멀티 에이전트 개요</div>
+  <p><span class="note-kw">멀티 에이전트(Multi-Agent)</span> 패턴은 복잡한 작업을 전문화된 여러 에이전트가 협력하여 처리하는 아키텍처입니다. 각 에이전트는 특정 도메인에 특화됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">역할 분담</div>
+  <ul>
+    <li><span class="note-kw">오케스트레이터(Orchestrator)</span>: 사용자 요청을 받아 적합한 서브 에이전트에게 작업을 위임하는 관리 에이전트입니다.</li>
+    <li><span class="note-kw">서브 에이전트(Sub-Agent)</span>: 특정 도메인(HR·IT 지원·재무 등)에 특화된 에이전트입니다.</li>
+    <li><span class="note-kw">협업(Collaboration)</span>: 오케스트레이터가 서브 에이전트의 응답을 조합하여 최종 답변을 생성합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 사내 AI 어시스턴트</div>
+  <p>회사 AI 어시스턴트를 만들 때 HR 에이전트·IT 에이전트·재무 에이전트를 별도로 구성하고 오케스트레이터가 질문을 라우팅합니다. <strong>각 팀이 독립적으로 에이전트를 관리</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'Amazon Bedrock Evaluation — 세 가지 방법', h:`
+<div class="note-section">
+  <div class="note-section-title">모델 평가의 중요성</div>
+  <p>생성형 AI 애플리케이션의 품질을 객관적으로 측정하려면 체계적인 <span class="note-kw">평가(Evaluation)</span>가 필요합니다. Amazon Bedrock은 세 가지 평가 방법을 제공합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">세 가지 평가 방법</div>
+  <ul>
+    <li><span class="note-kw">자동 평가(Automated Evaluation)</span>: 사전 정의된 메트릭(정확성·유창성·일관성)으로 대규모 자동 평가를 수행합니다.</li>
+    <li><span class="note-kw">사람 평가(Human Evaluation)</span>: 도메인 전문가나 실제 사용자가 응답 품질을 직접 평가합니다. 주관적 품질 측정에 적합합니다.</li>
+    <li><span class="note-kw">LLM as Judge</span>: 별도의 LLM이 응답을 평가합니다. 자동화와 품질의 균형을 맞춥니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: RAG 품질 평가</div>
+  <p>HR QnA 앱의 답변 품질을 평가할 때, LLM as Judge로 "답변이 HR 정책 문서에 근거했는가?"를 자동 체크합니다. <strong>모델 업그레이드 전후 품질 비교</strong>에 활용됩니다.</p>
+</div>`},
+  {t:'모델 호출 로깅 활성화', h:`
+<div class="note-section">
+  <div class="note-section-title">로깅 개요</div>
+  <p><span class="note-kw">호출 로깅(Invocation Logging)</span>은 Amazon Bedrock API 호출의 입력·출력·메타데이터를 저장하는 기능입니다. 감사·디버깅·비용 분석에 활용됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">로깅 대상</div>
+  <ul>
+    <li><span class="note-kw">CloudWatch</span>: 실시간 로그 모니터링과 알림 설정에 사용합니다. 운영 중 이상 탐지에 적합합니다.</li>
+    <li><span class="note-kw">S3</span>: 대용량 로그 장기 보관에 사용합니다. 비용 최적화와 규정 준수 목적에 적합합니다.</li>
+    <li><span class="note-kw">감사(Audit)</span>: 누가 언제 어떤 모델에 무엇을 요청했는지 추적합니다. 보안·컴플라이언스 요구사항 충족에 필수입니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 규정 준수</div>
+  <p>금융·의료 등 규제 산업에서는 AI 호출 이력을 일정 기간 보관해야 합니다. Bedrock 로깅으로 <strong>별도 코드 없이 자동으로 감사 로그</strong>를 생성합니다.</p>
+</div>`}
+];
+
+// ── 상수 ──
+var TOTAL = 26;
+var cur = 0;
+var fsCur = 0;
+var frameReady = false;
+var fsFrameReady = false;
+
+// ── goTo: iframe 슬라이드 제어 (3단계 폴백) ──
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  cur = n;
+  var win = document.getElementById('slideFrame').contentWindow;
+  if (frameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') { win.kiroGo(n); }
+      else if (typeof win.go === 'function') { win.go(n); }
+      else if (typeof win.show === 'function') { win.show(n); }
+    } catch(e) {}
+  }
+  updateUI();
+}
+
+// ── UI 업데이트 ──
+function updateUI() {
+  var n = cur;
+  document.getElementById('progText').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('progFill').style.width = ((n+1)/TOTAL*100).toFixed(1) + '%';
+  document.getElementById('snCnt').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('btnPrev').disabled = n === 0;
+  document.getElementById('btnNext').disabled = n === TOTAL-1;
+  // 노트 업데이트
+  var nd = NOTES[n];
+  if (nd) {
+    document.getElementById('noteTitle').textContent = nd.t;
+    document.getElementById('noteBody').innerHTML = nd.h;
+  }
+  // fsOverlay 동기화
+  if (document.getElementById('fsOverlay').style.display !== 'none') {
+    goFS(n);
+  }
+}
+
+// ── 전체화면 ──
+function openFS() {
+  document.getElementById('fsOverlay').style.display = 'flex';
+  goFS(cur);
+}
+function closeFS() {
+  document.getElementById('fsOverlay').style.display = 'none';
+}
+function goFS(n) {
+  if (n < 0 || n >= TOTAL) return;
+  fsCur = n;
+  var win = document.getElementById('fsFrame').contentWindow;
+  if (fsFrameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') win.kiroGo(n);
+      else if (typeof win.go === 'function') win.go(n);
+      else if (typeof win.show === 'function') win.show(n);
+    } catch(e) {}
+  }
+  document.getElementById('fsCnt').textContent = (fsCur+1) + ' / ' + TOTAL;
+}
+
+// ── Day 토글 ──
+function toggleDay(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+  var btn = el.querySelector('.navday-toggle');
+  if (btn) btn.setAttribute('aria-expanded', el.classList.contains('open'));
+}
+
+// ── 키보드 ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(cur+1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(cur-1); }
+  if (e.key === 'Escape') { closeFS(); }
+});
+
+// ── 테마 ──
+(function() {
+  if (localStorage.getItem('aawTheme') === 'dark') document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var d = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('aawTheme', d ? 'dark' : 'light');
+  });
+})();
+
+// ── 초기화 ──
+goTo(0);
+</script>
+</body>
+</html>

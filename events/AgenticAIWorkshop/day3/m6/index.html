@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M6. Amazon Bedrock AgentCore — Agentic AI Workshop</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+/* ── CSS 변수 ── */
+:root {
+  --bg:#ffffff; --bg-alt:#f8f7ff; --bg-soft:#ede9fe;
+  --primary:#211E62; --secondary:#0891B2; --accent:#D97706;
+  --t1:#1e1b4b; --t2:#4338CA; --t3:#6B7280;
+  --border:#c7d2fe; --tag:#ede9fe;
+  --sh:0 2px 8px rgba(33,30,98,.08);
+}
+html.dark {
+  --bg:#0a0a0a; --bg-alt:#111111; --bg-soft:#1a1a2e;
+  --primary:#818CF8; --secondary:#22D3EE;
+  --t1:#F1F5F9; --t2:#94A3B8; --t3:#64748B;
+  --border:#1e293b; --tag:#1e1b4b;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--t1);
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  font-size:17px;line-height:1.75;transition:background .2s,color .2s;}
+
+/* ── 헤더 ── */
+header.top{
+  position:sticky;top:0;z-index:200;height:64px;
+  display:flex;align-items:center;gap:16px;padding:0 24px;
+  background:#fff;border-bottom:2px solid var(--border);
+  transition:background .25s,border-color .25s;
+}
+html.dark header.top{background:#0a0a0a;border-bottom-color:#3a3a6a;}
+header.top .brand{font-weight:800;font-size:18px;color:var(--primary);letter-spacing:-.02em;}
+header.top .brand b{color:var(--secondary);}
+.themebtn{
+  margin-left:auto;width:34px;height:34px;border-radius:8px;
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.themebtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;} .themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;} html.dark .themebtn .sun{display:block;}
+
+/* ── 레이아웃 ── */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
+
+/* ── 사이드바 ── */
+aside{
+  border-right:1px solid var(--border);padding:18px 12px;
+  overflow-y:auto;position:sticky;top:64px;height:calc(100vh - 64px);
+  background:var(--bg);display:flex;flex-direction:column;gap:4px;
+  transition:background .25s;
+}
+html.dark aside{border-right-color:#3a3a6a;}
+
+/* navday */
+.navday{margin-bottom:2px;}
+.navday-hd{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 8px;border-radius:8px;
+  transition:background .15s;
+}
+.navday-hd:hover{background:var(--tag);}
+.navday-toggle{
+  background:transparent;border:none;cursor:pointer;padding:2px;
+  display:flex;align-items:center;flex-shrink:0;margin-top:1px;
+}
+.navday-link{
+  flex:1;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:2px;
+}
+.navday-link:hover .navday-name{color:var(--primary);}
+html.dark .navday-link:hover .navday-name{color:var(--primary)!important;}
+.navday-arr{
+  width:14px;height:14px;flex-shrink:0;margin-top:3px;color:var(--t3);
+  transition:transform .22s ease;fill:none;stroke:currentColor;stroke-width:2.5;
+}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:12px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 6px 22px;border-left:2px solid var(--border);margin-left:13px;display:none;}
+.navday.open>.navday-body{display:block;}
+html.dark .navday-body{border-left-color:#3a3a6a;}
+.nav-module{
+  display:block;padding:7px 10px;border-radius:6px;
+  font-size:13px;font-weight:500;color:var(--t1);
+  border-left:2px solid transparent;text-decoration:none;transition:background .15s;
+}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.nav-module.locked{opacity:.4;pointer-events:none;}
+
+/* 진행 현황 */
+.prog-box{
+  margin-top:16px;padding:10px 12px;
+  background:var(--bg-alt);border-radius:10px;border:1px solid var(--border);
+}
+.prog-box-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.prog-counts{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.prog-bar{height:4px;background:#e0e0e8;border-radius:2px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;transition:width .3s;}
+
+/* 나가기 버튼 */
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  margin:12px 0 8px;padding:9px 12px;border-radius:8px;
+  background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.25);
+  color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;
+  transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+
+/* ── 메인 ── */
+main{padding:20px 24px 80px;width:100%;}
+
+/* ── 슬라이드 뷰어 (svis) ── */
+.svis{
+  background:#0b1020;border:1px solid var(--border);
+  border-radius:14px;box-shadow:var(--sh);
+  position:relative;overflow:hidden;
+  aspect-ratio:16/9;width:100%;
+  transition:all .25s;
+}
+html.dark .svis{border-color:#3a3a6a;}
+
+/* svis 상단 버튼들 */
+.svis-btns{
+  position:absolute;top:10px;right:10px;z-index:50;
+  display:flex;gap:6px;
+}
+.svis-btn{
+  height:30px;padding:0 12px;border-radius:8px;
+  background:rgba(255,255,255,.85);border:1px solid var(--border);
+  color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:5px;backdrop-filter:blur(6px);
+  transition:all .15s;font-family:inherit;
+}
+.svis-btn:hover{background:var(--primary);color:#fff;}
+.svis-btn.on{background:var(--primary);color:#fff;}
+html.dark .svis-btn{background:rgba(10,10,10,.8);color:#F1F5F9;border-color:#3a3a6a;}
+
+/* ── 슬라이드 노트 패널 ── */
+.npanel{
+  background:var(--bg-alt);border:1px solid var(--border);
+  border-radius:14px;padding:20px 24px;
+  display:flex;flex-direction:column;gap:12px;
+  box-shadow:var(--sh);margin-top:14px;
+  font-size:15px;line-height:1.85;
+}
+html.dark .npanel{background:#111111;border-color:#3a3a6a;}
+.npanel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+html.dark .npanel-header{border-bottom-color:#3a3a6a;}
+.npanel-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--secondary);}
+.npanel-slide-title{font-size:15px;font-weight:700;color:var(--primary);}
+.note-section{margin-bottom:14px;}
+.note-section-title{
+  font-size:12px;font-weight:700;color:var(--secondary);
+  border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:8px;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+html.dark .note-section-title{border-bottom-color:#3a3a6a;}
+.note-kw{font-weight:700;color:var(--secondary);}
+.note-case{
+  background:rgba(8,145,178,.07);border-left:3px solid var(--secondary);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;
+}
+.note-case-label{
+  font-size:11px;font-weight:700;color:var(--secondary);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;
+}
+.npanel ul{padding-left:18px;}
+.npanel li{margin-bottom:4px;}
+.npanel-close{
+  background:none;border:none;cursor:pointer;
+  font-size:16px;color:var(--t3);line-height:1;padding:2px 6px;
+}
+
+/* ── 전체화면 오버레이 ── */
+#fsOverlay{
+  position:fixed;inset:0;z-index:900;
+  background:#0b1020;
+  flex-direction:column;
+}
+.fs-topbar{
+  height:44px;display:flex;align-items:center;justify-content:flex-end;
+  padding:0 16px;background:rgba(0,0,0,.5);flex-shrink:0;
+}
+.fs-close{
+  height:32px;padding:0 16px;border-radius:8px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.fs-close:hover{background:rgba(255,255,255,.25);}
+#fsFrame{flex:1;width:100%;border:none;}
+.fs-nav{
+  height:44px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  background:rgba(0,0,0,.5);
+}
+.fs-nav button{
+  height:34px;padding:0 20px;border-radius:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.fs-nav button:hover{background:rgba(255,255,255,.22);}
+#fsCnt{font-size:14px;font-weight:700;color:rgba(255,255,255,.8);min-width:60px;text-align:center;}
+
+/* ── 하단 네비 바 ── */
+.sticknav{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:var(--bg-alt);border-top:1px solid var(--border);
+  padding:8px 24px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+}
+html.dark .sticknav{background:#0a0a0a;border-top-color:#3a3a6a;}
+.sticknav button{
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);padding:7px 20px;border-radius:8px;
+  cursor:pointer;font-size:14px;font-weight:600;
+  transition:all .15s;font-family:inherit;
+}
+.sticknav button:hover:not(:disabled){background:var(--primary);border-color:var(--primary);color:#fff;}
+.sticknav button:disabled{opacity:.35;cursor:default;}
+.sticknav-cnt{font-size:15px;color:var(--secondary);min-width:56px;text-align:center;font-weight:700;}
+
+/* ── 다크 모드 전체 ── */
+html.dark *{--border:#3a3a6a !important;}
+html.dark body,html.dark aside,html.dark main,html.dark .sticknav{background-color:#0a0a0a;}
+html.dark .navday-name,html.dark .nav-module{color:#F1F5F9 !important;}
+html.dark .navday-badge{color:#22D3EE !important;}
+html.dark .nav-module.active{background:rgba(129,140,248,.15) !important;color:#818CF8 !important;border-left-color:#818CF8 !important;}
+html.dark .sticknav-cnt{color:#22D3EE !important;}
+</style>
+</head>
+<body>
+
+<!-- PIN 접근 제어 -->
+<script>
+if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+  window.location.replace('../../AgenticAIWorkshop_gate_v1.html');
+}
+</script>
+
+<!-- ── 헤더 ── -->
+<header class="top">
+  <span class="brand">Agentic AI <b>Workshop</b></span>
+  <button class="themebtn" id="themeToggle" aria-label="배경 전환">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<!-- ── 레이아웃 ── -->
+<div class="layout">
+
+  <!-- ── 사이드바 ── -->
+  <aside>
+    <!-- Day 1 (접힘) -->
+    <div class="navday" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')" aria-label="Day 1 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day1/" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Generative AI 이해하기</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day1/m1/">M1. Kiro 소개</a>
+        <a class="nav-module" href="../../day1/m2/">M2. AI 이해하기</a>
+        <a class="nav-module" href="../../hol/ws1/">Workshop 1. Kiro Basic</a>
+      </div>
+    </div>
+
+    <!-- Day 2 (접힘) -->
+    <div class="navday" id="navday-2">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-2')" aria-label="Day 2 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day2/" class="navday-link">
+          <span class="navday-badge">Day 2</span>
+          <span class="navday-name">Developing GenAI App on AWS</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day2/m3/">M3. Amazon Bedrock 활용</a>
+        <a class="nav-module" href="../../day2/m4/">M4. Agentic AI 이해하기</a>
+        <a class="nav-module locked" href="#">WS2. HR QnA 앱 개발</a>
+      </div>
+    </div>
+
+    <!-- Day 3 (펼침, 현재 활성) -->
+    <div class="navday open" id="navday-3">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-3')" aria-label="Day 3 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day3/" class="navday-link">
+          <span class="navday-badge">Day 3</span>
+          <span class="navday-name">Agentic AI 개발하기</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../m5/">M5. Strands Agents</a>
+        <a class="nav-module active" href="#">M6. Amazon Bedrock AgentCore</a>
+      </div>
+    </div>
+
+    <!-- 진행 현황 -->
+    <div class="prog-box" style="margin-top:16px;">
+      <div class="prog-box-label">슬라이드 진행</div>
+      <div class="prog-counts"><span id="progText">1 / 18</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:5.6%"></div></div>
+    </div>
+
+    <!-- 나가기 -->
+    <a href="../../AgenticAIWorkshop_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </aside>
+
+  <!-- ── 메인 ── -->
+  <main>
+
+    <!-- 슬라이드 뷰어 -->
+    <div class="svis" id="svis">
+      <iframe id="slideFrame"
+              src="./slides.html"
+              frameborder="0"
+              style="width:100%;height:100%;border:none;display:block;"
+              onload="frameReady=true; goTo(cur);">
+      </iframe>
+      <div class="svis-btns">
+        <button class="svis-btn" id="expandBtn" onclick="openFS()">전체화면</button>
+      </div>
+    </div>
+
+    <!-- 슬라이드 노트 패널 (항상 표시) -->
+    <div class="npanel" id="notesPanel">
+      <div class="npanel-header">
+        <span class="npanel-label">슬라이드 노트</span>
+        <span class="npanel-slide-title" id="noteTitle"></span>
+      </div>
+      <div id="noteBody"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── 하단 네비 바 ── -->
+<div class="sticknav">
+  <button id="btnPrev" onclick="goTo(cur-1)" disabled>← 이전</button>
+  <span class="sticknav-cnt" id="snCnt">1 / 18</span>
+  <button id="btnNext" onclick="goTo(cur+1)">다음 →</button>
+</div>
+
+<!-- ── 전체화면 오버레이 ── -->
+<div id="fsOverlay" style="display:none;">
+  <div class="fs-topbar">
+    <button class="fs-close" onclick="closeFS()">✕ 강의실로 돌아가기</button>
+  </div>
+  <iframe id="fsFrame" src="./slides.html"
+          style="flex:1;width:100%;border:none;display:block;"
+          onload="fsFrameReady=true; goFS(cur);">
+  </iframe>
+  <div class="fs-nav">
+    <button onclick="goFS(fsCur-1)">← 이전</button>
+    <span id="fsCnt">1 / 18</span>
+    <button onclick="goFS(fsCur+1)">다음 →</button>
+  </div>
+</div>
+
+<script>
+// ── NOTES 배열 (18개) ──
+var NOTES = [
+  {t:'에이전트는 만들었지만…', h:`
+<div class="note-section">
+  <div class="note-section-title">개요</div>
+  <p>에이전트를 개발 환경에서 작동시키는 것과 실제 프로덕션에서 안정적으로 운영하는 것은 완전히 다른 문제입니다. 이 슬라이드는 에이전트를 만든 후 프로덕션 배포 과정에서 개발자들이 직면하는 현실적인 과제들을 보여줍니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">프로덕션 전환의 장벽</div>
+  <ul>
+    <li><span class="note-kw">실행 환경 관리(Runtime Management)</span>: 장기 실행 세션, 동시 요청 처리, 자동 스케일링 등 인프라를 직접 구성해야 합니다.</li>
+    <li><span class="note-kw">보안 및 인증(Security &amp; Auth)</span>: 에이전트가 외부 서비스를 호출할 때 자격 증명을 안전하게 관리해야 합니다.</li>
+    <li><span class="note-kw">가시성(Observability)</span>: 에이전트의 추론 과정과 도구 호출을 추적하고 문제를 진단할 수단이 필요합니다.</li>
+    <li><span class="note-kw">품질 보증(Quality Assurance)</span>: 에이전트 응답의 품질을 지속적으로 측정하고 개선하는 체계가 없으면 신뢰도가 낮아집니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 개발 환경과 프로덕션의 차이</div>
+  <p>로컬에서 완벽하게 작동하던 에이전트가 수백 명의 동시 사용자를 처리하거나, 외부 API 인증을 관리하거나, 장애 원인을 추적해야 하는 상황에서 한계를 드러냅니다. <strong>AgentCore는 이러한 프로덕션 과제를 한 번에 해결</strong>하는 플랫폼입니다.</p>
+</div>`},
+  {t:'Production-Ready 에이전트를 위한 Amazon Bedrock AgentCore', h:`
+<div class="note-section">
+  <div class="note-section-title">AgentCore 소개</div>
+  <p><span class="note-kw">Amazon Bedrock AgentCore</span>는 에이전트를 프로덕션 환경에서 안전하고 신뢰성 있게 운영하기 위한 완전 관리형 인프라 플랫폼입니다. 개발자가 에이전트 로직에만 집중하고, 운영 인프라는 AWS가 관리합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">6가지 핵심 컴포넌트</div>
+  <ul>
+    <li><span class="note-kw">Runtime</span>: 에이전트 실행 환경 — 서버리스 컨테이너 기반의 확장 가능한 실행 플랫폼</li>
+    <li><span class="note-kw">Gateway</span>: 통합 API 액세스 포인트 — 다양한 클라이언트에서 에이전트에 접근하는 단일 진입점</li>
+    <li><span class="note-kw">Memory</span>: 단기·장기 메모리 — 대화 상태와 사용자 선호도를 지속적으로 저장</li>
+    <li><span class="note-kw">Identity</span>: 인증·권한 관리 — 인바운드/아웃바운드 자격 증명 안전 관리</li>
+    <li><span class="note-kw">Observability</span>: 추적·모니터링 — 에이전트 실행 전 과정의 가시성 제공</li>
+    <li><span class="note-kw">Policy / Evaluation</span>: 정책 제어 및 품질 평가 — 안전하고 일관된 에이전트 운영 보장</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: AgentCore 도입 효과</div>
+  <p>Strands Agents로 만든 에이전트에 AgentCore를 연결하면 인프라 코드 없이도 수천 명의 동시 사용자를 처리하고, 모든 실행을 추적하며, 응답 품질을 지속적으로 개선하는 <strong>프로덕션 수준의 에이전트 플랫폼</strong>이 완성됩니다.</p>
+</div>`},
+  {t:'AgentCore Runtime', h:`
+<div class="note-section">
+  <div class="note-section-title">Runtime 개요</div>
+  <p><span class="note-kw">AgentCore Runtime</span>은 에이전트 코드를 프로덕션 환경에서 실행하기 위한 완전 관리형 서버리스 컨테이너 플랫폼입니다. 인프라 설정 없이 에이전트를 배포하고 실행할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Runtime의 핵심 기능</div>
+  <ul>
+    <li><span class="note-kw">서버리스 실행(Serverless Execution)</span>: 에이전트 코드를 컨테이너 이미지로 패키징하여 서버 프로비저닝 없이 실행합니다.</li>
+    <li><span class="note-kw">장기 실행 세션(Long-Running Sessions)</span>: 에이전트틱 루프는 수분에서 수시간이 걸릴 수 있습니다. Runtime은 이러한 장기 실행 작업을 안정적으로 지원합니다.</li>
+    <li><span class="note-kw">자동 스케일링(Auto Scaling)</span>: 요청량에 따라 컨테이너 인스턴스 수를 자동으로 조절합니다. 트래픽이 없을 때는 0으로 축소됩니다.</li>
+    <li><span class="note-kw">격리된 실행 환경(Isolated Execution)</span>: 각 에이전트 세션은 독립된 컨테이너에서 실행되어 보안성과 안정성을 보장합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 컨테이너 기반 배포</div>
+  <p>Strands Agents로 작성한 에이전트 코드를 Docker 이미지로 빌드하고 AgentCore Runtime에 배포하면, AWS가 컨테이너 오케스트레이션, 로드 밸런싱, 헬스 체크를 모두 관리합니다. <strong>개발자는 비즈니스 로직에만 집중</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'AgentCore Runtime—에이전트 워크로드에 최적화된 설계', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전트 워크로드의 특수성</div>
+  <p>일반 웹 애플리케이션과 달리 에이전트 워크로드는 <span class="note-kw">비결정적(Non-Deterministic)</span>이고 실행 시간을 예측하기 어렵습니다. AgentCore Runtime은 이러한 에이전트 특성에 최적화된 설계를 채택했습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">에이전트 최적화 설계 원칙</div>
+  <ul>
+    <li><span class="note-kw">비동기 실행(Asynchronous Execution)</span>: 장기 실행 에이전트 작업을 비동기로 처리하여 클라이언트가 결과를 폴링하거나 웹훅으로 받을 수 있습니다.</li>
+    <li><span class="note-kw">상태 지속성(State Persistence)</span>: 컨테이너가 재시작되어도 에이전트 세션 상태가 유지됩니다.</li>
+    <li><span class="note-kw">멀티 에이전트 지원(Multi-Agent Support)</span>: 오케스트레이터와 서브 에이전트를 각각 독립 컨테이너로 실행하고 서로 통신할 수 있습니다.</li>
+    <li><span class="note-kw">콜드 스타트 최소화(Cold Start Minimization)</span>: 자주 사용하는 에이전트의 컨테이너를 warm 상태로 유지하여 응답 지연을 줄입니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 대규모 배치 처리</div>
+  <p>수천 건의 고객 문의를 에이전트로 처리하는 배치 작업에서 AgentCore Runtime은 요청량에 맞게 자동 확장하고, 각 작업의 진행 상황을 추적하며, 실패 시 자동 재시도합니다. <strong>수동 인프라 관리 없이 대규모 에이전트 워크로드</strong>를 처리합니다.</p>
+</div>`},
+  {t:'AgentCore Gateway', h:`
+<div class="note-section">
+  <div class="note-section-title">Gateway 개요</div>
+  <p><span class="note-kw">AgentCore Gateway</span>는 에이전트에 대한 통합 액세스 포인트를 제공하는 완전 관리형 API 게이트웨이입니다. 다양한 클라이언트와 프로토콜을 지원하여 에이전트 연동을 단순화합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Gateway의 핵심 기능</div>
+  <ul>
+    <li><span class="note-kw">다중 프로토콜 지원(Multi-Protocol Support)</span>: REST API, WebSocket, Server-Sent Events(SSE) 등 다양한 통신 방식을 단일 게이트웨이에서 지원합니다.</li>
+    <li><span class="note-kw">MCP 엔드포인트(MCP Endpoint)</span>: 에이전트의 도구를 MCP 서버로 노출하여 MCP를 지원하는 모든 클라이언트에서 바로 사용할 수 있습니다.</li>
+    <li><span class="note-kw">요청 라우팅(Request Routing)</span>: 요청 유형과 에이전트 버전에 따라 적절한 Runtime 인스턴스로 트래픽을 분배합니다.</li>
+    <li><span class="note-kw">속도 제한(Rate Limiting)</span>: API 남용을 방지하고 안정적인 서비스 운영을 보장하는 요청 속도 제어 기능을 내장합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 단일 엔드포인트로 다양한 클라이언트 연결</div>
+  <p>웹 앱은 REST API로, 모바일 앱은 WebSocket으로, IDE 플러그인은 MCP로 동일한 에이전트에 접근합니다. <strong>클라이언트 종류에 관계없이 하나의 게이트웨이</strong>로 에이전트를 일관되게 노출합니다.</p>
+</div>`},
+  {t:'AgentCore Gateway—통합 액세스로 에이전트 개발 가속화', h:`
+<div class="note-section">
+  <div class="note-section-title">개발 가속화 메커니즘</div>
+  <p>AgentCore Gateway는 에이전트를 외부에 노출할 때 필요한 반복적인 설정 작업을 자동화하여 <span class="note-kw">에이전트 개발 가속화(Development Acceleration)</span>를 실현합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">개발 생산성 향상 기능</div>
+  <ul>
+    <li><span class="note-kw">자동 API 문서화(Auto API Documentation)</span>: 에이전트의 인터페이스를 자동으로 분석하여 OpenAPI 사양을 생성합니다. 클라이언트 개발팀이 별도의 문서 없이 바로 연동할 수 있습니다.</li>
+    <li><span class="note-kw">스트리밍 응답(Streaming Response)</span>: 에이전트의 생성 결과를 실시간 스트림으로 전달하여 사용자가 응답을 기다리는 시간을 체감상 줄입니다.</li>
+    <li><span class="note-kw">버전 관리(Version Management)</span>: 에이전트의 여러 버전을 동시에 운영하며 점진적 롤아웃과 A/B 테스트를 지원합니다.</li>
+    <li><span class="note-kw">SDK 자동 생성(SDK Auto-Generation)</span>: 다양한 프로그래밍 언어의 클라이언트 SDK를 자동으로 생성하여 연동 시간을 단축합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 팀 간 협업 가속화</div>
+  <p>백엔드 팀이 에이전트를 AgentCore Gateway에 배포하면, 프론트엔드 팀은 자동 생성된 SDK와 API 문서로 즉시 연동 작업을 시작합니다. <strong>백엔드-프론트엔드 간 병렬 개발</strong>이 가능해집니다.</p>
+</div>`},
+  {t:'AgentCore Gateway 의미 검색', h:`
+<div class="note-section">
+  <div class="note-section-title">의미 검색 기능 개요</div>
+  <p>AgentCore Gateway는 <span class="note-kw">의미 검색(Semantic Search)</span> 기능을 내장하여 에이전트가 올바른 도구나 다른 에이전트를 자연어 쿼리로 찾을 수 있도록 지원합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">의미 검색의 작동 원리</div>
+  <ul>
+    <li><span class="note-kw">도구 임베딩(Tool Embedding)</span>: 등록된 도구의 설명과 파라미터를 벡터 임베딩으로 변환하여 저장합니다.</li>
+    <li><span class="note-kw">자연어 매칭(Natural Language Matching)</span>: 에이전트가 "고객의 주문 상태를 확인하는 도구"처럼 의도를 설명하면 가장 관련성 높은 도구를 반환합니다.</li>
+    <li><span class="note-kw">동적 도구 검색(Dynamic Tool Discovery)</span>: 수백 개의 도구 중 현재 작업에 필요한 도구만 동적으로 선택하여 컨텍스트 길이 제한 문제를 해결합니다.</li>
+    <li>검색 결과의 관련성 점수와 함께 도구 목록을 반환하여 에이전트가 최적의 도구를 선택합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 대규모 엔터프라이즈 도구 관리</div>
+  <p>수백 개의 사내 API를 AgentCore Gateway에 등록하면, 에이전트는 필요한 도구를 실시간으로 검색하여 사용합니다. <strong>모든 도구를 프롬프트에 포함시킬 필요 없이</strong> 필요한 것만 동적으로 가져옵니다.</p>
+</div>`},
+  {t:'AgentCore Memory', h:`
+<div class="note-section">
+  <div class="note-section-title">Memory 서비스 개요</div>
+  <p><span class="note-kw">AgentCore Memory</span>는 에이전트가 대화 내용, 사용자 선호도, 학습된 정보를 세션 간에 지속적으로 저장하고 활용하는 완전 관리형 메모리 서비스입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">메모리 서비스의 필요성</div>
+  <ul>
+    <li><span class="note-kw">컨텍스트 연속성(Context Continuity)</span>: LLM은 기본적으로 상태가 없습니다(Stateless). Memory는 에이전트가 이전 대화와 사용자 정보를 기억하도록 합니다.</li>
+    <li><span class="note-kw">개인화(Personalization)</span>: 사용자별 선호도와 행동 패턴을 장기 메모리에 저장하여 점점 더 맞춤화된 서비스를 제공합니다.</li>
+    <li><span class="note-kw">지식 축적(Knowledge Accumulation)</span>: 에이전트가 업무를 처리하면서 얻은 도메인 지식을 저장하고 재활용합니다.</li>
+    <li>Memory 서비스는 확장성 있는 스토리지와 빠른 검색을 기반으로 수백만 건의 메모리를 효율적으로 관리합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 개인 비서 에이전트</div>
+  <p>처음 만난 에이전트가 일주일 후에도 사용자의 이름, 선호하는 회의 시간, 자주 사용하는 서비스를 기억합니다. <strong>매번 다시 설명할 필요 없이</strong> 지속적으로 학습하는 개인화 경험을 제공합니다.</p>
+</div>`},
+  {t:'AgentCore Memory—단기 메모리 및 장기 메모리', h:`
+<div class="note-section">
+  <div class="note-section-title">두 가지 메모리 유형</div>
+  <p>AgentCore Memory는 <span class="note-kw">단기 메모리(Short-Term Memory)</span>와 <span class="note-kw">장기 메모리(Long-Term Memory)</span> 두 가지 유형을 제공합니다. 각각 다른 시간 범위와 용도에 맞게 설계되었습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">메모리 유형별 특징</div>
+  <ul>
+    <li><span class="note-kw">단기 메모리(Short-Term Memory)</span>: 현재 세션 내의 대화 내용과 작업 컨텍스트를 저장합니다. 세션이 종료되면 만료되거나 장기 메모리로 요약되어 이관됩니다.</li>
+    <li><span class="note-kw">장기 메모리(Long-Term Memory)</span>: 사용자 프로파일, 선호도, 중요한 사실을 영구적으로 저장합니다. 여러 세션에 걸쳐 지속됩니다.</li>
+    <li><span class="note-kw">자동 요약(Auto Summarization)</span>: 단기 메모리의 긴 대화를 핵심 정보만 추출하여 장기 메모리로 압축합니다.</li>
+    <li><span class="note-kw">관련성 검색(Relevance Retrieval)</span>: 현재 맥락과 관련된 장기 메모리를 시맨틱 검색으로 가져와 컨텍스트에 포함합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 고객 지원 에이전트</div>
+  <p>단기 메모리로 현재 통화 내용을 추적하고, 장기 메모리로 고객의 구매 이력, 이전 문의 내용, 선호 연락 방법을 기억합니다. <strong>고객이 매번 같은 정보를 반복하지 않아도 되는</strong> 자연스러운 지원 경험을 제공합니다.</p>
+</div>`},
+  {t:'메모리 전략 예시', h:`
+<div class="note-section">
+  <div class="note-section-title">메모리 전략 설계</div>
+  <p>효과적인 에이전트를 만들려면 어떤 정보를 얼마나 오래 어떤 방식으로 저장할지 결정하는 <span class="note-kw">메모리 전략(Memory Strategy)</span>을 설계해야 합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">주요 메모리 전략 패턴</div>
+  <ul>
+    <li><span class="note-kw">대화 버퍼 전략(Conversation Buffer Strategy)</span>: 최근 N개 메시지를 단기 메모리에 유지합니다. 단순하고 예측 가능하지만 긴 대화에서는 초기 컨텍스트가 손실될 수 있습니다.</li>
+    <li><span class="note-kw">슬라이딩 윈도우 전략(Sliding Window Strategy)</span>: 오래된 메시지를 요약으로 압축하면서 전체 대화 흐름을 유지합니다.</li>
+    <li><span class="note-kw">엔티티 추출 전략(Entity Extraction Strategy)</span>: 대화에서 중요한 엔티티(사람, 장소, 제품)를 추출하여 구조화된 형태로 저장합니다.</li>
+    <li><span class="note-kw">시맨틱 검색 전략(Semantic Search Strategy)</span>: 현재 질문과 의미적으로 유사한 과거 대화를 검색하여 관련 컨텍스트만 가져옵니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 의료 상담 에이전트</div>
+  <p>환자의 증상 기록, 복용 약물, 알레르기 정보를 엔티티 추출 전략으로 구조화하여 저장하고, 매 상담마다 관련 의료 이력을 시맨틱 검색으로 가져옵니다. <strong>환자 안전에 직결되는 정보를 체계적으로 관리</strong>합니다.</p>
+</div>`},
+  {t:'AgentCore Identity', h:`
+<div class="note-section">
+  <div class="note-section-title">Identity 서비스 개요</div>
+  <p><span class="note-kw">AgentCore Identity</span>는 에이전트의 인바운드 및 아웃바운드 인증과 권한 부여를 중앙에서 관리하는 완전 관리형 보안 서비스입니다. 에이전트를 사용하는 사용자와 에이전트가 호출하는 서비스 모두를 안전하게 처리합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Identity 서비스의 필요성</div>
+  <ul>
+    <li><span class="note-kw">자격 증명 관리 복잡성(Credential Management Complexity)</span>: 에이전트가 수십 개의 외부 서비스를 호출할 때 각각의 API 키와 토큰을 코드에 하드코딩하면 보안 위험이 발생합니다.</li>
+    <li><span class="note-kw">토큰 만료 처리(Token Expiry Handling)</span>: OAuth 토큰, IAM 자격 증명 등의 만료와 갱신을 자동으로 처리합니다.</li>
+    <li><span class="note-kw">최소 권한 원칙(Least Privilege Principle)</span>: 에이전트에게 필요한 최소한의 권한만 부여하여 보안 사고 시 피해 범위를 제한합니다.</li>
+    <li>사용자별, 역할별로 에이전트 기능에 대한 세밀한 접근 제어가 가능합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 멀티 테넌트 에이전트 플랫폼</div>
+  <p>여러 기업 고객이 동일한 에이전트 플랫폼을 사용하는 경우, Identity 서비스가 각 고객의 데이터 격리와 접근 제어를 보장합니다. <strong>A 기업의 에이전트가 B 기업의 데이터에 접근하는 것을 원천 차단</strong>합니다.</p>
+</div>`},
+  {t:'Identity—인바운드·아웃바운드 인증', h:`
+<div class="note-section">
+  <div class="note-section-title">두 방향의 인증</div>
+  <p>AgentCore Identity는 에이전트를 중심으로 두 가지 방향의 인증을 관리합니다. <span class="note-kw">인바운드 인증(Inbound Authentication)</span>은 외부에서 에이전트로 들어오는 요청을, <span class="note-kw">아웃바운드 인증(Outbound Authentication)</span>은 에이전트에서 외부 서비스로 나가는 요청을 처리합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">각 방향별 처리 방식</div>
+  <ul>
+    <li><span class="note-kw">인바운드 — 사용자 인증(Inbound User Auth)</span>: JWT, OAuth 2.0, AWS IAM 등 다양한 인증 방식으로 에이전트에 접근하는 사용자를 검증합니다.</li>
+    <li><span class="note-kw">인바운드 — API 키 관리(Inbound API Key)</span>: 서비스 간 통신을 위한 API 키를 발급하고 관리합니다.</li>
+    <li><span class="note-kw">아웃바운드 — 서비스 자격 증명(Outbound Service Credential)</span>: 에이전트가 외부 API를 호출할 때 필요한 OAuth 토큰, API 키를 안전한 저장소에서 가져옵니다.</li>
+    <li><span class="note-kw">아웃바운드 — IAM 역할 위임(Outbound IAM Role)</span>: AWS 서비스 호출 시 적절한 IAM 역할로 자동 전환하여 임시 자격 증명을 사용합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR 에이전트 보안 구성</div>
+  <p>HR 에이전트는 직원 JWT로 인바운드 인증을 받고(자신의 정보만 조회 가능), Workday API 토큰으로 아웃바운드 인증을 처리합니다. <strong>민감한 자격 증명이 코드에 노출되지 않고</strong> Identity 서비스가 안전하게 관리합니다.</p>
+</div>`},
+  {t:'인증(AuthN) vs 권한 부여(AuthZ)', h:`
+<div class="note-section">
+  <div class="note-section-title">핵심 보안 개념 구분</div>
+  <p>에이전트 보안을 올바르게 설계하려면 <span class="note-kw">인증(Authentication, AuthN)</span>과 <span class="note-kw">권한 부여(Authorization, AuthZ)</span>의 차이를 명확히 이해해야 합니다. 두 개념은 서로 보완적이지만 다른 문제를 해결합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">개념 비교</div>
+  <ul>
+    <li><span class="note-kw">인증(AuthN) — "당신은 누구인가"</span>: 사용자 또는 시스템의 신원을 확인합니다. 비밀번호, 토큰, 생체 정보 등으로 본인임을 증명합니다.</li>
+    <li><span class="note-kw">권한 부여(AuthZ) — "당신은 무엇을 할 수 있는가"</span>: 인증된 주체가 어떤 리소스에 어떤 작업을 수행할 수 있는지 결정합니다.</li>
+    <li>인증 없이는 권한 부여가 의미 없습니다. 항상 인증이 선행되어야 합니다.</li>
+    <li>에이전트 컨텍스트에서: 사용자가 에이전트에 로그인(AuthN)하면, 에이전트는 해당 사용자가 어떤 도구와 데이터에 접근 가능한지 확인(AuthZ)합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 역할 기반 에이전트 접근 제어</div>
+  <p>영업 담당자는 에이전트에 로그인(AuthN)하지만 고객 계약서 삭제 도구는 사용 불가(AuthZ)하고, 영업 관리자는 동일하게 로그인하면서 삭제 권한까지 허용됩니다. <strong>같은 에이전트에서 역할에 따라 다른 기능 범위</strong>를 적용합니다.</p>
+</div>`},
+  {t:'AgentCore Observability', h:`
+<div class="note-section">
+  <div class="note-section-title">Observability 서비스 개요</div>
+  <p><span class="note-kw">AgentCore Observability</span>는 에이전트의 실행 과정 전체를 추적하고 분석하는 완전 관리형 모니터링 플랫폼입니다. 에이전트틱 루프의 각 단계를 가시화하여 문제 진단과 성능 최적화를 지원합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Observability의 세 가지 기둥</div>
+  <ul>
+    <li><span class="note-kw">추적(Tracing)</span>: 에이전트의 추론 과정, 도구 호출, 외부 서비스 응답을 분산 추적(Distributed Tracing)으로 시각화합니다. 어떤 단계에서 얼마나 시간이 걸렸는지 확인합니다.</li>
+    <li><span class="note-kw">로깅(Logging)</span>: 에이전트 실행의 상세 로그를 구조화된 형태로 수집합니다. 시스템 프롬프트, 사용자 입력, 도구 결과 등을 포함합니다.</li>
+    <li><span class="note-kw">메트릭(Metrics)</span>: 응답 시간, 도구 호출 횟수, 오류율, 토큰 사용량 등 운영 지표를 대시보드에서 실시간으로 모니터링합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 에이전트 오류 진단</div>
+  <p>에이전트가 잘못된 답변을 반환했을 때, Observability 대시보드에서 해당 요청의 추적 기록을 확인하면 어떤 도구가 잘못된 결과를 반환했는지, LLM이 어떤 추론을 했는지 단계별로 파악합니다. <strong>블랙박스였던 에이전트를 투명하게</strong> 만들어 줍니다.</p>
+</div>`},
+  {t:'Observability 수명 주기', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전트 실행 수명 주기</div>
+  <p><span class="note-kw">Observability 수명 주기(Observability Lifecycle)</span>는 에이전트 요청이 시작되어 응답이 반환될 때까지의 전 과정을 단계별로 추적하는 프레임워크입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">수명 주기 단계별 모니터링</div>
+  <ul>
+    <li><span class="note-kw">요청 수신(Request Ingestion)</span>: Gateway에서 요청을 받는 시점의 지연 시간, 인증 처리 시간을 기록합니다.</li>
+    <li><span class="note-kw">LLM 추론(LLM Inference)</span>: 모델 호출 횟수, 입출력 토큰 수, 추론 지연 시간, 비용을 추적합니다.</li>
+    <li><span class="note-kw">도구 실행(Tool Execution)</span>: 각 도구 호출의 성공/실패, 응답 시간, 반환 데이터 크기를 기록합니다.</li>
+    <li><span class="note-kw">메모리 조회(Memory Retrieval)</span>: 메모리 검색 쿼리, 반환된 메모리 항목 수, 관련성 점수를 추적합니다.</li>
+    <li><span class="note-kw">응답 반환(Response Delivery)</span>: 전체 엔드-투-엔드 지연 시간과 최종 응답 품질 점수를 기록합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 성능 병목 지점 파악</div>
+  <p>에이전트 응답이 느리다는 사용자 피드백이 있을 때, 수명 주기 추적으로 전체 10초 중 8초가 특정 외부 API 호출에 소비된다는 것을 발견합니다. <strong>전체 수명 주기 가시성으로 최적화 우선순위</strong>를 데이터 기반으로 결정합니다.</p>
+</div>`},
+  {t:'AgentCore Policy—정책 기반 제어', h:`
+<div class="note-section">
+  <div class="note-section-title">Policy 서비스 개요</div>
+  <p><span class="note-kw">AgentCore Policy</span>는 에이전트의 행동을 코드 변경 없이 정책(Policy)으로 제어하는 완전 관리형 거버넌스 서비스입니다. 에이전트가 허용된 범위 안에서만 동작하도록 보장합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">정책 기반 제어의 유형</div>
+  <ul>
+    <li><span class="note-kw">콘텐츠 정책(Content Policy)</span>: 에이전트가 생성하거나 처리할 수 없는 콘텐츠 유형을 정의합니다. 유해 콘텐츠, 개인정보, 기업 기밀 등을 자동으로 필터링합니다.</li>
+    <li><span class="note-kw">도구 사용 정책(Tool Usage Policy)</span>: 특정 역할이나 컨텍스트에서 사용 가능한 도구를 제한합니다. 테스트 환경에서는 삭제 도구 비활성화 등이 가능합니다.</li>
+    <li><span class="note-kw">비용 정책(Cost Policy)</span>: 에이전트의 LLM 호출 횟수, 토큰 사용량, 외부 API 호출 횟수에 상한선을 설정합니다.</li>
+    <li><span class="note-kw">시간 정책(Time Policy)</span>: 에이전트 실행 최대 시간을 제한하여 무한 루프나 비용 폭증을 방지합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 금융 서비스 컴플라이언스</div>
+  <p>금융 에이전트에 "고객 동의 없이 개인정보를 외부 서비스에 전달 금지" 정책을 적용하면, 에이전트 코드가 변경되어도 정책이 항상 적용됩니다. <strong>규제 준수를 코드가 아닌 정책으로 보장</strong>합니다.</p>
+</div>`},
+  {t:'AgentCore Evaluation—에이전트 품질 평가', h:`
+<div class="note-section">
+  <div class="note-section-title">Evaluation 서비스 개요</div>
+  <p><span class="note-kw">AgentCore Evaluation</span>은 에이전트의 응답 품질을 자동으로 측정하고 개선 방향을 제시하는 완전 관리형 평가 플랫폼입니다. LLM을 판사(Judge)로 활용하여 에이전트 응답을 다차원적으로 평가합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">품질 평가 기준</div>
+  <ul>
+    <li><span class="note-kw">정확성(Accuracy)</span>: 에이전트 응답이 사실적으로 정확한지 평가합니다. 참조 데이터나 기준 답변과 비교합니다.</li>
+    <li><span class="note-kw">관련성(Relevance)</span>: 에이전트 응답이 사용자의 질문 의도에 맞는지 평가합니다.</li>
+    <li><span class="note-kw">안전성(Safety)</span>: 응답에 유해하거나 편향된 내용이 포함되지 않았는지 확인합니다.</li>
+    <li><span class="note-kw">완전성(Completeness)</span>: 사용자 요청의 모든 측면을 다루었는지 평가합니다.</li>
+    <li><span class="note-kw">도구 사용 적절성(Tool Usage Appropriateness)</span>: 에이전트가 올바른 도구를 올바른 파라미터로 사용했는지 평가합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 지속적인 품질 개선 파이프라인</div>
+  <p>에이전트가 새 버전으로 업데이트될 때마다 Evaluation이 자동으로 실행되어 이전 버전 대비 품질 변화를 리포트합니다. <strong>회귀 테스트처럼 에이전트 품질이 저하되면 자동으로 경고</strong>를 발생시킵니다.</p>
+</div>`},
+  {t:'AgentCore Evaluation의 이점', h:`
+<div class="note-section">
+  <div class="note-section-title">Evaluation 도입 효과</div>
+  <p>AgentCore Evaluation을 도입하면 주관적인 품질 판단 대신 <span class="note-kw">데이터 기반 품질 관리(Data-Driven Quality Management)</span>가 가능해집니다. 에이전트 개선 과정 전체가 측정 가능하고 반복 가능한 엔지니어링 프로세스가 됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">주요 비즈니스 이점</div>
+  <ul>
+    <li><span class="note-kw">배포 리스크 감소(Deployment Risk Reduction)</span>: 새 버전 배포 전 자동 품질 검증으로 품질 저하 없이 빠른 배포가 가능합니다.</li>
+    <li><span class="note-kw">프롬프트 최적화(Prompt Optimization)</span>: 여러 프롬프트 변형을 Evaluation으로 비교하여 최적의 시스템 프롬프트를 데이터로 선택합니다.</li>
+    <li><span class="note-kw">에지 케이스 발견(Edge Case Discovery)</span>: 에이전트가 잘 처리하지 못하는 입력 패턴을 자동으로 발견하고 테스트 케이스로 등록합니다.</li>
+    <li><span class="note-kw">규제 감사 지원(Regulatory Audit Support)</span>: 에이전트 응답 품질과 안전성 평가 기록을 보관하여 규제 감사에 대응합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 에이전트 A/B 테스트</div>
+  <p>새 모델로 업그레이드할 때 동일한 테스트 케이스 1,000개에 대해 기존 모델과 새 모델의 응답을 Evaluation으로 비교합니다. 정확성 +12%, 안전성 유지, 응답 시간 -20% 같은 <strong>정량적 데이터로 모델 전환 의사결정</strong>을 내립니다.</p>
+</div>`}
+];
+
+// ── 상수 ──
+var TOTAL = 18;
+var cur = 0;
+var fsCur = 0;
+var frameReady = false;
+var fsFrameReady = false;
+
+// ── goTo: iframe 슬라이드 제어 (3단계 폴백) ──
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  cur = n;
+  var win = document.getElementById('slideFrame').contentWindow;
+  if (frameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') { win.kiroGo(n); }
+      else if (typeof win.go === 'function') { win.go(n); }
+      else if (typeof win.show === 'function') { win.show(n); }
+    } catch(e) {}
+  }
+  updateUI();
+}
+
+// ── UI 업데이트 ──
+function updateUI() {
+  var n = cur;
+  document.getElementById('progText').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('progFill').style.width = ((n+1)/TOTAL*100).toFixed(1) + '%';
+  document.getElementById('snCnt').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('btnPrev').disabled = n === 0;
+  document.getElementById('btnNext').disabled = n === TOTAL-1;
+  // 노트 업데이트
+  var nd = NOTES[n];
+  if (nd) {
+    document.getElementById('noteTitle').textContent = nd.t;
+    document.getElementById('noteBody').innerHTML = nd.h;
+  }
+  // fsOverlay 동기화
+  if (document.getElementById('fsOverlay').style.display !== 'none') {
+    goFS(n);
+  }
+}
+
+// ── 전체화면 ──
+function openFS() {
+  document.getElementById('fsOverlay').style.display = 'flex';
+  goFS(cur);
+}
+function closeFS() {
+  document.getElementById('fsOverlay').style.display = 'none';
+}
+function goFS(n) {
+  if (n < 0 || n >= TOTAL) return;
+  fsCur = n;
+  var win = document.getElementById('fsFrame').contentWindow;
+  if (fsFrameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') win.kiroGo(n);
+      else if (typeof win.go === 'function') win.go(n);
+      else if (typeof win.show === 'function') win.show(n);
+    } catch(e) {}
+  }
+  document.getElementById('fsCnt').textContent = (fsCur+1) + ' / ' + TOTAL;
+}
+
+// ── Day 토글 ──
+function toggleDay(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+  var btn = el.querySelector('.navday-toggle');
+  if (btn) btn.setAttribute('aria-expanded', el.classList.contains('open'));
+}
+
+// ── 키보드 ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(cur+1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(cur-1); }
+  if (e.key === 'Escape') { closeFS(); }
+});
+
+// ── 테마 ──
+(function() {
+  if (localStorage.getItem('aawTheme') === 'dark') document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var d = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('aawTheme', d ? 'dark' : 'light');
+  });
+})();
+
+// ── 초기화 ──
+goTo(0);
+</script>
+</body>
+</html>

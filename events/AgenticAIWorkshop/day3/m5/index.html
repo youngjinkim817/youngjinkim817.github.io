@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M5. Strands Agents — Agentic AI Workshop</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+/* ── CSS 변수 ── */
+:root {
+  --bg:#ffffff; --bg-alt:#f8f7ff; --bg-soft:#ede9fe;
+  --primary:#211E62; --secondary:#0891B2; --accent:#D97706;
+  --t1:#1e1b4b; --t2:#4338CA; --t3:#6B7280;
+  --border:#c7d2fe; --tag:#ede9fe;
+  --sh:0 2px 8px rgba(33,30,98,.08);
+}
+html.dark {
+  --bg:#0a0a0a; --bg-alt:#111111; --bg-soft:#1a1a2e;
+  --primary:#818CF8; --secondary:#22D3EE;
+  --t1:#F1F5F9; --t2:#94A3B8; --t3:#64748B;
+  --border:#1e293b; --tag:#1e1b4b;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--t1);
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  font-size:17px;line-height:1.75;transition:background .2s,color .2s;}
+
+/* ── 헤더 ── */
+header.top{
+  position:sticky;top:0;z-index:200;height:64px;
+  display:flex;align-items:center;gap:16px;padding:0 24px;
+  background:#fff;border-bottom:2px solid var(--border);
+  transition:background .25s,border-color .25s;
+}
+html.dark header.top{background:#0a0a0a;border-bottom-color:#3a3a6a;}
+header.top .brand{font-weight:800;font-size:18px;color:var(--primary);letter-spacing:-.02em;}
+header.top .brand b{color:var(--secondary);}
+.themebtn{
+  margin-left:auto;width:34px;height:34px;border-radius:8px;
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.themebtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;} .themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;} html.dark .themebtn .sun{display:block;}
+
+/* ── 레이아웃 ── */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
+
+/* ── 사이드바 ── */
+aside{
+  border-right:1px solid var(--border);padding:18px 12px;
+  overflow-y:auto;position:sticky;top:64px;height:calc(100vh - 64px);
+  background:var(--bg);display:flex;flex-direction:column;gap:4px;
+  transition:background .25s;
+}
+html.dark aside{border-right-color:#3a3a6a;}
+
+/* navday */
+.navday{margin-bottom:2px;}
+.navday-hd{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 8px;border-radius:8px;
+  transition:background .15s;
+}
+.navday-hd:hover{background:var(--tag);}
+.navday-toggle{
+  background:transparent;border:none;cursor:pointer;padding:2px;
+  display:flex;align-items:center;flex-shrink:0;margin-top:1px;
+}
+.navday-link{
+  flex:1;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:2px;
+}
+.navday-link:hover .navday-name{color:var(--primary);}
+html.dark .navday-link:hover .navday-name{color:var(--primary)!important;}
+.navday-arr{
+  width:14px;height:14px;flex-shrink:0;margin-top:3px;color:var(--t3);
+  transition:transform .22s ease;fill:none;stroke:currentColor;stroke-width:2.5;
+}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:12px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 6px 22px;border-left:2px solid var(--border);margin-left:13px;display:none;}
+.navday.open>.navday-body{display:block;}
+html.dark .navday-body{border-left-color:#3a3a6a;}
+.nav-module{
+  display:block;padding:7px 10px;border-radius:6px;
+  font-size:13px;font-weight:500;color:var(--t1);
+  border-left:2px solid transparent;text-decoration:none;transition:background .15s;
+}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.nav-module.locked{opacity:.4;pointer-events:none;}
+
+/* 진행 현황 */
+.prog-box{
+  margin-top:16px;padding:10px 12px;
+  background:var(--bg-alt);border-radius:10px;border:1px solid var(--border);
+}
+.prog-box-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.prog-counts{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.prog-bar{height:4px;background:#e0e0e8;border-radius:2px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;transition:width .3s;}
+
+/* 나가기 버튼 */
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  margin:12px 0 8px;padding:9px 12px;border-radius:8px;
+  background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.25);
+  color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;
+  transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+
+/* ── 메인 ── */
+main{padding:20px 24px 80px;width:100%;}
+
+/* ── 슬라이드 뷰어 (svis) ── */
+.svis{
+  background:#0b1020;border:1px solid var(--border);
+  border-radius:14px;box-shadow:var(--sh);
+  position:relative;overflow:hidden;
+  aspect-ratio:16/9;width:100%;
+  transition:all .25s;
+}
+html.dark .svis{border-color:#3a3a6a;}
+
+/* svis 상단 버튼들 */
+.svis-btns{
+  position:absolute;top:10px;right:10px;z-index:50;
+  display:flex;gap:6px;
+}
+.svis-btn{
+  height:30px;padding:0 12px;border-radius:8px;
+  background:rgba(255,255,255,.85);border:1px solid var(--border);
+  color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:5px;backdrop-filter:blur(6px);
+  transition:all .15s;font-family:inherit;
+}
+.svis-btn:hover{background:var(--primary);color:#fff;}
+.svis-btn.on{background:var(--primary);color:#fff;}
+html.dark .svis-btn{background:rgba(10,10,10,.8);color:#F1F5F9;border-color:#3a3a6a;}
+
+/* ── 슬라이드 노트 패널 ── */
+.npanel{
+  background:var(--bg-alt);border:1px solid var(--border);
+  border-radius:14px;padding:20px 24px;
+  display:flex;flex-direction:column;gap:12px;
+  box-shadow:var(--sh);margin-top:14px;
+  font-size:15px;line-height:1.85;
+}
+html.dark .npanel{background:#111111;border-color:#3a3a6a;}
+.npanel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+html.dark .npanel-header{border-bottom-color:#3a3a6a;}
+.npanel-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--secondary);}
+.npanel-slide-title{font-size:15px;font-weight:700;color:var(--primary);}
+.note-section{margin-bottom:14px;}
+.note-section-title{
+  font-size:12px;font-weight:700;color:var(--secondary);
+  border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:8px;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+html.dark .note-section-title{border-bottom-color:#3a3a6a;}
+.note-kw{font-weight:700;color:var(--secondary);}
+.note-case{
+  background:rgba(8,145,178,.07);border-left:3px solid var(--secondary);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;
+}
+.note-case-label{
+  font-size:11px;font-weight:700;color:var(--secondary);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;
+}
+.npanel ul{padding-left:18px;}
+.npanel li{margin-bottom:4px;}
+.npanel-close{
+  background:none;border:none;cursor:pointer;
+  font-size:16px;color:var(--t3);line-height:1;padding:2px 6px;
+}
+
+/* ── 전체화면 오버레이 ── */
+#fsOverlay{
+  position:fixed;inset:0;z-index:900;
+  background:#0b1020;
+  flex-direction:column;
+}
+.fs-topbar{
+  height:44px;display:flex;align-items:center;justify-content:flex-end;
+  padding:0 16px;background:rgba(0,0,0,.5);flex-shrink:0;
+}
+.fs-close{
+  height:32px;padding:0 16px;border-radius:8px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.fs-close:hover{background:rgba(255,255,255,.25);}
+#fsFrame{flex:1;width:100%;border:none;}
+.fs-nav{
+  height:44px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  background:rgba(0,0,0,.5);
+}
+.fs-nav button{
+  height:34px;padding:0 20px;border-radius:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.fs-nav button:hover{background:rgba(255,255,255,.22);}
+#fsCnt{font-size:14px;font-weight:700;color:rgba(255,255,255,.8);min-width:60px;text-align:center;}
+
+/* ── 하단 네비 바 ── */
+.sticknav{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:var(--bg-alt);border-top:1px solid var(--border);
+  padding:8px 24px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+}
+html.dark .sticknav{background:#0a0a0a;border-top-color:#3a3a6a;}
+.sticknav button{
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);padding:7px 20px;border-radius:8px;
+  cursor:pointer;font-size:14px;font-weight:600;
+  transition:all .15s;font-family:inherit;
+}
+.sticknav button:hover:not(:disabled){background:var(--primary);border-color:var(--primary);color:#fff;}
+.sticknav button:disabled{opacity:.35;cursor:default;}
+.sticknav-cnt{font-size:15px;color:var(--secondary);min-width:56px;text-align:center;font-weight:700;}
+
+/* ── 다크 모드 전체 ── */
+html.dark *{--border:#3a3a6a !important;}
+html.dark body,html.dark aside,html.dark main,html.dark .sticknav{background-color:#0a0a0a;}
+html.dark .navday-name,html.dark .nav-module{color:#F1F5F9 !important;}
+html.dark .navday-badge{color:#22D3EE !important;}
+html.dark .nav-module.active{background:rgba(129,140,248,.15) !important;color:#818CF8 !important;border-left-color:#818CF8 !important;}
+html.dark .sticknav-cnt{color:#22D3EE !important;}
+</style>
+</head>
+<body>
+
+<!-- PIN 접근 제어 -->
+<script>
+if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+  window.location.replace('../../AgenticAIWorkshop_gate_v1.html');
+}
+</script>
+
+<!-- ── 헤더 ── -->
+<header class="top">
+  <span class="brand">Agentic AI <b>Workshop</b></span>
+  <button class="themebtn" id="themeToggle" aria-label="배경 전환">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<!-- ── 레이아웃 ── -->
+<div class="layout">
+
+  <!-- ── 사이드바 ── -->
+  <aside>
+    <!-- Day 1 (접힘) -->
+    <div class="navday" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')" aria-label="Day 1 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day1/" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Generative AI 이해하기</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day1/m1/">M1. Kiro 소개</a>
+        <a class="nav-module" href="../../day1/m2/">M2. AI 이해하기</a>
+        <a class="nav-module" href="../../hol/ws1/">Workshop 1. Kiro Basic</a>
+      </div>
+    </div>
+
+    <!-- Day 2 (접힘) -->
+    <div class="navday" id="navday-2">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-2')" aria-label="Day 2 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day2/" class="navday-link">
+          <span class="navday-badge">Day 2</span>
+          <span class="navday-name">Developing GenAI App on AWS</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day2/m3/">M3. Amazon Bedrock 활용</a>
+        <a class="nav-module" href="../../day2/m4/">M4. Agentic AI 이해하기</a>
+        <a class="nav-module locked" href="#">WS2. HR QnA 앱 개발</a>
+      </div>
+    </div>
+
+    <!-- Day 3 (펼침, 현재 활성) -->
+    <div class="navday open" id="navday-3">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-3')" aria-label="Day 3 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day3/" class="navday-link">
+          <span class="navday-badge">Day 3</span>
+          <span class="navday-name">Agentic AI 개발하기</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module active" href="#">M5. Strands Agents</a>
+        <a class="nav-module" href="../m6/">M6. Multi-Agent 시스템</a>
+      </div>
+    </div>
+
+    <!-- 진행 현황 -->
+    <div class="prog-box" style="margin-top:16px;">
+      <div class="prog-box-label">슬라이드 진행</div>
+      <div class="prog-counts"><span id="progText">1 / 20</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:5%"></div></div>
+    </div>
+
+    <!-- 나가기 -->
+    <a href="../../AgenticAIWorkshop_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </aside>
+
+  <!-- ── 메인 ── -->
+  <main>
+
+    <!-- 슬라이드 뷰어 -->
+    <div class="svis" id="svis">
+      <iframe id="slideFrame"
+              src="./slides.html"
+              frameborder="0"
+              style="width:100%;height:100%;border:none;display:block;"
+              onload="frameReady=true; goTo(cur);">
+      </iframe>
+      <div class="svis-btns">
+        <button class="svis-btn" id="expandBtn" onclick="openFS()">전체화면</button>
+      </div>
+    </div>
+
+    <!-- 슬라이드 노트 패널 (항상 표시) -->
+    <div class="npanel" id="notesPanel">
+      <div class="npanel-header">
+        <span class="npanel-label">슬라이드 노트</span>
+        <span class="npanel-slide-title" id="noteTitle"></span>
+      </div>
+      <div id="noteBody"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── 하단 네비 바 ── -->
+<div class="sticknav">
+  <button id="btnPrev" onclick="goTo(cur-1)" disabled>← 이전</button>
+  <span class="sticknav-cnt" id="snCnt">1 / 20</span>
+  <button id="btnNext" onclick="goTo(cur+1)">다음 →</button>
+</div>
+
+<!-- ── 전체화면 오버레이 ── -->
+<div id="fsOverlay" style="display:none;">
+  <div class="fs-topbar">
+    <button class="fs-close" onclick="closeFS()">✕ 강의실로 돌아가기</button>
+  </div>
+  <iframe id="fsFrame" src="./slides.html"
+          style="flex:1;width:100%;border:none;display:block;"
+          onload="fsFrameReady=true; goFS(cur);">
+  </iframe>
+  <div class="fs-nav">
+    <button onclick="goFS(fsCur-1)">← 이전</button>
+    <span id="fsCnt">1 / 20</span>
+    <button onclick="goFS(fsCur+1)">다음 →</button>
+  </div>
+</div>
+
+<script>
+// ── NOTES 배열 (20개) ──
+var NOTES = [
+  {t:'Strands Agents 소개', h:`
+<div class="note-section">
+  <div class="note-section-title">개요</div>
+  <p><span class="note-kw">Strands Agents</span>는 AWS가 오픈소스로 공개한 Python 기반 AI 에이전트 프레임워크입니다. 개발자가 단 몇 줄의 코드로 프로덕션 수준의 AI 에이전트를 구축할 수 있도록 설계되었습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">핵심 철학</div>
+  <ul>
+    <li><span class="note-kw">모델 중립성(Model Agnostic)</span>: 특정 LLM에 종속되지 않고, Amazon Bedrock을 비롯한 다양한 모델을 교체 가능한 형태로 지원합니다.</li>
+    <li><span class="note-kw">오픈소스(Open Source)</span>: Apache 2.0 라이선스로 공개되어 누구나 자유롭게 사용하고 기여할 수 있습니다.</li>
+    <li>복잡한 인프라 설정 없이 에이전트 로직에만 집중할 수 있는 단순한 API를 제공합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 왜 Strands Agents인가</div>
+  <p>LangChain, CrewAI 등 기존 프레임워크와 달리 Strands Agents는 AWS 생태계(Bedrock, Lambda, S3)와 긴밀하게 통합되어 있습니다. <strong>AWS 기반 에이전트 개발의 출발점</strong>으로 적합합니다.</p>
+</div>`},
+  {t:'SDK 핵심 기술 특징', h:`
+<div class="note-section">
+  <div class="note-section-title">주요 기술 특징</div>
+  <p><span class="note-kw">Strands Agents SDK</span>는 에이전트 구축에 필요한 핵심 기능을 내장하고 있습니다. 별도의 외부 의존성을 최소화하여 가볍고 실용적인 구조를 지향합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">4가지 핵심 특징</div>
+  <ul>
+    <li><span class="note-kw">에이전틱 루프(Agentic Loop)</span>: 자체적인 추론-행동 루프를 내장하여 목표 달성까지 반복 실행합니다.</li>
+    <li><span class="note-kw">내장 도구(Built-in Tools)</span>: 파일 시스템, 웹 검색, 코드 실행 등 자주 사용하는 도구가 미리 준비되어 있습니다.</li>
+    <li><span class="note-kw">MCP 지원(MCP Support)</span>: Model Context Protocol을 기본 지원하여 다양한 외부 시스템과 표준화된 방식으로 연동합니다.</li>
+    <li><span class="note-kw">멀티 에이전트(Multi-Agent)</span>: 단일 에이전트를 넘어 여러 에이전트가 협력하는 복잡한 시스템을 구축할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 빠른 프로토타이핑</div>
+  <p>Strands Agents는 <code>pip install strands-agents</code> 한 줄로 설치하고, Agent 클래스와 도구 몇 개로 즉시 동작하는 에이전트를 만들 수 있습니다. <strong>프로토타입에서 프로덕션까지 동일한 코드베이스</strong>를 유지합니다.</p>
+</div>`},
+  {t:'3가지 구성요소', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전트의 3가지 핵심 구성요소</div>
+  <p>Strands Agents로 만든 에이전트는 세 가지 핵심 요소로 구성됩니다. <span class="note-kw">모델(Model)</span>, <span class="note-kw">도구(Tools)</span>, <span class="note-kw">시스템 프롬프트(System Prompt)</span>가 유기적으로 결합하여 에이전트의 행동을 결정합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">각 구성요소 역할</div>
+  <ul>
+    <li><span class="note-kw">모델(Model)</span>: 에이전트의 두뇌입니다. 주어진 상황을 이해하고, 도구를 언제 어떻게 사용할지 결정합니다.</li>
+    <li><span class="note-kw">도구(Tools)</span>: 에이전트가 실제 작업을 수행하는 손발입니다. Python 함수 하나가 곧 도구가 됩니다.</li>
+    <li><span class="note-kw">시스템 프롬프트(System Prompt)</span>: 에이전트의 역할과 행동 방침을 정의합니다. 에이전트의 '직업 설명서' 역할을 합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: HR 에이전트 구성</div>
+  <p>HR 에이전트를 만들려면 Claude Sonnet(모델) + 연차 조회 함수(도구) + "당신은 HR 전문가입니다"(시스템 프롬프트)를 결합합니다. <strong>각 구성요소를 독립적으로 교체</strong>하여 다양한 에이전트를 만들 수 있습니다.</p>
+</div>`},
+  {t:'에이전틱 루프', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전틱 루프 개념</div>
+  <p><span class="note-kw">에이전틱 루프(Agentic Loop)</span>는 에이전트가 목표를 달성하기 위해 반복적으로 추론하고 행동하는 핵심 실행 메커니즘입니다. Strands Agents의 내장 루프는 개발자가 직접 구현할 필요가 없습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">루프 단계</div>
+  <ul>
+    <li><span class="note-kw">입력 수신(Input)</span>: 사용자의 요청이나 이전 도구 실행 결과를 받습니다.</li>
+    <li><span class="note-kw">LLM 추론(Reasoning)</span>: 모델이 현재 상황을 분석하고 다음 행동을 결정합니다.</li>
+    <li><span class="note-kw">도구 실행(Tool Execution)</span>: 선택한 도구를 호출하고 결과를 얻습니다.</li>
+    <li><span class="note-kw">종료 판단(Stop Condition)</span>: 목표 달성 여부를 판단하여 루프를 계속할지 종료할지 결정합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 자율 데이터 분석</div>
+  <p>에이전트에게 "올해 분기별 매출 분석 보고서를 작성해줘"를 요청하면, 루프를 통해 데이터 조회 → 분석 → 차트 생성 → 보고서 작성 과정을 <strong>사람 개입 없이 자율 완수</strong>합니다.</p>
+</div>`},
+  {t:'시작하기', h:`
+<div class="note-section">
+  <div class="note-section-title">빠른 시작 가이드</div>
+  <p>Strands Agents를 시작하려면 패키지를 설치하고 기본 에이전트를 정의하면 됩니다. 필수 의존성은 <code>strands-agents</code>와 AWS 자격 증명입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">기본 에이전트 생성 패턴</div>
+  <ul>
+    <li><code>from strands import Agent</code>로 핵심 클래스를 불러옵니다.</li>
+    <li><code>@tool</code> 데코레이터로 Python 함수를 에이전트 도구로 등록합니다.</li>
+    <li><span class="note-kw">Agent 클래스(Agent Class)</span>: 모델, 도구, 시스템 프롬프트를 받아 에이전트 인스턴스를 생성합니다.</li>
+    <li>에이전트 호출은 <code>agent("질문 또는 작업 설명")</code>처럼 함수 호출 방식으로 단순합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: Hello Agent</div>
+  <p>날씨 조회 도구를 정의하고 Agent에 연결하면, "오늘 서울 날씨를 알려줘"라는 질문에 에이전트가 도구를 자동으로 선택하고 실행하여 <strong>10줄 미만의 코드로 동작하는 에이전트</strong>를 완성합니다.</p>
+</div>`},
+  {t:'Model Agnostic', h:`
+<div class="note-section">
+  <div class="note-section-title">모델 중립 지원</div>
+  <p><span class="note-kw">모델 중립성(Model Agnostic)</span>은 Strands Agents의 핵심 설계 원칙입니다. 에이전트 코드를 변경하지 않고도 사용하는 LLM을 교체할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">지원 모델 및 공급자</div>
+  <ul>
+    <li><span class="note-kw">Amazon Bedrock</span>: Claude, Llama, Titan 등 Bedrock에서 지원하는 모든 모델을 사용할 수 있습니다.</li>
+    <li><span class="note-kw">Anthropic API</span>: Bedrock을 거치지 않고 Anthropic의 API를 직접 호출할 수 있습니다.</li>
+    <li><span class="note-kw">로컬 모델(Local Model)</span>: Ollama를 통해 로컬에서 실행 중인 모델도 연결 가능합니다.</li>
+    <li><span class="note-kw">커스텀 공급자(Custom Provider)</span>: 표준 인터페이스를 구현하면 어떤 모델이든 연결할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 비용 최적화 전략</div>
+  <p>개발 단계에서는 저렴한 모델로 테스트하고, 프로덕션에서는 고성능 모델을 사용하는 전략이 가능합니다. <strong>모델 교체가 설정 한 줄로</strong> 완료됩니다.</p>
+</div>`},
+  {t:'System Prompt', h:`
+<div class="note-section">
+  <div class="note-section-title">시스템 프롬프트 역할</div>
+  <p><span class="note-kw">시스템 프롬프트(System Prompt)</span>는 에이전트의 정체성, 목표, 제약 조건을 정의하는 지시문입니다. 모든 대화의 기반이 되며 에이전트 행동의 기준점이 됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">효과적인 시스템 프롬프트 작성</div>
+  <ul>
+    <li><span class="note-kw">역할 정의(Role Definition)</span>: 에이전트가 누구인지, 어떤 전문성을 가지는지 명확하게 정의합니다.</li>
+    <li><span class="note-kw">제약 조건(Constraints)</span>: 에이전트가 하면 안 되는 행동과 다루면 안 되는 주제를 명시합니다.</li>
+    <li><span class="note-kw">출력 형식(Output Format)</span>: 답변의 구조, 언어, 스타일을 지정하여 일관된 응답을 보장합니다.</li>
+    <li>간결하고 명확할수록 에이전트 행동이 예측 가능해집니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 전문 에이전트 페르소나</div>
+  <p>"당신은 AWS 솔루션 아키텍트입니다. 고객의 요구사항을 분석하여 최적의 AWS 아키텍처를 추천하고, 항상 비용과 보안을 고려한 답변을 제공하세요." 같이 <strong>구체적인 역할과 기준을 명시</strong>할수록 효과적입니다.</p>
+</div>`},
+  {t:'사전 구축된 Tool 저장소', h:`
+<div class="note-section">
+  <div class="note-section-title">내장 도구 저장소</div>
+  <p>Strands Agents는 자주 사용하는 기능을 <span class="note-kw">사전 구축된 도구(Pre-built Tools)</span>로 제공합니다. 이 도구들은 바로 에이전트에 연결하여 사용할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">주요 내장 도구 카테고리</div>
+  <ul>
+    <li><span class="note-kw">파일 시스템 도구(File System Tools)</span>: 파일 읽기, 쓰기, 디렉토리 탐색 기능을 제공합니다.</li>
+    <li><span class="note-kw">코드 실행 도구(Code Execution Tools)</span>: Python 코드를 실행하고 결과를 반환합니다. 데이터 분석 에이전트에 유용합니다.</li>
+    <li><span class="note-kw">HTTP 도구(HTTP Tools)</span>: 외부 API 호출과 웹 콘텐츠 조회 기능을 제공합니다.</li>
+    <li><span class="note-kw">AWS 도구(AWS Tools)</span>: S3, DynamoDB 등 AWS 서비스와 직접 연동하는 도구를 제공합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 즉시 활용 가능한 에이전트</div>
+  <p>내장 도구를 조합하면 코드 한 줄 없이 "S3에서 CSV를 읽고 Python으로 분석한 뒤 결과를 파일로 저장하는" 데이터 분석 에이전트를 <strong>선언적으로 구성</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'사용자 정의 Tool 생성', h:`
+<div class="note-section">
+  <div class="note-section-title">커스텀 도구 생성 방법</div>
+  <p>Strands Agents에서 <span class="note-kw">사용자 정의 도구(Custom Tool)</span>를 만드는 방법은 매우 간단합니다. 일반 Python 함수에 <code>@tool</code> 데코레이터를 붙이면 됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">도구 작성 핵심 규칙</div>
+  <ul>
+    <li><span class="note-kw">타입 힌트(Type Hint)</span>: 파라미터와 반환값에 타입을 명시하면 SDK가 자동으로 JSON 스키마를 생성합니다.</li>
+    <li><span class="note-kw">독스트링(Docstring)</span>: 함수 설명이 LLM에게 전달됩니다. 명확하게 작성할수록 에이전트가 도구를 올바르게 선택합니다.</li>
+    <li>함수 로직은 일반 Python 코드와 동일하게 작성합니다. 기존 코드를 도구로 전환하기 쉽습니다.</li>
+    <li>에러 처리를 포함하면 에이전트가 실패 상황을 인식하고 대안을 선택할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 사내 시스템 연동 도구</div>
+  <p>기존 사내 HR 시스템 API 호출 코드를 <code>@tool</code> 데코레이터로 감싸기만 하면 에이전트가 연차 잔여일 조회, 휴가 신청 등 <strong>기존 비즈니스 로직을 그대로 활용</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'워크플로 예제', h:`
+<div class="note-section">
+  <div class="note-section-title">실전 워크플로 패턴</div>
+  <p>Strands Agents를 이용한 <span class="note-kw">워크플로(Workflow)</span> 예제는 에이전트가 여러 도구를 순서대로 또는 조건에 따라 실행하는 복잡한 작업 흐름을 보여줍니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">워크플로 구성 패턴</div>
+  <ul>
+    <li><span class="note-kw">순차 실행(Sequential Execution)</span>: 도구를 순서대로 실행하며 이전 단계의 결과를 다음 단계에 전달합니다.</li>
+    <li><span class="note-kw">조건 분기(Conditional Branching)</span>: 도구 실행 결과에 따라 다음 행동을 동적으로 결정합니다.</li>
+    <li><span class="note-kw">에러 복구(Error Recovery)</span>: 도구 실패 시 에이전트가 대안을 탐색하거나 사용자에게 명확화를 요청합니다.</li>
+    <li>복잡한 오케스트레이션 로직 없이도 에이전트의 추론 능력으로 자연스러운 워크플로가 구현됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 상품 추천 워크플로</div>
+  <p>고객 요청 접수 → 재고 조회 → 개인화 추천 → 가격 비교 → 결과 정리 순서의 워크플로를 에이전트가 자율 실행합니다. <strong>워크플로 코드를 따로 작성할 필요 없이</strong> 도구와 프롬프트만으로 구현됩니다.</p>
+</div>`},
+  {t:'MCP 기본 지원', h:`
+<div class="note-section">
+  <div class="note-section-title">MCP 개요</div>
+  <p><span class="note-kw">MCP(Model Context Protocol)</span>는 AI 에이전트와 외부 도구·데이터 소스 간 표준화된 연결 방식입니다. Strands Agents는 MCP를 기본 지원하여 MCP 서버에 연결된 모든 도구를 바로 사용할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">MCP 연동 방식</div>
+  <ul>
+    <li><span class="note-kw">MCP 서버(MCP Server)</span>: 도구를 제공하는 서버입니다. 파일 시스템, GitHub, Slack 등 다양한 MCP 서버가 공개되어 있습니다.</li>
+    <li><span class="note-kw">MCP 클라이언트(MCP Client)</span>: Strands Agents가 MCP 클라이언트 역할을 하여 서버와 통신합니다.</li>
+    <li>MCP로 연결된 도구는 커스텀 도구와 동일하게 에이전트에서 사용됩니다. 개발자가 별도로 구현할 필요가 없습니다.</li>
+    <li><span class="note-kw">표준화된 인터페이스(Standardized Interface)</span>: 한 번 MCP 서버를 구현하면 MCP를 지원하는 모든 에이전트 프레임워크에서 재사용됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: GitHub MCP 서버 연동</div>
+  <p>GitHub MCP 서버에 연결하면 에이전트가 코드 리뷰 요청, 이슈 생성, PR 확인 등을 자연어로 처리합니다. <strong>GitHub API 문서를 읽을 필요 없이</strong> 에이전트가 알아서 적절한 도구를 선택합니다.</p>
+</div>`},
+  {t:'E-Commerce 상품추천 에이전트', h:`
+<div class="note-section">
+  <div class="note-section-title">실제 사용 사례 분석</div>
+  <p>E-Commerce <span class="note-kw">상품 추천 에이전트(Product Recommendation Agent)</span>는 Strands Agents의 실전 활용을 보여주는 대표적인 예제입니다. 고객의 자연어 요청을 분석하여 맞춤형 상품을 추천합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">에이전트 구성 요소</div>
+  <ul>
+    <li><span class="note-kw">상품 검색 도구(Product Search Tool)</span>: 고객 요청 키워드로 상품 DB를 검색합니다.</li>
+    <li><span class="note-kw">재고 확인 도구(Inventory Check Tool)</span>: 검색된 상품의 재고 상태를 실시간으로 확인합니다.</li>
+    <li><span class="note-kw">개인화 도구(Personalization Tool)</span>: 고객의 구매 이력과 선호도를 분석하여 추천 순위를 조정합니다.</li>
+    <li><span class="note-kw">가격 비교 도구(Price Comparison Tool)</span>: 유사 상품의 가격을 비교하여 최적의 선택지를 제안합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 대화형 쇼핑 어시스턴트</div>
+  <p>"생일 선물로 40대 남성에게 어울리는 10만 원대 선물 추천해줘"라는 요청에 에이전트가 검색 → 재고 확인 → 개인화 → 가격 비교를 거쳐 <strong>맞춤형 상품 목록과 이유를 함께 제시</strong>합니다.</p>
+</div>`},
+  {t:'Multi-Agent 모드', h:`
+<div class="note-section">
+  <div class="note-section-title">멀티 에이전트 지원</div>
+  <p>Strands Agents는 단일 에이전트를 넘어 여러 에이전트가 협력하는 <span class="note-kw">멀티 에이전트(Multi-Agent)</span> 시스템을 다양한 방식으로 지원합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">4가지 멀티 에이전트 모드</div>
+  <ul>
+    <li><span class="note-kw">오케스트레이터 모드(Orchestrator Mode)</span>: 한 에이전트가 다른 에이전트를 도구처럼 사용하는 계층적 구조입니다.</li>
+    <li><span class="note-kw">스웜 모드(Swarm Mode)</span>: 여러 에이전트가 동등하게 협력하며 공유 목표를 달성합니다.</li>
+    <li><span class="note-kw">에이전트 그래프 모드(Agent Graph Mode)</span>: 에이전트 간 관계를 그래프로 정의하여 복잡한 의존성을 처리합니다.</li>
+    <li><span class="note-kw">워크플로 모드(Workflow Mode)</span>: 에이전트를 순서대로 실행하는 파이프라인 구조입니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 모드 선택 기준</div>
+  <p>단순한 위임 구조라면 오케스트레이터, 병렬 처리가 필요하다면 스웜, 복잡한 의존성이 있다면 그래프, 순서가 중요하다면 워크플로 모드를 선택합니다. <strong>문제 특성에 맞는 모드 선택이 핵심</strong>입니다.</p>
+</div>`},
+  {t:'Orchestrator 모드', h:`
+<div class="note-section">
+  <div class="note-section-title">오케스트레이터 패턴</div>
+  <p><span class="note-kw">오케스트레이터 모드(Orchestrator Mode)</span>는 하나의 주 에이전트(Orchestrator)가 전문화된 서브 에이전트들을 도구처럼 호출하는 계층적 구조입니다. "에이전트를 도구로(Agents as Tools)"라는 패턴으로 불립니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">구조 및 특징</div>
+  <ul>
+    <li><span class="note-kw">주 에이전트(Main Agent)</span>: 사용자 요청을 분석하고 적합한 서브 에이전트에게 작업을 위임합니다.</li>
+    <li><span class="note-kw">서브 에이전트(Sub-Agent)</span>: 특정 도메인에 특화된 에이전트입니다. 주 에이전트의 관점에서는 도구처럼 보입니다.</li>
+    <li>서브 에이전트를 <code>@tool</code>로 감싸면 오케스트레이터가 자동으로 활용합니다.</li>
+    <li>각 서브 에이전트는 독립적으로 개발하고 테스트할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 사내 AI 포털</div>
+  <p>HR 에이전트, IT 지원 에이전트, 재무 에이전트를 각 팀이 개발하고, 오케스트레이터가 질문을 분류하여 적합한 에이전트에게 위임합니다. <strong>팀 간 독립적인 개발과 배포</strong>가 가능합니다.</p>
+</div>`},
+  {t:'Swarm 모드', h:`
+<div class="note-section">
+  <div class="note-section-title">스웜 모드 개념</div>
+  <p><span class="note-kw">스웜 모드(Swarm Mode)</span>는 여러 에이전트가 동등한 관계로 협력하여 공동 목표를 달성하는 패턴입니다. "Collaborative Agents" 패턴으로도 불립니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">스웜의 특징</div>
+  <ul>
+    <li><span class="note-kw">동등한 협력(Peer Collaboration)</span>: 특정 에이전트가 지휘하지 않고 모든 에이전트가 대등하게 참여합니다.</li>
+    <li><span class="note-kw">공유 컨텍스트(Shared Context)</span>: 모든 에이전트가 동일한 대화 이력과 상태를 공유하여 일관성을 유지합니다.</li>
+    <li><span class="note-kw">역할 전환(Role Handoff)</span>: 현재 작업에 가장 적합한 에이전트가 주도권을 가져가는 유동적 구조입니다.</li>
+    <li>단일 에이전트보다 다양한 관점에서 문제를 분석할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 코드 리뷰 스웜</div>
+  <p>보안 전문 에이전트, 성능 전문 에이전트, 가독성 전문 에이전트가 함께 코드를 검토합니다. 각자 전문 영역에서 피드백을 제공하고 <strong>통합된 리뷰 결과</strong>를 반환합니다.</p>
+</div>`},
+  {t:'Agent Graph 모드', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전트 그래프 모드</div>
+  <p><span class="note-kw">에이전트 그래프 모드(Agent Graph Mode)</span>는 에이전트 간의 관계와 실행 순서를 방향성 그래프(DAG)로 정의하는 고급 멀티 에이전트 패턴입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">그래프 구조의 장점</div>
+  <ul>
+    <li><span class="note-kw">명시적 의존성(Explicit Dependencies)</span>: 에이전트 간 선행 관계를 그래프로 명확하게 표현합니다.</li>
+    <li><span class="note-kw">병렬 실행(Parallel Execution)</span>: 의존 관계가 없는 에이전트들은 동시에 실행되어 전체 처리 시간을 단축합니다.</li>
+    <li><span class="note-kw">조건 분기(Conditional Edges)</span>: 에이전트 결과에 따라 실행 경로를 동적으로 변경합니다.</li>
+    <li>복잡한 비즈니스 프로세스를 시각적으로 모델링하기 용이합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 계약서 검토 파이프라인</div>
+  <p>문서 파싱 에이전트 이후, 법률 검토 에이전트와 재무 검토 에이전트가 병렬 실행되고, 두 결과가 완료된 후 최종 승인 에이전트가 실행됩니다. <strong>그래프로 의존성과 병렬성을 한눈에 파악</strong>합니다.</p>
+</div>`},
+  {t:'Workflow 모드', h:`
+<div class="note-section">
+  <div class="note-section-title">워크플로 모드 개념</div>
+  <p><span class="note-kw">워크플로 모드(Workflow Mode)</span>는 에이전트들을 미리 정의된 순서로 실행하는 순차적(Sequential) 파이프라인 패턴입니다. 각 단계의 출력이 다음 단계의 입력이 됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">워크플로의 특징</div>
+  <ul>
+    <li><span class="note-kw">예측 가능성(Predictability)</span>: 실행 순서가 고정되어 있어 결과를 예측하고 디버깅하기 쉽습니다.</li>
+    <li><span class="note-kw">단계별 검증(Step Validation)</span>: 각 에이전트의 출력을 다음 단계로 전달하기 전에 검증할 수 있습니다.</li>
+    <li><span class="note-kw">재사용 가능한 파이프라인(Reusable Pipeline)</span>: 동일한 워크플로를 다른 입력에 반복 적용합니다.</li>
+    <li>에이전트의 자율성보다 프로세스의 일관성이 중요한 경우에 적합합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 콘텐츠 생성 파이프라인</div>
+  <p>주제 연구 에이전트 → 개요 작성 에이전트 → 본문 작성 에이전트 → 교정 에이전트 → SEO 최적화 에이전트 순서로 실행되는 블로그 포스트 자동 생성 워크플로를 <strong>선언적으로 정의</strong>합니다.</p>
+</div>`},
+  {t:'에이전트-도구 vs 에이전트-에이전트 상호 운영성', h:`
+<div class="note-section">
+  <div class="note-section-title">두 가지 상호 운영성 패턴</div>
+  <p>AI 시스템에서 <span class="note-kw">상호 운영성(Interoperability)</span>은 서로 다른 시스템이 표준화된 방식으로 연동하는 능력입니다. Strands Agents는 에이전트-도구 연결과 에이전트-에이전트 연결 두 가지 패턴을 지원합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">비교 분석</div>
+  <ul>
+    <li><span class="note-kw">에이전트-도구 상호 운영성(Agent-Tool Interoperability)</span>: MCP 프로토콜을 통해 에이전트와 외부 도구·데이터 소스가 표준화된 방식으로 연동합니다.</li>
+    <li><span class="note-kw">에이전트-에이전트 상호 운영성(Agent-Agent Interoperability)</span>: A2A(Agent-to-Agent) 프로토콜을 통해 서로 다른 에이전트 프레임워크로 만든 에이전트들이 협력합니다.</li>
+    <li>두 프로토콜은 상호 보완적입니다. MCP는 도구와의 연결, A2A는 에이전트 간 통신에 초점을 맞춥니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 이기종 시스템 통합</div>
+  <p>Strands Agents로 만든 에이전트가 LangChain으로 만든 에이전트, Bedrock Agent와 A2A 프로토콜로 협력하고, 각 에이전트는 MCP로 자신의 도구에 연결됩니다. <strong>벤더 종속 없이 최적의 도구를 선택</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'MCP vs A2A', h:`
+<div class="note-section">
+  <div class="note-section-title">MCP와 A2A 비교</div>
+  <p><span class="note-kw">MCP(Model Context Protocol)</span>와 <span class="note-kw">A2A(Agent-to-Agent Protocol)</span>는 AI 생태계의 두 핵심 표준 프로토콜입니다. 각각 다른 문제를 해결합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">핵심 차이점</div>
+  <ul>
+    <li><span class="note-kw">MCP 목적</span>: 에이전트와 외부 도구·컨텍스트 소스 간의 표준화된 연결. "에이전트가 세상과 어떻게 연결되는가"를 정의합니다.</li>
+    <li><span class="note-kw">A2A 목적</span>: 에이전트 간 작업 위임과 협력의 표준화. "에이전트들이 서로 어떻게 협력하는가"를 정의합니다.</li>
+    <li><span class="note-kw">통신 방향</span>: MCP는 에이전트가 도구를 호출하는 단방향, A2A는 에이전트 간 양방향 통신을 지원합니다.</li>
+    <li><span class="note-kw">공개 주체</span>: MCP는 Anthropic이, A2A는 Google이 주도하여 개발했으며 현재 업계 표준으로 자리잡고 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 협업 AI 시스템</div>
+  <p>연구 에이전트가 A2A로 분석 에이전트에게 작업을 위임하고, 분석 에이전트는 MCP로 데이터베이스 도구와 차트 생성 도구에 연결합니다. <strong>두 프로토콜을 함께 사용하면 완전한 에이전트 생태계</strong>를 구성합니다.</p>
+</div>`},
+  {t:'두 가지 옵션', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전트 생성 두 가지 방식</div>
+  <p>Strands Agents에서 에이전트를 생성하는 방법은 크게 두 가지입니다. <span class="note-kw">코드 기반 방식(Code-Based)</span>과 <span class="note-kw">설정 기반 방식(Configuration-Based)</span>으로, 각각 다른 사용 시나리오에 적합합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">방식별 특징 비교</div>
+  <ul>
+    <li><span class="note-kw">코드 기반 방식</span>: Python 코드로 에이전트의 모든 구성 요소를 직접 정의합니다. 복잡한 로직, 조건 처리, 동적 도구 등록에 유리합니다.</li>
+    <li><span class="note-kw">설정 기반 방식</span>: YAML 또는 JSON 설정 파일로 에이전트를 선언적으로 정의합니다. 비개발자도 에이전트를 설정하고 관리하기 쉽습니다.</li>
+    <li>두 방식 모두 동일한 에이전틱 루프와 도구 시스템을 사용하므로 기능 차이는 없습니다.</li>
+    <li>프로젝트 규모와 팀 구성에 따라 적합한 방식을 선택하거나 혼합 사용도 가능합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 팀별 선택 기준</div>
+  <p>개발팀은 코드 기반으로 복잡한 에이전트를 구축하고, 비즈니스팀은 설정 기반으로 간단한 에이전트를 배포합니다. <strong>동일한 플랫폼에서 서로 다른 팀이 자신에게 맞는 방식으로 에이전트를 관리</strong>합니다.</p>
+</div>`}
+];
+
+// ── 상수 ──
+var TOTAL = 20;
+var cur = 0;
+var fsCur = 0;
+var frameReady = false;
+var fsFrameReady = false;
+
+// ── goTo: iframe 슬라이드 제어 (3단계 폴백) ──
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  cur = n;
+  var win = document.getElementById('slideFrame').contentWindow;
+  if (frameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') { win.kiroGo(n); }
+      else if (typeof win.go === 'function') { win.go(n); }
+      else if (typeof win.show === 'function') { win.show(n); }
+    } catch(e) {}
+  }
+  updateUI();
+}
+
+// ── UI 업데이트 ──
+function updateUI() {
+  var n = cur;
+  document.getElementById('progText').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('progFill').style.width = ((n+1)/TOTAL*100).toFixed(1) + '%';
+  document.getElementById('snCnt').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('btnPrev').disabled = n === 0;
+  document.getElementById('btnNext').disabled = n === TOTAL-1;
+  // 노트 업데이트
+  var nd = NOTES[n];
+  if (nd) {
+    document.getElementById('noteTitle').textContent = nd.t;
+    document.getElementById('noteBody').innerHTML = nd.h;
+  }
+  // fsOverlay 동기화
+  if (document.getElementById('fsOverlay').style.display !== 'none') {
+    goFS(n);
+  }
+}
+
+// ── 전체화면 ──
+function openFS() {
+  document.getElementById('fsOverlay').style.display = 'flex';
+  goFS(cur);
+}
+function closeFS() {
+  document.getElementById('fsOverlay').style.display = 'none';
+}
+function goFS(n) {
+  if (n < 0 || n >= TOTAL) return;
+  fsCur = n;
+  var win = document.getElementById('fsFrame').contentWindow;
+  if (fsFrameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') win.kiroGo(n);
+      else if (typeof win.go === 'function') win.go(n);
+      else if (typeof win.show === 'function') win.show(n);
+    } catch(e) {}
+  }
+  document.getElementById('fsCnt').textContent = (fsCur+1) + ' / ' + TOTAL;
+}
+
+// ── Day 토글 ──
+function toggleDay(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+  var btn = el.querySelector('.navday-toggle');
+  if (btn) btn.setAttribute('aria-expanded', el.classList.contains('open'));
+}
+
+// ── 키보드 ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(cur+1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(cur-1); }
+  if (e.key === 'Escape') { closeFS(); }
+});
+
+// ── 테마 ──
+(function() {
+  if (localStorage.getItem('aawTheme') === 'dark') document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var d = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('aawTheme', d ? 'dark' : 'light');
+  });
+})();
+
+// ── 초기화 ──
+goTo(0);
+</script>
+</body>
+</html>

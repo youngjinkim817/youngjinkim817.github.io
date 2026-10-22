@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M7. Kiro 고급 기능 — Agentic AI Workshop</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+/* ── CSS 변수 ── */
+:root {
+  --bg:#ffffff; --bg-alt:#f8f7ff; --bg-soft:#ede9fe;
+  --primary:#211E62; --secondary:#0891B2; --accent:#D97706;
+  --t1:#1e1b4b; --t2:#4338CA; --t3:#6B7280;
+  --border:#c7d2fe; --tag:#ede9fe;
+  --sh:0 2px 8px rgba(33,30,98,.08);
+}
+html.dark {
+  --bg:#0a0a0a; --bg-alt:#111111; --bg-soft:#1a1a2e;
+  --primary:#818CF8; --secondary:#22D3EE;
+  --t1:#F1F5F9; --t2:#94A3B8; --t3:#64748B;
+  --border:#1e293b; --tag:#1e1b4b;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--t1);
+  font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  font-size:17px;line-height:1.75;transition:background .2s,color .2s;}
+
+/* ── 헤더 ── */
+header.top{
+  position:sticky;top:0;z-index:200;height:64px;
+  display:flex;align-items:center;gap:16px;padding:0 24px;
+  background:#fff;border-bottom:2px solid var(--border);
+  transition:background .25s,border-color .25s;
+}
+html.dark header.top{background:#0a0a0a;border-bottom-color:#3a3a6a;}
+header.top .brand{font-weight:800;font-size:18px;color:var(--primary);letter-spacing:-.02em;}
+header.top .brand b{color:var(--secondary);}
+.themebtn{
+  margin-left:auto;width:34px;height:34px;border-radius:8px;
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.themebtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;} .themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;} html.dark .themebtn .sun{display:block;}
+
+/* ── 레이아웃 ── */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
+
+/* ── 사이드바 ── */
+aside{
+  border-right:1px solid var(--border);padding:18px 12px;
+  overflow-y:auto;position:sticky;top:64px;height:calc(100vh - 64px);
+  background:var(--bg);display:flex;flex-direction:column;gap:4px;
+  transition:background .25s;
+}
+html.dark aside{border-right-color:#3a3a6a;}
+
+/* navday */
+.navday{margin-bottom:2px;}
+.navday-hd{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 8px;border-radius:8px;
+  transition:background .15s;
+}
+.navday-hd:hover{background:var(--tag);}
+.navday-toggle{
+  background:transparent;border:none;cursor:pointer;padding:2px;
+  display:flex;align-items:center;flex-shrink:0;margin-top:1px;
+}
+.navday-link{
+  flex:1;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;gap:2px;
+}
+.navday-link:hover .navday-name{color:var(--primary);}
+html.dark .navday-link:hover .navday-name{color:var(--primary)!important;}
+.navday-arr{
+  width:14px;height:14px;flex-shrink:0;margin-top:3px;color:var(--t3);
+  transition:transform .22s ease;fill:none;stroke:currentColor;stroke-width:2.5;
+}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:12px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 6px 22px;border-left:2px solid var(--border);margin-left:13px;display:none;}
+.navday.open>.navday-body{display:block;}
+html.dark .navday-body{border-left-color:#3a3a6a;}
+.nav-module{
+  display:block;padding:7px 10px;border-radius:6px;
+  font-size:13px;font-weight:500;color:var(--t1);
+  border-left:2px solid transparent;text-decoration:none;transition:background .15s;
+}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.nav-module.locked{opacity:.4;pointer-events:none;}
+
+/* 진행 현황 */
+.prog-box{
+  margin-top:16px;padding:10px 12px;
+  background:var(--bg-alt);border-radius:10px;border:1px solid var(--border);
+}
+.prog-box-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.prog-counts{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.prog-bar{height:4px;background:#e0e0e8;border-radius:2px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;transition:width .3s;}
+
+/* 나가기 버튼 */
+.exit-classroom-btn{
+  display:flex;align-items:center;gap:8px;
+  margin:12px 0 8px;padding:9px 12px;border-radius:8px;
+  background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.25);
+  color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;
+  transition:all .2s;
+}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+
+/* ── 메인 ── */
+main{padding:20px 24px 80px;width:100%;}
+
+/* ── 슬라이드 뷰어 (svis) ── */
+.svis{
+  background:#0b1020;border:1px solid var(--border);
+  border-radius:14px;box-shadow:var(--sh);
+  position:relative;overflow:hidden;
+  aspect-ratio:16/9;width:100%;
+  transition:all .25s;
+}
+html.dark .svis{border-color:#3a3a6a;}
+
+/* svis 상단 버튼들 */
+.svis-btns{
+  position:absolute;top:10px;right:10px;z-index:50;
+  display:flex;gap:6px;
+}
+.svis-btn{
+  height:30px;padding:0 12px;border-radius:8px;
+  background:rgba(255,255,255,.85);border:1px solid var(--border);
+  color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:5px;backdrop-filter:blur(6px);
+  transition:all .15s;font-family:inherit;
+}
+.svis-btn:hover{background:var(--primary);color:#fff;}
+.svis-btn.on{background:var(--primary);color:#fff;}
+html.dark .svis-btn{background:rgba(10,10,10,.8);color:#F1F5F9;border-color:#3a3a6a;}
+
+/* ── 슬라이드 노트 패널 ── */
+.npanel{
+  background:var(--bg-alt);border:1px solid var(--border);
+  border-radius:14px;padding:20px 24px;
+  display:flex;flex-direction:column;gap:12px;
+  box-shadow:var(--sh);margin-top:14px;
+  font-size:15px;line-height:1.85;
+}
+html.dark .npanel{background:#111111;border-color:#3a3a6a;}
+.npanel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:8px;border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+html.dark .npanel-header{border-bottom-color:#3a3a6a;}
+.npanel-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--secondary);}
+.npanel-slide-title{font-size:15px;font-weight:700;color:var(--primary);}
+.note-section{margin-bottom:14px;}
+.note-section-title{
+  font-size:12px;font-weight:700;color:var(--secondary);
+  border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:8px;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+html.dark .note-section-title{border-bottom-color:#3a3a6a;}
+.note-kw{font-weight:700;color:var(--secondary);}
+.note-case{
+  background:rgba(8,145,178,.07);border-left:3px solid var(--secondary);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;
+}
+.note-case-label{
+  font-size:11px;font-weight:700;color:var(--secondary);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;
+}
+.npanel ul{padding-left:18px;}
+.npanel li{margin-bottom:4px;}
+.npanel-close{
+  background:none;border:none;cursor:pointer;
+  font-size:16px;color:var(--t3);line-height:1;padding:2px 6px;
+}
+
+/* ── 전체화면 오버레이 ── */
+#fsOverlay{
+  position:fixed;inset:0;z-index:900;
+  background:#0b1020;
+  flex-direction:column;
+}
+.fs-topbar{
+  height:44px;display:flex;align-items:center;justify-content:flex-end;
+  padding:0 16px;background:rgba(0,0,0,.5);flex-shrink:0;
+}
+.fs-close{
+  height:32px;padding:0 16px;border-radius:8px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+.fs-close:hover{background:rgba(255,255,255,.25);}
+#fsFrame{flex:1;width:100%;border:none;display:block;}
+.fs-nav{
+  height:44px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  background:rgba(0,0,0,.5);
+}
+.fs-nav button{
+  height:34px;padding:0 20px;border-radius:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.fs-nav button:hover{background:rgba(255,255,255,.22);}
+#fsCnt{font-size:14px;font-weight:700;color:rgba(255,255,255,.8);min-width:60px;text-align:center;}
+
+/* ── 하단 네비 바 ── */
+.sticknav{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:var(--bg-alt);border-top:1px solid var(--border);
+  padding:8px 24px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);
+}
+html.dark .sticknav{background:#0a0a0a;border-top-color:#3a3a6a;}
+.sticknav button{
+  background:var(--bg-soft);border:1px solid var(--border);
+  color:var(--t1);padding:7px 20px;border-radius:8px;
+  cursor:pointer;font-size:14px;font-weight:600;
+  transition:all .15s;font-family:inherit;
+}
+.sticknav button:hover:not(:disabled){background:var(--primary);border-color:var(--primary);color:#fff;}
+.sticknav button:disabled{opacity:.35;cursor:default;}
+.sticknav-cnt{font-size:15px;color:var(--secondary);min-width:56px;text-align:center;font-weight:700;}
+
+/* ── 다크 모드 전체 ── */
+html.dark *{--border:#3a3a6a !important;}
+html.dark body,html.dark aside,html.dark main,html.dark .sticknav{background-color:#0a0a0a;}
+html.dark .navday-name,html.dark .nav-module{color:#F1F5F9 !important;}
+html.dark .navday-badge{color:#22D3EE !important;}
+html.dark .nav-module.active{background:rgba(129,140,248,.15) !important;color:#818CF8 !important;border-left-color:#818CF8 !important;}
+html.dark .sticknav-cnt{color:#22D3EE !important;}
+</style>
+</head>
+<body>
+
+<!-- PIN 접근 제어 -->
+<script>
+if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+  window.location.replace('../../AgenticAIWorkshop_gate_v1.html');
+}
+</script>
+
+<!-- ── 헤더 ── -->
+<header class="top">
+  <span class="brand">Agentic AI <b>Workshop</b></span>
+  <button class="themebtn" id="themeToggle" aria-label="배경 전환">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+
+<!-- ── 레이아웃 ── -->
+<div class="layout">
+
+  <!-- ── 사이드바 ── -->
+  <aside>
+    <!-- Day 1 (접힘) -->
+    <div class="navday" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')" aria-label="Day 1 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day1/" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Generative AI 이해하기</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day1/m1/">M1. Kiro 소개</a>
+        <a class="nav-module" href="../../day1/m2/">M2. AI 이해하기</a>
+        <a class="nav-module" href="../../hol/ws1/">Workshop 1. Kiro Basic</a>
+      </div>
+    </div>
+
+    <!-- Day 2 (접힘) -->
+    <div class="navday" id="navday-2">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-2')" aria-label="Day 2 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day2/" class="navday-link">
+          <span class="navday-badge">Day 2</span>
+          <span class="navday-name">Developing GenAI App on AWS</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day2/m3/">M3. Amazon Bedrock 활용</a>
+        <a class="nav-module" href="../../day2/m4/">M4. Agentic AI &amp; MCP</a>
+      </div>
+    </div>
+
+    <!-- Day 3 (접힘) -->
+    <div class="navday" id="navday-3">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-3')" aria-label="Day 3 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day3/" class="navday-link">
+          <span class="navday-badge">Day 3</span>
+          <span class="navday-name">Strands Agents &amp; AgentCore</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../../day3/m5/">M5. Strands Agents SDK</a>
+        <a class="nav-module" href="../../day3/m6/">M6. Amazon Bedrock AgentCore</a>
+      </div>
+    </div>
+
+    <!-- Day 4 (펼침, 현재 활성) -->
+    <div class="navday open" id="navday-4">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-4')" aria-label="Day 4 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day4/" class="navday-link">
+          <span class="navday-badge">Day 4</span>
+          <span class="navday-name">Kiro 고급 기능</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module active" href="#">M7. Kiro 고급 기능</a>
+      </div>
+    </div>
+
+    <!-- 진행 현황 -->
+    <div class="prog-box" style="margin-top:16px;">
+      <div class="prog-box-label">슬라이드 진행</div>
+      <div class="prog-counts"><span id="progText">1 / 20</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:5%"></div></div>
+    </div>
+
+    <!-- 나가기 -->
+    <a href="../../AgenticAIWorkshop_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </aside>
+
+  <!-- ── 메인 ── -->
+  <main>
+
+    <!-- 슬라이드 뷰어 -->
+    <div class="svis" id="svis">
+      <iframe id="slideFrame"
+              src="./slides.html"
+              frameborder="0"
+              style="width:100%;height:100%;border:none;display:block;"
+              onload="frameReady=true; goTo(cur);">
+      </iframe>
+      <div class="svis-btns">
+        <button class="svis-btn" id="expandBtn" onclick="openFS()">전체화면</button>
+      </div>
+    </div>
+
+    <!-- 슬라이드 노트 패널 (항상 표시) -->
+    <div class="npanel" id="notesPanel">
+      <div class="npanel-header">
+        <span class="npanel-label">슬라이드 노트</span>
+        <span class="npanel-slide-title" id="noteTitle"></span>
+      </div>
+      <div id="noteBody"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── 하단 네비 바 ── -->
+<div class="sticknav">
+  <button id="btnPrev" onclick="goTo(cur-1)" disabled>← 이전</button>
+  <span class="sticknav-cnt" id="snCnt">1 / 20</span>
+  <button id="btnNext" onclick="goTo(cur+1)">다음 →</button>
+</div>
+
+<!-- ── 전체화면 오버레이 ── -->
+<div id="fsOverlay" style="display:none;">
+  <div class="fs-topbar">
+    <button class="fs-close" onclick="closeFS()">✕ 강의실로 돌아가기</button>
+  </div>
+  <iframe id="fsFrame" src="./slides.html"
+          style="flex:1;width:100%;border:none;display:block;"
+          onload="fsFrameReady=true; goFS(cur);">
+  </iframe>
+  <div class="fs-nav">
+    <button onclick="goFS(fsCur-1)">← 이전</button>
+    <span id="fsCnt">1 / 20</span>
+    <button onclick="goFS(fsCur+1)">다음 →</button>
+  </div>
+</div>
+
+<script>
+// ── NOTES 배열 (20개) ──
+var NOTES = [
+  {t:'Kiro의 핵심 기능', h:`
+<div class="note-section">
+  <div class="note-section-title">개요</div>
+  <p><span class="note-kw">Kiro</span>는 단순한 코드 보조 도구를 넘어, 개발 워크플로 전반을 자동화하는 <span class="note-kw">에이전트 통합 개발 환경(Agentic IDE)</span>입니다. 대화(Vibe)·설계(Spec)부터 규칙·자동화·확장까지 일곱 가지 핵심 기능을 제공합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">일곱 가지 기능 구성</div>
+  <ul>
+    <li><span class="note-kw">Vibe(바이브)</span>: 자연어 대화 기반 코딩 — 요청을 입력하면 에이전트가 파일을 탐색하고 코드를 작성합니다.</li>
+    <li><span class="note-kw">Spec(스펙)</span>: 기능 명세 기반 개발 — 요구사항·설계·태스크를 구조적으로 작성하고 추적합니다.</li>
+    <li><span class="note-kw">Steering·MCP·Skills·Hooks·Powers</span>: 고급 기능으로 이 슬라이드 덱에서 하나씩 다룹니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 어디서 시작할까</div>
+  <p>빠른 개발은 Vibe, 복잡한 기능 설계는 Spec, 팀 표준 적용은 Steering, 외부 시스템 연동은 MCP를 활용하세요. <strong>기능을 조합할수록 생산성이 배가됩니다.</strong></p>
+</div>`},
+  {t:'두 얼굴의 Kiro — IDE와 CLI', h:`
+<div class="note-section">
+  <div class="note-section-title">IDE와 CLI 두 가지 모드</div>
+  <p><span class="note-kw">Kiro IDE</span>는 VS Code 기반의 그래픽 에디터이고, <span class="note-kw">Kiro CLI</span>는 터미널에서 실행하는 명령줄 도구입니다. 같은 <code>.kiro/</code> 설정을 공유하므로 환경을 바꿔도 동일한 규칙과 도구가 유지됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">각 모드의 특징</div>
+  <ul>
+    <li><span class="note-kw">IDE 전용 기능</span>: 실시간 인라인 제안, GUI 파일 탐색기, Spec 시각화 대시보드, 비주얼 디버거.</li>
+    <li><span class="note-kw">CLI 전용 기능</span>: CI/CD 파이프라인 통합, 원격 서버 자동화, 스크립트 호출, 헤드리스(Headless) 실행.</li>
+    <li>공통 기능: Steering, MCP, Skills, Hooks, Powers — <code>.kiro/</code> 폴더가 있으면 IDE·CLI 모두에서 동일하게 작동합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 로컬 개발과 서버 배포</div>
+  <p>개발자는 IDE에서 코드를 작성하고, 동일한 프로젝트를 GitHub Actions 서버의 CLI가 자동으로 검사·빌드합니다. <strong>설정 파일 하나로 로컬과 CI 환경을 일치</strong>시킬 수 있습니다.</p>
+</div>`},
+  {t:'Kiro 설정 폴더(.kiro) 구조', h:`
+<div class="note-section">
+  <div class="note-section-title">.kiro 폴더 위치 규칙</div>
+  <p><code>.kiro/</code> 폴더는 반드시 <span class="note-kw">Kiro로 연 프로젝트 루트 폴더</span> 바로 아래에 위치해야 합니다. 위치가 어긋나면 권한 오류 또는 설정이 무시됩니다. 이 폴더에는 Steering, Skills, Hooks, MCP 설정 파일이 모두 들어갑니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">폴더 구조</div>
+  <ul>
+    <li><code>.kiro/steering/</code>: 규칙 파일(.md) 저장 — 항상·조건부 적용 규칙을 파일로 관리.</li>
+    <li><code>.kiro/skills/</code>: 스킬 폴더 — 하위 폴더 하나가 하나의 스킬 패키지.</li>
+    <li><code>.kiro/hooks/</code>: 훅 설정 파일 — 이벤트 트리거와 실행 명령을 정의.</li>
+    <li><code>.kiro/settings/</code>: MCP 서버 연결 정보와 기타 Kiro 설정.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 팀 표준 공유</div>
+  <p><code>.kiro/</code> 폴더를 Git에 커밋하면 팀원 전원이 동일한 규칙과 도구를 자동으로 공유합니다. <strong>신규 팀원은 레포 클론만 하면 Kiro 설정이 즉시 적용</strong>됩니다.</p>
+</div>`},
+  {t:'설정의 두 가지 스코프 — Global vs Workspace', h:`
+<div class="note-section">
+  <div class="note-section-title">두 가지 설정 스코프</div>
+  <p>Kiro의 모든 설정은 <span class="note-kw">Global 스코프</span>(사용자 홈 디렉터리)와 <span class="note-kw">Workspace 스코프</span>(프로젝트 루트 <code>.kiro/</code>)로 나뉩니다. 저장 위치가 곧 적용 범위를 결정합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">스코프별 특징 비교</div>
+  <ul>
+    <li><span class="note-kw">Global</span>: 모든 프로젝트에 공통 적용. 개인 코딩 스타일, 기본 언어, 자주 쓰는 MCP 서버 등을 등록합니다.</li>
+    <li><span class="note-kw">Workspace</span>: 해당 프로젝트에만 적용. 팀 컨벤션, 프레임워크별 규칙, 프로젝트 전용 도구를 정의합니다.</li>
+    <li>Workspace 설정이 Global보다 <span class="note-kw">우선 적용(Override)</span>됩니다 — 프로젝트마다 다른 규칙을 가질 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 개인 취향과 팀 규칙 분리</div>
+  <p>개발자는 Global에 "항상 한국어로 응답"을 설정하고, 각 프로젝트 Workspace에 "이 프로젝트는 TypeScript strict 모드"를 설정합니다. <strong>개인 설정을 유지하면서 팀 표준을 강제</strong>할 수 있습니다.</p>
+</div>`},
+  {t:'Kiro를 움직이는 다섯 가지 핵심 기능', h:`
+<div class="note-section">
+  <div class="note-section-title">다섯 가지 핵심 기능 개요</div>
+  <p>Kiro의 고급 기능은 <span class="note-kw">Steering(스티어링)</span>, <span class="note-kw">MCP(Model Context Protocol)</span>, <span class="note-kw">Skills(스킬)</span>, <span class="note-kw">Agent Hook(에이전트 훅)</span>, <span class="note-kw">Powers(파워)</span> 다섯 가지입니다. 모두 <code>.kiro/</code> 설정 폴더를 통해 IDE와 CLI가 공유합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">기능별 역할 요약</div>
+  <ul>
+    <li><span class="note-kw">Steering</span>: AI 행동을 규정하는 규칙 파일 — "이 프로젝트에서 항상 지켜야 할 것"을 정의합니다.</li>
+    <li><span class="note-kw">MCP</span>: 외부 도구·데이터 소스 연결 표준 — GitHub, Slack, DB 등을 AI가 직접 활용하게 합니다.</li>
+    <li><span class="note-kw">Skills</span>: 반복 작업 절차 패키지 — 자주 쓰는 작업 흐름을 AI가 자동으로 따르게 합니다.</li>
+    <li><span class="note-kw">Agent Hook</span>: 이벤트 기반 자동화 — 파일 저장, 도구 호출 등 이벤트 발생 시 특정 작업을 수행합니다.</li>
+    <li><span class="note-kw">Powers</span>: 위 기능들을 묶은 번들 패키지 — 한 번에 설치하고 키워드로 자동 활성화됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 풀스택 자동화</div>
+  <p>MCP로 GitHub에 연결하고, Steering으로 코딩 컨벤션을 강제하며, Hook으로 저장 시 자동 린트를 실행하고, Skills로 PR 생성 절차를 자동화합니다. <strong>다섯 기능을 조합하면 개발 워크플로 전체가 자동화</strong>됩니다.</p>
+</div>`},
+  {t:'Steering — 규칙 설정', h:`
+<div class="note-section">
+  <div class="note-section-title">Steering이란</div>
+  <p><span class="note-kw">Steering(스티어링)</span>은 Kiro AI의 행동을 제어하는 규칙 파일입니다. Markdown(.md) 형식으로 작성하며, AI가 코드를 생성하거나 대화할 때 이 규칙을 참고합니다. "같은 요청, 다른 결과"가 나오는 이유가 바로 이 규칙 파일 한 장의 차이입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Steering 규칙 적용 효과</div>
+  <ul>
+    <li>규칙이 없으면 AI는 일반적인 방식으로 응답합니다 — 팀 표준과 다를 수 있습니다.</li>
+    <li>규칙을 정의하면 AI는 매번 동일한 패턴으로 응답합니다 — 코드 스타일, 변수 명명, 오류 처리 방식 등을 강제합니다.</li>
+    <li><span class="note-kw">프론트매터(Frontmatter)</span>: 파일 상단의 YAML 헤더로 적용 시점(항상/조건부)을 설정합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 코딩 스타일 강제</div>
+  <p>"Python 코드는 항상 타입 힌트를 포함하고, 함수에는 반드시 docstring을 작성하며, 상수는 UPPER_SNAKE_CASE를 사용하라"는 규칙을 Steering에 등록하면 <strong>AI가 생성하는 모든 코드에 자동으로 적용</strong>됩니다.</p>
+</div>`},
+  {t:'Steering 적용', h:`
+<div class="note-section">
+  <div class="note-section-title">Steering 파일 생성 방법</div>
+  <p><code>.kiro/steering/</code> 폴더에 <code>.md</code> 파일을 생성하면 즉시 규칙이 적용됩니다. 파일 이름은 규칙 내용을 반영하도록 짓습니다 (예: <code>coding-style.md</code>, <code>security-rules.md</code>). 파일 상단의 <span class="note-kw">프론트매터(Frontmatter)</span>로 적용 범위를 설정합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Steering 파일 구성</div>
+  <ul>
+    <li>YAML 프론트매터 블록: <code>inclusion</code> 키로 적용 시점 지정 (always, fileMatch, agentRequested, manual).</li>
+    <li>Markdown 본문: 자연어로 규칙을 작성합니다. 명확하고 구체적일수록 AI가 정확하게 따릅니다.</li>
+    <li>규칙 파일은 여러 개를 동시에 적용할 수 있습니다 — 각 파일은 독립적인 규칙 집합입니다.</li>
+    <li>Git에 커밋하면 팀 전체에 동일한 규칙이 적용됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 보안 규칙 자동 적용</div>
+  <p><code>security.md</code> 파일에 "SQL 쿼리는 반드시 파라미터화된 쿼리를 사용하고, 사용자 입력은 항상 검증하라"를 작성하면 <strong>AI가 생성하는 모든 DB 접근 코드에 보안 규칙이 자동 적용</strong>됩니다.</p>
+</div>`},
+  {t:'Steering 적용 시점', h:`
+<div class="note-section">
+  <div class="note-section-title">4가지 Inclusion 모드</div>
+  <p>Steering 파일 상단 프론트매터의 <code>inclusion</code> 키로 규칙이 언제 로드될지 정합니다. 총 <span class="note-kw">4가지 Inclusion 모드(Inclusion Mode)</span>가 있으며, 모드 선택이 적용 범위와 컨텍스트 사용량에 영향을 미칩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">4가지 모드 비교</div>
+  <ul>
+    <li><span class="note-kw">always</span>: 모든 AI 요청에 항상 포함됩니다 — 중요한 팀 규칙에 사용하세요.</li>
+    <li><span class="note-kw">fileMatch</span>: 특정 파일 패턴과 일치할 때만 포함됩니다 (예: <code>**/*.py</code>) — 언어별 규칙에 적합합니다.</li>
+    <li><span class="note-kw">agentRequested</span>: AI가 규칙을 읽고 현재 작업에 필요하다고 판단할 때 자동으로 포함합니다.</li>
+    <li><span class="note-kw">manual</span>: 사용자가 명시적으로 <code>@steering-name</code>으로 호출할 때만 포함됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 컨텍스트 최적화</div>
+  <p>보안 규칙은 <code>always</code>, 프레임워크 규칙은 <code>fileMatch</code>, 배포 가이드는 <code>manual</code>로 설정하면 컨텍스트 낭비 없이 필요한 규칙만 AI에 전달됩니다. <strong>올바른 모드 선택이 AI 응답 품질을 결정</strong>합니다.</p>
+</div>`},
+  {t:'Steering으로 무엇을 규칙화할까요?', h:`
+<div class="note-section">
+  <div class="note-section-title">규칙화 가능한 영역</div>
+  <p>Steering으로는 개인정보처럼 <span class="note-kw">항상 지켜야 하는 규칙</span>을 정의하는 것이 가장 효과적입니다. 코딩 컨벤션, 보안 정책, 문서화 기준, 커밋 메시지 형식 등 다양한 영역을 규칙화할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">규칙화 권장 항목</div>
+  <ul>
+    <li><span class="note-kw">개인정보 보호</span>: 로그에 개인정보 출력 금지, 코드에 하드코딩된 비밀번호 금지.</li>
+    <li><span class="note-kw">코딩 스타일</span>: 함수명 규칙, 주석 언어, 들여쓰기 방식, 최대 함수 길이.</li>
+    <li><span class="note-kw">보안 정책</span>: 입력 검증, 인증 처리 방식, 암호화 알고리즘 선택 기준.</li>
+    <li><span class="note-kw">문서화 기준</span>: API 문서 필수 포함 항목, README 구조, 변경 이력 작성법.</li>
+    <li><span class="note-kw">테스트 기준</span>: 단위 테스트 커버리지 기준, 테스트 파일 명명 규칙.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 개인정보 보호 규칙</div>
+  <p>"이름, 이메일, 전화번호는 절대 로그에 출력하지 말고, 화면에 표시할 때는 반드시 마스킹 처리하라"를 Steering에 등록하면 <strong>AI가 생성하는 모든 출력 코드에 개인정보 보호 규칙이 자동 적용</strong>됩니다.</p>
+</div>`},
+  {t:'MCP 연결하기', h:`
+<div class="note-section">
+  <div class="note-section-title">MCP란</div>
+  <p><span class="note-kw">MCP(Model Context Protocol)</span>는 AI 에이전트와 외부 도구·데이터 소스 간의 표준화된 연결 방식입니다. Anthropic이 주도하여 공개한 표준으로, MCP가 약속하는 세 가지는 정해진 규격, 표준 형식 노출, 플랫폼 독립성입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">MCP의 세 가지 약속</div>
+  <ul>
+    <li><span class="note-kw">정해진 규격(Standard Spec)</span>: MCP를 지원하는 모든 AI 도구가 같은 방식으로 서버와 통신합니다.</li>
+    <li><span class="note-kw">표준 형식 노출(Standard Exposure)</span>: 도구는 Tools, Resources, Prompts 세 가지 형태로 기능을 AI에 노출합니다.</li>
+    <li><span class="note-kw">플랫폼 독립(Platform Independence)</span>: 한 번 만든 MCP 서버는 Kiro, Claude Desktop, Cursor 등 MCP를 지원하는 모든 곳에서 재사용됩니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: MCP 생태계 활용</div>
+  <p>GitHub, Slack, Jira, PostgreSQL, AWS 등 수백 개의 MCP 서버가 커뮤니티에 공개되어 있습니다. <strong>설정 몇 줄만으로 Kiro가 이 모든 도구를 자유롭게 활용</strong>하게 됩니다.</p>
+</div>`},
+  {t:'코딩 에이전트와 MCP', h:`
+<div class="note-section">
+  <div class="note-section-title">에이전트가 MCP를 활용하는 방식</div>
+  <p>MCP 서버를 연결해 두면 <span class="note-kw">코딩 에이전트(Coding Agent)</span>가 서버의 도구 명세를 자동으로 읽고, 현재 작업에 필요한 도구를 스스로 골라 호출합니다. 개발자가 직접 API 문서를 읽거나 호출 코드를 작성할 필요가 없습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">동작 원리</div>
+  <ul>
+    <li><span class="note-kw">도구 탐색(Tool Discovery)</span>: 에이전트가 연결된 MCP 서버의 모든 도구 목록과 설명을 자동으로 가져옵니다.</li>
+    <li><span class="note-kw">자동 선택(Auto Selection)</span>: 사용자의 요청 문맥을 분석하여 적합한 도구를 선택합니다.</li>
+    <li><span class="note-kw">결과 처리(Result Processing)</span>: 도구 호출 결과를 에이전트가 해석하여 다음 행동을 결정합니다.</li>
+    <li>여러 MCP 서버의 도구를 하나의 워크플로에서 조합해서 사용할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 자동화된 코드 리뷰</div>
+  <p>"이 PR의 보안 이슈를 검토해줘"라고 입력하면, GitHub MCP 서버로 PR 변경사항을 가져오고, 자동으로 분석 후 GitHub에 댓글을 달기까지 <strong>에이전트가 전 과정을 자율 처리</strong>합니다.</p>
+</div>`},
+  {t:'MCP 서버 연결 방법', h:`
+<div class="note-section">
+  <div class="note-section-title">두 가지 연결 방식</div>
+  <p>MCP 서버는 실행 위치에 따라 두 가지 방식으로 연결합니다. <span class="note-kw">원격 방식(Streamable HTTP)</span>은 URL로 연결하고, <span class="note-kw">로컬 방식(stdio)</span>은 실행 명령으로 연결합니다. 연결 정보는 <code>.kiro/settings/mcp.json</code>에 저장됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">방식별 연결 정보</div>
+  <ul>
+    <li><span class="note-kw">원격 — Streamable HTTP</span>: 서버 URL을 입력합니다. 이미 배포된 클라우드 MCP 서버에 연결할 때 사용합니다. 인증 토큰을 환경 변수로 별도 관리합니다.</li>
+    <li><span class="note-kw">로컬 — stdio</span>: 실행 명령(command)과 인자(args)를 입력합니다. 로컬에 설치된 패키지를 실행하여 서버를 구동합니다. npx, python, uv 등으로 실행합니다.</li>
+    <li>두 방식 모두 Kiro가 설정을 읽고 자동으로 서버에 연결합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: GitHub MCP 서버 연결</div>
+  <p>GitHub MCP 서버는 <code>npx @modelcontextprotocol/server-github</code>로 로컬에서 실행하고, 환경 변수로 GitHub PAT(Personal Access Token)을 전달합니다. <strong>설정 후 Kiro가 GitHub 모든 API를 자연어로 사용</strong>할 수 있게 됩니다.</p>
+</div>`},
+  {t:'Skill — 새 능력 추가', h:`
+<div class="note-section">
+  <div class="note-section-title">Skill이란</div>
+  <p><span class="note-kw">Skill(스킬)</span>은 자주 반복하는 작업 절차를 패키지로 등록하는 기능입니다. 스킬을 등록하면 AI가 관련 작업이 필요할 때 스스로 해당 스킬을 찾아 활용합니다. Steering이 "규칙"이라면, Skill은 "절차"를 패키지화한 것입니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Skill의 구성</div>
+  <ul>
+    <li><span class="note-kw">SKILL.md</span>: 스킬의 이름, 설명, 단계별 절차를 Markdown으로 작성합니다.</li>
+    <li><span class="note-kw">폴더 단위 패키지</span>: <code>.kiro/skills/스킬이름/</code> 폴더 하나가 하나의 스킬이 됩니다.</li>
+    <li>AI는 <code>description</code> 필드를 읽고 현재 작업에 이 스킬이 필요한지 판단합니다.</li>
+    <li>스킬 내에 예시 파일, 템플릿, 보조 파일을 함께 포함할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: API 엔드포인트 추가 스킬</div>
+  <p>"새 API 엔드포인트를 추가할 때는 라우터 등록 → 컨트롤러 생성 → 서비스 로직 → 테스트 코드 → Swagger 문서 업데이트 순서로 작업하라"는 스킬을 등록하면 <strong>AI가 이 절차를 자동으로 따릅니다.</strong></p>
+</div>`},
+  {t:'Skill 적용 — SKILL.md', h:`
+<div class="note-section">
+  <div class="note-section-title">SKILL.md 파일 구조</div>
+  <p><code>.kiro/skills/&lt;스킬이름&gt;/SKILL.md</code> 파일이 스킬의 핵심입니다. 파일 상단의 <span class="note-kw">프론트매터(Frontmatter)</span>에 name과 description을 작성하고, 본문에 단계별 절차를 상세히 기술합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">SKILL.md 작성 요소</div>
+  <ul>
+    <li><span class="note-kw">name</span>: 스킬의 식별 이름 — 짧고 명확하게 작성합니다.</li>
+    <li><span class="note-kw">description</span>: AI가 이 스킬을 언제 사용할지 판단하는 핵심 설명 — 구체적인 상황을 기술합니다.</li>
+    <li><span class="note-kw">절차(Steps)</span>: 번호가 매겨진 단계별 지시사항 — 각 단계는 명확한 행동으로 기술합니다.</li>
+    <li>추가 컨텍스트 파일: 스킬 폴더에 예시 코드, 템플릿 파일 등을 함께 포함할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 코드 리뷰 응답 스킬</div>
+  <p>description에 "코드 리뷰 피드백을 받았을 때"라고 쓰면, 리뷰 관련 요청 시 AI가 자동으로 이 스킬을 활용해 <strong>피드백 분석 → 수정 계획 → 구현 → PR 업데이트 순서로 처리</strong>합니다.</p>
+</div>`},
+  {t:'Skill 적용 시점 — name / description', h:`
+<div class="note-section">
+  <div class="note-section-title">AI가 Skill을 선택하는 원리</div>
+  <p>Kiro AI는 <code>SKILL.md</code>의 <span class="note-kw">description 필드</span>를 읽고 현재 작업에 이 스킬이 필요한지 자동으로 판단합니다. description이 구체적일수록 AI가 올바른 스킬을 정확하게 선택합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">name과 description 작성 전략</div>
+  <ul>
+    <li><span class="note-kw">name</span>: 스킬의 고유한 식별자 — 다른 스킬과 겹치지 않는 명확한 이름을 사용합니다.</li>
+    <li><span class="note-kw">description</span>: 이 스킬을 언제 사용해야 하는지 구체적인 상황을 기술합니다. "새 React 컴포넌트를 만들 때" 처럼 작업 유형을 명시합니다.</li>
+    <li>지나치게 넓은 description은 불필요한 스킬 활성화를 유발할 수 있습니다.</li>
+    <li><span class="note-kw">수동 호출(Manual Invocation)</span>: 채팅에서 <code>@스킬이름</code>으로 직접 호출도 가능합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: description 최적화</div>
+  <p>"코드를 작성할 때" (너무 넓음) 대신 "FastAPI 라우터에 새 엔드포인트를 추가할 때"로 작성하면 <strong>필요한 상황에서만 정확하게 스킬이 활성화</strong>됩니다.</p>
+</div>`},
+  {t:'Agent Hook — 자동화', h:`
+<div class="note-section">
+  <div class="note-section-title">Agent Hook이란</div>
+  <p><span class="note-kw">Agent Hook(에이전트 훅)</span>은 특정 이벤트가 발생할 때 자동으로 작업을 수행하는 기능입니다. "파일 저장", "도구 호출", "세션 시작" 같은 이벤트에 반응하여 지정된 작업을 실행합니다. 개발자가 직접 개입하지 않아도 반복 검사와 자동화 작업이 수행됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Hook의 구성 요소</div>
+  <ul>
+    <li><span class="note-kw">트리거(Trigger)</span>: 어떤 이벤트에 반응할지 정의합니다 — 10가지 트리거 타입을 제공합니다.</li>
+    <li><span class="note-kw">조건(Condition)</span>: 트리거 발생 시 추가 조건을 설정합니다 — 특정 파일 패턴이나 값 조건을 지정합니다.</li>
+    <li><span class="note-kw">명령(Command)</span>: 조건을 만족할 때 실행할 작업을 정의합니다 — AI 프롬프트 또는 쉘 명령을 지정합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 저장 시 자동 검사</div>
+  <p>Python 파일이 저장될 때마다 자동으로 개인정보 패턴(이메일, 전화번호)을 검사하는 Hook을 설정하면 <strong>개발자가 깜빡해도 민감한 정보가 코드에 남지 않습니다.</strong></p>
+</div>`},
+  {t:'Hook 적용', h:`
+<div class="note-section">
+  <div class="note-section-title">PostFileSave Hook 적용 예시</div>
+  <p><span class="note-kw">PostFileSave 트리거</span>는 에이전트가 파일을 저장하는 시점에 발생합니다. 이 트리거를 사용하면 저장 후 자동으로 검사, 포매팅, 문서 업데이트 등을 실행할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Hook 설정 파일 구조</div>
+  <ul>
+    <li>Hook 설정은 <code>.kiro/hooks/</code> 폴더의 JSON 파일로 관리합니다.</li>
+    <li><span class="note-kw">trigger 타입</span>: PostFileSave, PreFileSave, PostToolCall 등 이벤트 유형을 지정합니다.</li>
+    <li><span class="note-kw">filePattern</span>: 적용 대상 파일 패턴 (예: <code>**/*.py</code>)을 설정합니다.</li>
+    <li><span class="note-kw">prompt</span>: AI에 전달할 검사/처리 지시사항을 자연어로 작성합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 저장 시 docstring 자동 추가</div>
+  <p>Python 파일이 저장될 때마다 "함수에 docstring이 없으면 자동으로 추가하라"는 Hook을 설정하면 <strong>코드베이스 전체의 문서화 수준이 일정하게 유지</strong>됩니다.</p>
+</div>`},
+  {t:'Hook 적용 시점 — 트리거 10가지', h:`
+<div class="note-section">
+  <div class="note-section-title">10가지 트리거 타입</div>
+  <p>Kiro Agent Hook은 개발 워크플로의 주요 이벤트에 반응하는 <span class="note-kw">10가지 트리거 타입(Trigger Types)</span>을 제공합니다. 트리거를 올바르게 선택해야 원하는 시점에 자동화가 실행됩니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">트리거 카테고리별 설명</div>
+  <ul>
+    <li><span class="note-kw">파일 이벤트</span>: PreFileSave·PostFileSave·OnFileDelete — 파일 생성·저장·삭제 시 맞춤법·개인정보 검사 자동화에 활용.</li>
+    <li><span class="note-kw">프롬프트 이벤트</span>: PrePrompt·PostPrompt — 프롬프트 전송 전·후 민감정보 검사, 컨텍스트 자동 추가에 활용.</li>
+    <li><span class="note-kw">도구 이벤트</span>: PreToolCall·PostToolCall — 도구 호출 전·후 위험한 작업 확인, 호출 기록 자동화에 활용.</li>
+    <li><span class="note-kw">태스크 이벤트</span>: OnTaskStart·OnTaskComplete — 태스크 시작 전 환경 확인, 완료 후 테스트 자동 실행에 활용.</li>
+    <li><span class="note-kw">세션 이벤트</span>: OnSessionStart·OnTurnComplete — 시작 시 컨텍스트 준비, 마무리 점검에 활용.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 위험 작업 이중 확인</div>
+  <p>PreToolCall에서 데이터베이스 삭제(DELETE) 명령이 감지되면 "정말 삭제하시겠습니까? 대상 레코드 수: N건"을 출력하는 Hook을 설정하면 <strong>에이전트의 실수를 사전에 방지</strong>합니다.</p>
+</div>`},
+  {t:'Powers — 기능 번들', h:`
+<div class="note-section">
+  <div class="note-section-title">Powers란</div>
+  <p><span class="note-kw">Powers(파워)</span>는 MCP 서버, Steering 규칙, Agent Hook을 하나의 패키지로 묶어 제공하는 번들 기능입니다. 관련 설정이 여러 폴더에 흩어지는 것을 방지하고 한 번에 설치할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">Powers의 세 가지 특징</div>
+  <ul>
+    <li><span class="note-kw">하나로 묶어 제공(Bundle)</span>: MCP 도구 + Steering 규칙 + Hook 자동화가 하나의 설치 단위로 제공됩니다.</li>
+    <li><span class="note-kw">동적 로드(Dynamic Loading)</span>: 항상 활성화하면 컨텍스트 과부하가 발생합니다. Powers는 필요할 때만 불러와 <span class="note-kw">컨텍스트 오버로드(Context Overload)</span>를 방지합니다.</li>
+    <li><span class="note-kw">키워드 자동 활성화(Keyword Activation)</span>: 대화 중 관련 키워드가 등장하면 자동으로 활성화됩니다. 커뮤니티와 공유하여 베스트 프랙티스를 교환합니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: AWS Power 활용</div>
+  <p>AWS Power를 설치하면 AWS CLI MCP 서버, AWS 모범 사례 Steering 규칙, S3/Lambda 사용 Hook이 한 번에 설치됩니다. <strong>AWS 관련 키워드가 나오면 자동 활성화되어 AWS 작업을 즉시 지원</strong>합니다.</p>
+</div>`},
+  {t:'Power 설치', h:`
+<div class="note-section">
+  <div class="note-section-title">Power 설치 방법</div>
+  <p>Power 설치는 카탈로그에서 탐색하고 "Try power / Install"을 클릭하는 것으로 완료됩니다. 설정 파일 편집이나 터미널 명령 없이 <span class="note-kw">채팅(Chat)에서 직접 설치</span>할 수 있습니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">설치 과정</div>
+  <ul>
+    <li><span class="note-kw">카탈로그 탐색</span>: Kiro 내 Power 카탈로그에서 필요한 기능을 검색하거나 카테고리로 탐색합니다.</li>
+    <li><span class="note-kw">Try power</span>: 설치 전 해당 Power를 임시로 체험하여 동작을 확인합니다.</li>
+    <li><span class="note-kw">Install</span>: 확인 후 설치하면 <code>.kiro/</code> 폴더에 관련 설정 파일들이 자동으로 생성됩니다.</li>
+    <li>설치된 Power는 언제든지 비활성화하거나 제거할 수 있습니다.</li>
+  </ul>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: 팀 Power 공유</div>
+  <p>팀이 자체 개발한 Power를 카탈로그에 게시하면 다른 팀원들이 클릭 한 번으로 동일한 개발 환경을 설치합니다. <strong>복잡한 Kiro 설정을 Power로 패키징하여 팀 전체에 배포</strong>할 수 있습니다.</p>
+</div>`}
+];
+
+// ── 상수 ──
+var TOTAL = 20;
+var cur = 0;
+var fsCur = 0;
+var frameReady = false;
+var fsFrameReady = false;
+
+// ── goTo: iframe 슬라이드 제어 (3단계 폴백) ──
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  cur = n;
+  var win = document.getElementById('slideFrame').contentWindow;
+  if (frameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') { win.kiroGo(n); }
+      else if (typeof win.go === 'function') { win.go(n); }
+      else if (typeof win.show === 'function') { win.show(n); }
+    } catch(e) {}
+  }
+  updateUI();
+}
+
+// ── UI 업데이트 ──
+function updateUI() {
+  var n = cur;
+  document.getElementById('progText').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('progFill').style.width = ((n+1)/TOTAL*100).toFixed(1) + '%';
+  document.getElementById('snCnt').textContent = (n+1) + ' / ' + TOTAL;
+  document.getElementById('btnPrev').disabled = n === 0;
+  document.getElementById('btnNext').disabled = n === TOTAL-1;
+  // 노트 업데이트
+  var nd = NOTES[n];
+  if (nd) {
+    document.getElementById('noteTitle').textContent = nd.t;
+    document.getElementById('noteBody').innerHTML = nd.h;
+  }
+  // fsOverlay 동기화
+  if (document.getElementById('fsOverlay').style.display !== 'none') {
+    goFS(n);
+  }
+}
+
+// ── 전체화면 ──
+function openFS() {
+  document.getElementById('fsOverlay').style.display = 'flex';
+  goFS(cur);
+}
+function closeFS() {
+  document.getElementById('fsOverlay').style.display = 'none';
+}
+function goFS(n) {
+  if (n < 0 || n >= TOTAL) return;
+  fsCur = n;
+  var win = document.getElementById('fsFrame').contentWindow;
+  if (fsFrameReady && win) {
+    try {
+      if (typeof win.kiroGo === 'function') win.kiroGo(n);
+      else if (typeof win.go === 'function') win.go(n);
+      else if (typeof win.show === 'function') win.show(n);
+    } catch(e) {}
+  }
+  document.getElementById('fsCnt').textContent = (fsCur+1) + ' / ' + TOTAL;
+}
+
+// ── Day 토글 ──
+function toggleDay(id) {
+  var el = document.getElementById(id);
+  el.classList.toggle('open');
+  var btn = el.querySelector('.navday-toggle');
+  if (btn) btn.setAttribute('aria-expanded', el.classList.contains('open'));
+}
+
+// ── 키보드 ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); goTo(cur+1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(cur-1); }
+  if (e.key === 'Escape') { closeFS(); }
+});
+
+// ── 테마 ──
+(function() {
+  if (localStorage.getItem('aawTheme') === 'dark') document.documentElement.classList.add('dark');
+  document.getElementById('themeToggle').addEventListener('click', function() {
+    var d = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('aawTheme', d ? 'dark' : 'light');
+  });
+})();
+
+// ── 초기화 ──
+goTo(0);
+</script>
+</body>
+</html>
