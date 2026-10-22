@@ -382,10 +382,10 @@ html:not(.dark) .icon-sun { display: none; }
     <div class="navday open" id="navday-1">
       <button class="navday-hd" onclick="toggleDay('navday-1')" aria-expanded="true">
         <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <span>
-          <span class="navday-badge">DAY 1</span><br>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <span class="navday-badge">Day 1</span>
           <span class="navday-name">Generative AI 이해하기</span>
-        </span>
+        </div>
       </button>
       <div class="navday-body">
         <a class="nav-module" href="../../day1/m1/">M1. Kiro 소개</a>
