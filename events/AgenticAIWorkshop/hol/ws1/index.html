@@ -3,1243 +3,847 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Workshop 1: Kiro Basic — Agentic AI Workshop</title>
-
-<!-- PIN 접근 제어: 세션 토큰 없으면 게이트로 리다이렉트 -->
-<script>
-  (function(){
-    if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-      window.location.replace('../../AgenticAIWorkshop_gate_v1.html');
-    }
-  })();
-</script>
-
-<!-- Pretendard 폰트 CDN -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
-
+<title>Workshop 1 · Kiro Basic 핸즈온 가이드</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
 <style>
-/* ── CSS 변수: 라이트 모드 기본 ── */
-:root {
-  --bg:        #ffffff;
-  --bg-alt:    #f8f7ff;
-  --bg-soft:   #ede9fe;
-  --primary:   #211E62;
-  --secondary: #0891B2;
-  --accent:    #D97706;
-  --positive:  #059669;
-  --danger:    #DC2626;
-  --t1:        #1e1b4b;
-  --t2:        #4338CA;
-  --t3:        #6B7280;
-  --border:    #c7d2fe;
-  --tag:       #ede9fe;
-  --sh:        0 2px 8px rgba(33,30,98,.08);
+:root{
+  --bg:#f6f8f7; --surface:#ffffff; --ink:#0f172a; --ink-2:#334155; --muted:#64748b;
+  --line:#e2e8f0; --primary:#00592D; --primary-2:#0a7d42; --accent:#D97706;
+  --code-bg:#0b1020; --ok:#15803d; --warn:#92400e; --warnbg:#fffbeb; --warnline:#fde68a;
+  --font:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.65}
+.wrap{max-width:940px;margin:0 auto;padding:0 24px}
 
-/* ── CSS 변수: 다크 모드 ── */
-html.dark {
-  --bg:        #0a0a0a;
-  --bg-alt:    #111111;
-  --bg-soft:   #1a1a2e;
-  --primary:   #818CF8;
-  --secondary: #22D3EE;
-  --accent:    #FCD34D;
-  --positive:  #34D399;
-  --danger:    #F87171;
-  --t1:        #F1F5F9;
-  --t2:        #94A3B8;
-  --t3:        #64748B;
-  --border:    #1e293b;
-  --tag:       #1e1b4b;
-  --sh:        0 2px 12px rgba(0,0,0,.4);
-}
+/* header */
+.top{background:linear-gradient(120deg,#00592D,#0a7d42);color:#fff;padding:40px 0 34px}
+.top .eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.top h1{margin:10px 0 0;font-size:30px;font-weight:800;letter-spacing:-.01em}
+.top p{margin:12px 0 0;font-size:15px;opacity:.95;max-width:720px;line-height:1.7}
+.badges{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.badge{font-size:12px;font-weight:700;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 13px}
 
-/* ── 기본 리셋 ── */
-*, *::before, *::after { box-sizing: border-box; }
-html, body {
-  background: var(--bg); color: var(--t1); margin: 0;
-  font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-  font-size: 17px; line-height: 1.75;
-  transition: background .2s, color .2s;
-}
-a { color: var(--secondary); text-decoration: none; }
-button { font-family: inherit; }
-p { margin: 0 0 10px; }
-h1, h2, h3 { margin: 0; }
+/* TOC */
+.toc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:26px 0;box-shadow:0 4px 16px rgba(15,23,42,.05)}
+.toc h2{margin:0 0 10px;font-size:14px;font-weight:800;color:var(--muted);letter-spacing:.02em}
+.toc ol{margin:0;padding-left:20px;columns:2;column-gap:28px}
+.toc li{font-size:14px;margin-bottom:6px;break-inside:avoid}
+.toc a{color:var(--ink-2);text-decoration:none}
+.toc a:hover{color:var(--primary-2);text-decoration:underline}
 
-/* ── 헤더 ── */
-header.top {
-  position: sticky; top: 0; z-index: 100;
-  height: 64px; display: flex; align-items: center; gap: 16px; padding: 0 24px;
-  background: #ffffff; border-bottom: 2px solid #c7d2fe;
-  transition: background .25s, border-color .25s;
-}
-html.dark header.top { background: #0a0a0a; border-bottom-color: #1e293b; }
-header.top .brand { font-weight: 800; font-size: 18px; color: var(--primary); }
-header.top .brand b { color: var(--secondary); font-style: normal; }
+/* sections */
+section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:30px 34px;margin:20px 0;box-shadow:0 4px 16px rgba(15,23,42,.05)}
+.sec-tag{display:inline-block;font-size:12px;font-weight:800;color:var(--primary-2);background:#e7f5ec;border:1px solid #c6ebd4;border-radius:999px;padding:5px 13px;margin-bottom:14px}
+h2.sh{font-size:23px;font-weight:800;margin:0 0 6px;letter-spacing:-.01em}
+h3.th{font-size:18px;font-weight:800;margin:26px 0 10px;color:var(--ink);padding-top:4px}
+h4{font-size:15px;font-weight:800;margin:18px 0 8px;color:var(--ink-2)}
+p{margin:10px 0}
+.lead{font-size:15.5px;color:var(--ink-2)}
+ul,ol{padding-left:22px}
+li{margin:7px 0}
+hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.muted{color:var(--muted);font-size:13.5px}
+code.inl{background:#eef2f1;border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-family:var(--mono);font-size:13px;color:#0b4a2a}
+b,strong{font-weight:800}
 
-/* ── 레이아웃 ── */
-.layout { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 64px); }
+/* step number */
+.step{display:flex;gap:14px;align-items:flex-start;margin-top:8px}
+.step-n{flex:none;width:34px;height:34px;border-radius:10px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;margin-top:2px}
 
-/* ── 사이드바 ── */
-aside {
-  border-right: 1px solid var(--border); padding: 16px 12px 0;
-  position: sticky; top: 64px; height: calc(100vh - 64px);
-  overflow-y: auto; background: var(--bg);
-  transition: background .25s, border-color .25s;
-  display: flex; flex-direction: column;
-}
-html.dark aside { background: #0a0a0a; border-right-color: #1e293b; }
+/* code block with OS label + copy */
+.cmd{margin:12px 0;border-radius:11px;overflow:hidden;border:1px solid #1e293b;background:var(--code-bg);box-shadow:0 6px 18px rgba(2,6,23,.12)}
+.cmd-bar{display:flex;align-items:center;gap:9px;padding:8px 13px;background:#131a2e;border-bottom:1px solid #1f2a44}
+.os{font-size:11.5px;font-weight:800;letter-spacing:.03em;padding:3px 10px;border-radius:999px}
+.os.mac{background:#1e293b;color:#67e8f9}
+.os.win{background:#1e293b;color:#93c5fd}
+.os.linux{background:#1e293b;color:#fcd34d}
+.os.any{background:#1e293b;color:#86efac}
+.cmd-bar .sp{flex:1}
+.copy{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#cbd5e1;font-family:var(--font);font-size:11.5px;font-weight:700;border-radius:7px;padding:4px 11px;cursor:pointer;transition:all .15s}
+.copy:hover{background:rgba(255,255,255,.16);color:#fff}
+.copy.done{background:#14532d;border-color:#166534;color:#bbf7d0}
+.cmd pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.7;color:#e2e8f0;white-space:pre}
+.cmd pre .cm{color:#7c8aa5}
 
-/* ── navday 내비게이션 ── */
-.navday { margin-bottom: 2px; }
-.navday-hd {
-  display: flex; align-items: flex-start; gap: 8px; width: 100%;
-  padding: 7px 10px 7px 6px; border-radius: 8px;
-  background: transparent; border: none; cursor: pointer; font-family: inherit;
-  text-align: left;
-  transition: background .15s; color: var(--t1);
-}
-.navday-hd:hover { background: var(--tag); }
-.navday-arr {
-  width: 14px; height: 14px; flex-shrink: 0; margin-top: 3px;
-  transition: transform .22s ease; fill: none; stroke: currentColor; stroke-width: 2.5;
-}
-.navday.open > .navday-hd .navday-arr { transform: rotate(90deg); }
-.navday-badge {
-  font-size: 10px; font-weight: 800; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--secondary);
-}
-.navday-name { font-size: 12px; font-weight: 600; line-height: 1.35; color: var(--t1); }
-.navday-body {
-  padding: 2px 0 6px 22px; border-left: 2px solid var(--border);
-  margin-left: 13px; display: none;
-}
-.navday.open > .navday-body { display: block; }
-.nav-module {
-  display: block; padding: 7px 10px; border-radius: 6px; font-size: 13px;
-  font-weight: 500; text-decoration: none; color: var(--t1);
-  border-left: 2px solid transparent; transition: background .15s;
-}
-.nav-module:hover { background: var(--tag); color: var(--primary); }
-.nav-module.active {
-  background: var(--tag); border-left-color: var(--primary);
-  color: var(--primary); font-weight: 700;
-}
-.nav-module.locked { opacity: .4; pointer-events: none; cursor: default; }
+/* prompt box (typed into Kiro) */
+.prompt{margin:14px 0;border-radius:13px;overflow:hidden;border:1px solid #c6ebd4;background:#f3faf6;box-shadow:0 4px 14px rgba(0,89,45,.06)}
+.prompt-bar{display:flex;align-items:center;gap:9px;padding:9px 15px;background:#e7f5ec;border-bottom:1px solid #c6ebd4}
+.prompt-bar .pi{font-size:12px;font-weight:800;color:var(--primary);letter-spacing:.02em}
+.prompt-bar .sp{flex:1}
+.copy-k{background:var(--primary);border:0;color:#fff;font-family:var(--font);font-size:11.5px;font-weight:700;border-radius:7px;padding:5px 13px;cursor:pointer;transition:all .15s}
+.copy-k:hover{background:var(--primary-2)}
+.copy-k.done{background:#166534}
+.prompt .pbody{margin:0;padding:15px 17px;font-family:var(--mono);font-size:13.5px;line-height:1.75;color:#0f2a1c;white-space:pre-wrap;word-break:break-word}
+.orig{border-top:1px dashed #c6ebd4}
+.orig summary{cursor:pointer;padding:9px 17px;font-size:12.5px;font-weight:700;color:var(--muted);user-select:none}
+.orig summary:hover{color:var(--primary-2)}
+.orig pre{margin:0;padding:4px 17px 15px;font-family:var(--mono);font-size:12.5px;line-height:1.7;color:var(--muted);white-space:pre-wrap;word-break:break-word}
 
-/* ── 구분선 ── */
-.nav-sep { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+/* callouts */
+.note{background:#f1f5f9;border:1px solid var(--line);border-left:4px solid var(--primary-2);border-radius:10px;padding:13px 16px;margin:14px 0;font-size:14px;color:var(--ink-2)}
+.warn{background:var(--warnbg);border:1px solid var(--warnline);border-left:4px solid var(--accent);border-radius:10px;padding:13px 16px;margin:14px 0;font-size:14px;color:#7c4a08}
+.warn b{color:#7c4a08}
+.verify{background:#ecfdf5;border:1px solid #bbf7d0;border-left:4px solid var(--ok);border-radius:10px;padding:12px 16px;margin:12px 0;font-size:13.5px;color:#14532d}
 
-/* ── 진행 박스 ── */
-.prog-box {
-  background: var(--bg-soft); border: 1px solid var(--border);
-  border-radius: 10px; padding: 10px 12px; margin: 2px 0 8px;
-}
-.prog-label {
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 12px; font-weight: 600; color: var(--t3); margin-bottom: 6px;
-}
-#progText { color: var(--primary); font-weight: 700; }
-.prog-bar-track {
-  background: var(--border); border-radius: 4px; height: 6px; overflow: hidden;
-}
-#progFill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  border-radius: 4px; transition: width .4s ease;
-}
+/* checklist */
+.check{list-style:none;padding:0;margin:12px 0}
+.check li{position:relative;padding:8px 0 8px 30px;border-bottom:1px solid var(--line);font-size:14.5px}
+.check li:last-child{border-bottom:0}
+.check li::before{content:"";position:absolute;left:3px;top:12px;width:15px;height:15px;border:2px solid var(--primary-2);border-radius:4px}
 
-/* ── TOC 스크롤 ── */
-.toc-scroll { flex: 1; overflow-y: auto; min-height: 0; }
-.toc-section { padding: 0 0 8px; }
-.toc-section-title {
-  font-size: 10px; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--t3); font-weight: 700; padding: 6px 10px 4px;
-}
-.toc-link {
-  display: block; padding: 6px 10px; border-radius: 6px;
-  font-size: 12px; color: var(--t3); text-decoration: none;
-  transition: background .15s, color .15s;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.toc-link:hover { background: var(--tag); color: var(--primary); }
-.toc-link.active { background: var(--tag); color: var(--primary); font-weight: 600; }
+/* build list */
+.build{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+@media(max-width:680px){.build{grid-template-columns:1fr}.toc ol{columns:1}}
+.bcard{background:#f8fafc;border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+.bcard b{display:block;font-size:14px;color:var(--primary);margin-bottom:3px}
+.bcard span{font-size:13px;color:var(--ink-2)}
 
-/* ── 사이드바 하단 ── */
-.aside-footer {
-  border-top: 1px solid var(--border); padding: 10px 0 8px; margin-top: auto;
-}
-.exit-classroom-btn {
-  display: flex; align-items: center; gap: 8px;
-  width: 100%; padding: 10px 14px; border-radius: 10px;
-  background: rgba(239,68,68,.08); border: 1.5px solid rgba(239,68,68,.3);
-  color: #b91c1c; font-size: 13px; font-weight: 700;
-  text-decoration: none; transition: all .2s;
-}
-.exit-classroom-btn:hover { background: rgba(239,68,68,.15); border-color: #dc2626; }
-html.dark .exit-classroom-btn { color: #f87171; }
-
-/* ── 메인 콘텐츠 ── */
-main { padding: 32px clamp(24px, 4vw, 72px) 100px; background: var(--bg); }
-html.dark main { background: #0a0a0a; }
-
-/* ── 워크숍 헤더 ── */
-.ws-header { margin-bottom: 24px; }
-.ws-badge {
-  display: inline-block; background: var(--tag); color: var(--primary);
-  font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-  padding: 4px 14px; border-radius: 20px; margin-bottom: 10px;
-}
-.ws-title {
-  font-size: clamp(26px, 3vw, 38px); font-weight: 800; color: var(--primary);
-  margin: 0 0 6px;
-}
-.ws-meta { font-size: 14px; color: var(--t3); margin: 0; display: flex; gap: 16px; flex-wrap: wrap; }
-.ws-meta span { display: flex; align-items: center; gap: 5px; }
-
-/* ── OS 토글 ── */
-.os-toggle {
-  position: sticky; top: 80px; z-index: 50;
-  display: inline-flex; gap: 4px; background: var(--bg-soft);
-  border: 1px solid var(--border); border-radius: 10px; padding: 4px;
-  margin-bottom: 28px;
-}
-.os-btn {
-  padding: 6px 18px; border-radius: 7px; border: none;
-  background: transparent; cursor: pointer; font-size: 14px; font-weight: 600;
-  color: var(--t3); transition: all .15s;
-}
-.os-btn.active {
-  background: var(--primary); color: #fff;
-  box-shadow: 0 2px 6px rgba(33,30,98,.25);
-}
-html.dark .os-btn.active { color: #0a0a0a; }
-
-/* ── OS 전환 콘텐츠 ── */
-.os-win { display: none; }
-.os-mac { display: block; }
-
-/* ── 태스크 카드 ── */
-.task-card {
-  background: var(--bg-alt); border: 1px solid var(--border);
-  border-radius: 14px; padding: 28px 32px; margin-bottom: 24px;
-  transition: background .2s, border-color .2s;
-  scroll-margin-top: 90px;
-}
-html.dark .task-card { background: #111111; border-color: #1e293b; }
-.task-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-.task-num {
-  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: #fff; font-size: 15px; font-weight: 800;
-  display: flex; align-items: center; justify-content: center;
-}
-.task-title { font-size: 19px; font-weight: 800; color: var(--primary); }
-.task-divider { height: 1px; background: var(--border); margin: 14px 0; }
-
-/* ── 개요 박스 ── */
-.task-overview {
-  background: var(--bg-soft); border-left: 3px solid var(--secondary);
-  border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 16px;
-  font-size: 15px; color: var(--t2); font-weight: 500;
-}
-html.dark .task-overview { color: var(--secondary); background: rgba(34,211,238,.08); }
-
-/* ── 단계 번호 ── */
-.step-num {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 700; color: var(--secondary);
-  text-transform: uppercase; letter-spacing: .05em;
-  margin: 20px 0 8px;
-}
-.step-num::before {
-  content: ''; display: block; width: 5px; height: 5px;
-  background: var(--secondary); border-radius: 50%; flex-shrink: 0;
-}
-
-/* ── 체크리스트 ── */
-.checklist { list-style: none; padding: 0; margin: 10px 0 14px; }
-.checklist li {
-  padding: 7px 10px 7px 30px; position: relative;
-  font-size: 15px; color: var(--t1); margin-bottom: 3px;
-  border-radius: 6px; transition: background .1s;
-}
-.checklist li:hover { background: var(--bg-soft); }
-.checklist li::before {
-  content: '✓'; position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
-  color: var(--positive); font-weight: 800; font-size: 13px;
-}
-
-/* ── 경고 박스 ── */
-.alert-box {
-  border-radius: 8px; padding: 12px 16px; margin: 14px 0;
-  font-size: 14px; display: flex; gap: 10px; align-items: flex-start;
-  line-height: 1.6;
-}
-.alert-box.tip {
-  background: rgba(8,145,178,.07); border-left: 3px solid var(--secondary); color: var(--t1);
-}
-.alert-box.warning {
-  background: rgba(217,119,6,.09); border-left: 3px solid var(--accent); color: var(--t1);
-}
-.alert-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
-html.dark .alert-box.tip { background: rgba(34,211,238,.08); }
-html.dark .alert-box.warning { background: rgba(252,211,77,.08); }
-
-/* ── 코드 블록 ── */
-.code-block {
-  border-radius: 10px; overflow: hidden; margin: 12px 0;
-  border: 1px solid var(--border);
-}
-.code-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 14px; background: var(--primary);
-  font-size: 12px; font-weight: 600; color: rgba(255,255,255,.85);
-}
-html.dark .code-header { background: #1e1b4b; }
-.code-lang { letter-spacing: .05em; text-transform: uppercase; font-size: 11px; }
-.copy-btn {
-  padding: 3px 12px; border-radius: 5px; border: 1px solid rgba(255,255,255,.3);
-  background: transparent; color: rgba(255,255,255,.9); font-size: 11px;
-  font-weight: 600; cursor: pointer; transition: all .15s;
-}
-.copy-btn:hover { background: rgba(255,255,255,.15); }
-.code-block pre {
-  margin: 0; padding: 16px 18px; overflow-x: auto; background: #14102a;
-}
-html.dark .code-block pre { background: #0d0b1f; }
-.code-block code {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Menlo', monospace;
-  font-size: 13.5px; line-height: 1.7; color: #e2e8f0;
-  white-space: pre; display: block;
-}
-
-/* ── 비교 테이블 ── */
-.compare-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
-.compare-table th {
-  background: var(--primary); color: #fff; padding: 11px 14px;
-  text-align: left; font-weight: 700; font-size: 13px;
-}
-html.dark .compare-table th { background: #1e1b4b; }
-.compare-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--t1); }
-.compare-table tr:nth-child(even) td { background: var(--bg-soft); }
-html.dark .compare-table tr:nth-child(even) td { background: #0d0d20; }
-.good { color: var(--positive); font-weight: 700; }
-.bad  { color: var(--danger);   font-weight: 700; }
-
-/* ── 도구 행 ── */
-.tool-row {
-  display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px;
-  border-radius: 8px; margin-bottom: 6px; background: var(--bg-soft);
-  border: 1px solid var(--border);
-}
-.tool-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
-.tool-info { flex: 1; }
-.tool-name { font-weight: 700; color: var(--primary); font-size: 15px; }
-.tool-ver  { font-size: 12px; color: var(--t3); margin-top: 1px; }
-
-/* ── 키보드 단축키 ── */
-kbd {
-  background: var(--bg-soft); border: 1px solid var(--border);
-  border-radius: 4px; padding: 2px 6px; font-size: 12px; font-weight: 600;
-  color: var(--t1); font-family: inherit; white-space: nowrap;
-}
-
-/* ── 테마 버튼 ── */
-.theme-btn {
-  position: fixed; top: 14px; right: 16px; z-index: 999;
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--bg-soft); border: 1px solid var(--border);
-  cursor: pointer; font-size: 16px;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .2s, border-color .2s;
-}
-.theme-btn:hover { border-color: var(--primary); }
-html.dark .icon-moon { display: none; }
-html:not(.dark) .icon-sun { display: none; }
-
-/* ── 반응형 ── */
-@media (max-width: 768px) {
-  .layout { grid-template-columns: 1fr; }
-  aside { display: none; }
-  .task-card { padding: 20px 18px; }
-}
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding:30px 0 50px}
+/* EARS explanation box */
+.ears{background:#f3faf6;border:1px solid #c6ebd4;border-radius:12px;padding:16px 18px;margin:14px 0}
+.ears-h{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:8px}
+.ears-row{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:start;padding:8px 0;border-top:1px solid #d8eede}
+.ears-k{font-size:13px;font-weight:800;color:var(--primary-2)}
+.ears-d{font-size:13px;color:var(--ink-2);line-height:1.55}
+.ears-d i{color:var(--ink);font-style:italic}
+@media(max-width:620px){.ears-row{grid-template-columns:1fr;gap:3px}}
 </style>
 </head>
 <body>
 
-<!-- ── 헤더 ── -->
-<header class="top">
-  <span class="brand">Agentic AI Workshop <b>on AWS</b></span>
-</header>
-
-<div class="layout">
-
-  <!-- ── 사이드바 ── -->
-  <aside>
-
-    <!-- Day 1: 열린 상태 -->
-    <div class="navday open" id="navday-1">
-      <button class="navday-hd" onclick="toggleDay('navday-1')" aria-expanded="true">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div style="display:flex;flex-direction:column;gap:2px;">
-          <span class="navday-badge">Day 1</span>
-          <span class="navday-name">Generative AI 이해하기</span>
-        </div>
-      </button>
-      <div class="navday-body">
-        <a class="nav-module" href="../../learn/day1/">Day 1 개요</a>
-        <a class="nav-module" href="../../day1/m1/">M1. Kiro 소개</a>
-        <a class="nav-module" href="../../day1/m2/">M2. AI 이해하기</a>
-        <a class="nav-module active" href="#">Workshop 1. Kiro Basic</a>
-      </div>
+<div class="top">
+  <div class="wrap">
+    <div class="eyebrow">Agentic AI Workshop · Day 1</div>
+    <h1>Workshop 1 — Kiro Basic 핸즈온 가이드</h1>
+    <p>AI 기반 개발 환경 <b>Kiro</b>를 사용해, 지능형 AI 에이전트 챗봇이 결합된 <b>완전한 이커머스 웹사이트</b>를 직접 만들어 보는 실습입니다. 자연어 프롬프트만으로 프론트엔드·백엔드·데이터베이스를 갖춘 애플리케이션을 완성합니다.</p>
+    <div class="badges">
+      <span class="badge">소요 시간 약 60~90분</span>
+      <span class="badge">Windows · macOS · Linux</span>
+      <span class="badge">난이도 입문</span>
     </div>
-    <!-- Day 2 (접힘) -->
-    <div class="navday" id="navday-2">
-      <button class="navday-hd" onclick="toggleDay('navday-2')" aria-expanded="false">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div style="display:flex;flex-direction:column;gap:2px;">
-          <span class="navday-badge">Day 2</span>
-          <span class="navday-name">Developing GenAI App on AWS</span>
-        </div>
-      </button>
-      <div class="navday-body">
-        <a class="nav-module" href="../../learn/day2/">Day 2 개요</a>
-        <a class="nav-module" href="../../day2/m3/">M3. Amazon Bedrock 활용</a>
-        <a class="nav-module" href="../../day2/m4/">M4. Agentic AI &amp; MCP</a>
-      </div>
-    </div>
-    <!-- Day 3 (접힘) -->
-    <div class="navday" id="navday-3">
-      <button class="navday-hd" onclick="toggleDay('navday-3')" aria-expanded="false">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div style="display:flex;flex-direction:column;gap:2px;">
-          <span class="navday-badge">Day 3</span>
-          <span class="navday-name">Strands Agents &amp; AgentCore</span>
-        </div>
-      </button>
-      <div class="navday-body">
-        <a class="nav-module" href="../../learn/day3/">Day 3 개요</a>
-        <a class="nav-module" href="../../day3/m5/">M5. Strands Agents SDK</a>
-        <a class="nav-module" href="../../day3/m6/">M6. Amazon Bedrock AgentCore</a>
-      </div>
-    </div>
-    <!-- Day 4 (접힘) -->
-    <div class="navday" id="navday-4">
-      <button class="navday-hd" onclick="toggleDay('navday-4')" aria-expanded="false">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div style="display:flex;flex-direction:column;gap:2px;">
-          <span class="navday-badge">Day 4</span>
-          <span class="navday-name">Kiro 고급 기능</span>
-        </div>
-      </button>
-      <div class="navday-body">
-        <a class="nav-module" href="../../learn/day4/">Day 4 개요</a>
-        <a class="nav-module" href="../../day4/m7/">M7. Kiro 고급 기능</a>
-      </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="toc">
+    <h2>목차</h2>
+    <ol>
+      <li><a href="#prep">사전 준비 — Kiro 설치 · 로그인</a></li>
+      <li><a href="#task1">Task 1 — 작업 폴더 생성</a></li>
+      <li><a href="#task2">Task 2 — 폴더 열기</a></li>
+      <li><a href="#task3">Task 3 — 터미널 열고 위치 확인</a></li>
+      <li><a href="#task4">Task 4 — 실습 환경 준비 (Node·Python·uv)</a></li>
+      <li><a href="#lab5">Lab 5 — Vibe Coding으로 이커머스 앱 만들기</a></li>
+      <li><a href="#trouble">문제 해결 (Troubleshooting)</a></li>
+      <li><a href="#end">Lab 5 종료 (Vibe Coding)</a></li>
+      <li><a href="#lab6">Lab 6 — Spec-Driven 방식으로 이커머스 앱 만들기</a></li>
+    </ol>
+  </div>
+
+  <!-- ================= 사전 준비 ================= -->
+  <section id="prep">
+    <span class="sec-tag">사전 준비 · Prerequisites</span>
+    <h2 class="sh">시작하기 전에</h2>
+    <p class="lead">실습을 시작하기 전에 Kiro IDE를 설치하고 로그인해 둡니다.</p>
+
+    <div class="step"><div class="step-n">1</div><div>
+      <h3 class="th" style="margin-top:0">Kiro IDE 설치</h3>
+      <p><a href="https://kiro.dev" target="_blank" style="color:var(--primary-2)">kiro.dev</a>에 접속해 사용 중인 운영체제(Windows / macOS)용 설치 파일을 내려받아 설치합니다.</p>
+    </div></div>
+
+    <div class="step"><div class="step-n">2</div><div>
+      <h3 class="th" style="margin-top:0">Kiro 로그인</h3>
+      <p>Kiro를 실행한 뒤 안내에 따라 로그인합니다. 로그인이 완료되어야 Vibe Coding 등 AI 기능을 사용할 수 있습니다.</p>
+    </div></div>
+  </section>
+
+  <!-- ================= Task 1 ================= -->
+  <section id="task1">
+    <span class="sec-tag">Task 1</span>
+    <h2 class="sh">작업 폴더 생성 — <code class="inl">kiro-vibe</code></h2>
+    <p>실습에 사용할 빈 작업 폴더 <code class="inl">kiro-vibe</code>를 만듭니다. 원하는 위치(예: 홈 디렉터리나 바탕화면)에 생성하세요.</p>
+
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os mac">macOS</span><span class="os linux">Linux</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre><span class="cm"># 홈 디렉터리에 생성하는 예시</span>
+mkdir ~/kiro-vibe</pre>
     </div>
 
-    <hr class="nav-sep">
-
-    <!-- 진행 현황 박스 -->
-    <div class="prog-box">
-      <div class="prog-label">
-        <span>진행 현황</span>
-        <span id="progText">0 / 6</span>
-      </div>
-      <div class="prog-bar-track">
-        <div id="progFill" style="width:0%"></div>
-      </div>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os win">Windows (PowerShell)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre><span class="cm"># 현재 위치에 생성하는 예시</span>
+mkdir kiro-vibe</pre>
     </div>
 
-    <!-- 목차 스크롤 -->
-    <div class="toc-scroll">
-      <div class="toc-section">
-        <div class="toc-section-title">실습 태스크</div>
-        <a class="toc-link" href="#task1">Task 1: 작업 폴더 생성하기</a>
-        <a class="toc-link" href="#task2">Task 2: Kiro 설치</a>
-        <a class="toc-link" href="#task3">Task 3: Kiro 로그인</a>
-        <a class="toc-link" href="#task4">Task 4: 개발 도구 설치 확인</a>
-        <a class="toc-link" href="#task5">Task 5: Vibe Coding</a>
-        <a class="toc-link" href="#task6">Task 6: Spec 기반 개발</a>
-      </div>
+    <div class="note">폴더는 Kiro IDE 안에서 직접 만들 필요는 없습니다. 파인더/탐색기에서 만들어도 되고, 위 명령으로 만들어도 됩니다. 중요한 것은 <b>비어 있는 폴더</b>라는 점입니다.</div>
+  </section>
+
+  <!-- ================= Task 2 ================= -->
+  <section id="task2">
+    <span class="sec-tag">Task 2</span>
+    <h2 class="sh">폴더 열기 — File → Open Folder</h2>
+    <ol>
+      <li>Kiro 상단 메뉴에서 <b>File → Open Folder</b>를 선택합니다.</li>
+      <li>방금 만든 <code class="inl">kiro-vibe</code> 폴더를 선택해 엽니다.</li>
+    </ol>
+    <div class="note">지금 이 폴더에는 <b>아무 것도 없습니다.</b> 이후 Vibe Coding이 이 빈 폴더 안에 애플리케이션 전체를 생성하게 됩니다.</div>
+  </section>
+
+  <!-- ================= Task 3 ================= -->
+  <section id="task3">
+    <span class="sec-tag">Task 3</span>
+    <h2 class="sh">터미널 열고 현재 위치 확인</h2>
+    <ol>
+      <li>Kiro 상단 메뉴에서 <b>Terminal → New Terminal</b>을 선택해 터미널을 엽니다.</li>
+      <li>아래 명령으로 현재 디렉터리 위치가 <code class="inl">kiro-vibe</code> 폴더인지 확인합니다.</li>
+    </ol>
+
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os mac">macOS</span><span class="os linux">Linux</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>pwd</pre>
     </div>
 
-    <!-- 사이드바 하단 -->
-    <div class="aside-footer">
-      <a href="../../AgenticAIWorkshop_intro_v1.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os win">Windows (PowerShell)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre><span class="cm"># PowerShell</span>
+pwd
+<span class="cm"># 또는 명령 프롬프트(cmd)</span>
+cd</pre>
     </div>
 
-  </aside><!-- /aside -->
+    <div class="verify">출력된 경로의 끝이 <code class="inl">...\kiro-vibe</code>(Windows) 또는 <code class="inl">.../kiro-vibe</code>(macOS·Linux)로 끝나면 올바른 위치입니다.</div>
+  </section>
 
-  <!-- ── 메인 콘텐츠 ── -->
-  <main>
+  <!-- ================= Task 4 ================= -->
+  <section id="task4">
+    <span class="sec-tag">Task 4</span>
+    <h2 class="sh">실습 환경 준비하기</h2>
+    <p class="lead">실습을 진행하려면 아래 구성 요소를 설치·설정해야 합니다.</p>
+    <ul>
+      <li><b>Node.js 18.x 이상</b> — 이커머스 애플리케이션의 프론트엔드·백엔드 실행</li>
+      <li><b>Python 3.8 이상</b> — 개발 도구 및 백엔드 연동</li>
+      <li><b>uv</b> — MCP 서버용 고속 Python 패키지 관리자</li>
+    </ul>
 
-    <!-- 워크숍 헤더 -->
-    <div class="ws-header">
-      <div class="ws-badge">Workshop 1</div>
-      <h1 class="ws-title">Kiro Basic</h1>
-      <div class="ws-meta">
-        <span>⏱ 예상 시간: 60~90분</span>
-        <span>📋 태스크: 6개</span>
-        <span>🎯 Day 1 실습</span>
-      </div>
+    <!-- 4.1 Node -->
+    <h3 class="th" id="node">4.1 Node.js 설치</h3>
+    <p>Node.js는 이커머스 애플리케이션의 백엔드·프론트엔드 실행에 필요합니다. <a href="https://nodejs.org" target="_blank" style="color:var(--primary-2)">nodejs.org</a>에서 <b>LTS 버전</b>(18.x 이상 권장)을 내려받아 설치하거나, 아래 명령으로 설치합니다.</p>
+
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os mac">macOS (Homebrew)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>brew install node</pre>
+    </div>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os linux">Linux (Debian·Ubuntu)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre><span class="cm"># NodeSource LTS 저장소를 통해 설치(권장)</span>
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs
+<span class="cm"># 또는 배포판 기본 패키지</span>
+sudo apt install -y nodejs npm</pre>
+    </div>
+    <div class="note">Windows는 <a href="https://nodejs.org" target="_blank" style="color:var(--primary-2)">nodejs.org</a>에서 받은 <code class="inl">.msi</code> 설치 파일을 실행해 마법사 안내를 따릅니다.</div>
+
+    <h4>설치 확인</h4>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os any">공통</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>node --version
+npm --version</pre>
+    </div>
+    <div class="verify">두 명령 모두 버전 번호가 출력되면 정상 설치된 것입니다.</div>
+
+    <!-- 4.2 Python -->
+    <h3 class="th" id="python">4.2 Python 설치</h3>
+    <p>Python은 여러 개발 도구와 백엔드 연동에 사용됩니다. <a href="https://python.org" target="_blank" style="color:var(--primary-2)">python.org</a>에서 3.8 이상을 내려받아 설치하거나 아래 명령으로 설치합니다.</p>
+
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os mac">macOS (Homebrew)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>brew install python</pre>
+    </div>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os linux">Linux (Debian·Ubuntu)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>sudo apt install python3 python3-pip python-is-python3</pre>
+    </div>
+    <div class="warn"><b>Windows:</b> 설치 프로그램 실행 시 <b>"Add Python to PATH"</b> 체크박스를 반드시 선택하세요. 그래야 터미널에서 <code class="inl">python</code> 명령을 쓸 수 있습니다.</div>
+
+    <h4>설치 확인</h4>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os any">공통</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>python --version
+pip --version</pre>
     </div>
 
-    <!-- 워크숍 개요 카드 -->
-    <div style="background:linear-gradient(135deg,var(--primary) 0%,#3730A3 60%,var(--secondary) 100%);border-radius:14px;padding:28px 32px;margin-bottom:28px;color:#fff;">
-      <div style="font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-bottom:10px;">워크숍 개요</div>
-      <p style="font-size:16px;line-height:1.8;margin:0 0 16px;color:rgba(255,255,255,.92);">
-        이 실습에서는 <strong style="color:#fff;">Kiro IDE</strong>를 처음 설치하고 로그인하는 것부터 시작해,
-        <strong style="color:#fff;">Vibe Coding</strong>과 <strong style="color:#fff;">Spec 기반 개발(Spec-Driven Development)</strong>
-        두 가지 AI 코드 생성 방식을 직접 경험합니다.
-      </p>
-      <div style="display:flex;gap:20px;flex-wrap:wrap;">
-        <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:10px 16px;min-width:120px;">
-          <div style="font-size:11px;opacity:.7;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">사전 요구사항</div>
-          <div style="font-size:14px;font-weight:700;">Node.js, Git, Python</div>
-        </div>
-        <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:10px 16px;min-width:120px;">
-          <div style="font-size:11px;opacity:.7;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">학습 목표</div>
-          <div style="font-size:14px;font-weight:700;">Kiro 숙달 + 개발 방식 비교</div>
-        </div>
-        <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:10px 16px;min-width:120px;">
-          <div style="font-size:11px;opacity:.7;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">실습 환경</div>
-          <div style="font-size:14px;font-weight:700;">로컬 개발 환경</div>
-        </div>
+    <div class="note"><b>macOS 참고 —</b> <code class="inl">python</code>·<code class="inl">pip</code>는 안 되고 <code class="inl">python3</code>·<code class="inl">pip3</code>만 된다면, 셸 설정 파일에 별칭(alias)을 추가하세요.
+      <div class="cmd" style="margin-top:10px">
+        <div class="cmd-bar"><span class="os mac">macOS (zsh)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+        <pre>echo 'alias python="python3"' >> ~/.zshrc
+echo 'alias pip="pip3"' >> ~/.zshrc</pre>
       </div>
+      적용 후 <b>현재 터미널 창을 닫고 새 터미널을 열면</b> 별칭이 반영됩니다.
     </div>
 
-    <!-- OS 토글 -->
-    <div class="os-toggle" id="osToggle">
-      <button class="os-btn active" data-os="mac" onclick="setOS('mac')">🍎 macOS</button>
-      <button class="os-btn" data-os="win" onclick="setOS('win')">🪟 Windows</button>
+    <!-- 4.3 uv -->
+    <h3 class="th" id="uv">4.3 uv 설치</h3>
+    <p><b>uv</b>는 빠른 Python 패키지 설치·의존성 관리 도구로, Kiro가 Python 의존성과 MCP 서버를 관리할 때 사용합니다.</p>
+
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os win">Windows (PowerShell)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</pre>
+    </div>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os mac">macOS</span><span class="os linux">Linux</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>curl -LsSf https://astral.sh/uv/install.sh | sh</pre>
+    </div>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os any">대안 (pip)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>pip install uv</pre>
     </div>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- TASK 1: 작업 폴더 생성하기               -->
-    <!-- ════════════════════════════════════════ -->
-    <div id="task1" class="task-card">
-      <div class="task-card-header">
-        <div class="task-num">1</div>
-        <div class="task-title">작업 폴더 생성하기</div>
-      </div>
-      <div class="task-divider"></div>
+    <h4>설치 확인</h4>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os any">공통</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>uv --version</pre>
+    </div>
+    <div class="warn"><b>⚠️ uv 명령을 찾을 수 없다면,</b> 현재 터미널 창을 닫고 새 터미널을 연 뒤 다시 확인하세요(PATH 갱신 필요).</div>
+  </section>
 
-      <div class="task-overview">
-        워크숍 실습 파일을 저장할 전용 폴더를 생성합니다.
-      </div>
+  <!-- ================= Lab 5 ================= -->
+  <section id="lab5">
+    <span class="sec-tag">Lab 5</span>
+    <h2 class="sh">Vibe Coding으로 이커머스 웹 애플리케이션 만들기</h2>
+    <p class="lead">이 랩에서는 Kiro의 <b>Vibe Coding</b> 기능을 사용해, 자연어 프롬프트만으로 완전한 이커머스 웹사이트를 빠르게 구축합니다.</p>
 
-      <!-- macOS -->
-      <div class="os-mac">
-        <div class="step-num">macOS — Terminal 명령어</div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>mkdir -p ~/workshop/kiro-basic
-cd ~/workshop/kiro-basic
-pwd</code></pre>
-        </div>
-      </div>
+    <h4>Vibe Coding이란?</h4>
+    <p>Vibe Coding은 프로젝트 요구사항을 해석해 프론트엔드·백엔드·데이터베이스를 포함한 <b>전체 애플리케이션 아키텍처를 자동 생성</b>하는 Kiro의 AI 개발 모드입니다. 단순한 코드 생성 수준을 넘어, 비즈니스 로직·사용자 경험 패턴·기술 모범 사례까지 이해해 구현합니다.</p>
 
-      <!-- Windows -->
-      <div class="os-win">
-        <div class="step-num">Windows — PowerShell 명령어</div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>New-Item -ItemType Directory -Path "$env:USERPROFILE\workshop\kiro-basic" -Force
-cd "$env:USERPROFILE\workshop\kiro-basic"
-Get-Location</code></pre>
-        </div>
-      </div>
-
-      <div class="step-num">확인 방법</div>
-      <ul class="checklist">
-        <li>명령어 실행 후 경로가 출력되면 성공.</li>
-      </ul>
-
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span><strong>팁:</strong> 이 폴더는 이번 워크숍에서 생성하는 모든 프로젝트의 루트 폴더가 됩니다. 실습이 끝나면 전체 폴더를 삭제하여 환경을 정리할 수 있습니다.</span>
-      </div>
+    <h4>무엇을 만드나요?</h4>
+    <div class="build">
+      <div class="bcard"><b>3-tier 아키텍처</b><span>현대적 구조의 이커머스 웹 애플리케이션</span></div>
+      <div class="bcard"><b>React 프론트엔드</b><span>반응형 UI와 인터랙티브 컴포넌트</span></div>
+      <div class="bcard"><b>Node.js 백엔드</b><span>RESTful API와 비즈니스 로직</span></div>
+      <div class="bcard"><b>SQL 데이터베이스</b><span>스키마 설계와 데이터 관계</span></div>
+      <div class="bcard" style="grid-column:1/-1"><b>완전한 사용자 흐름</b><span>상품 둘러보기부터 장바구니 관리까지</span></div>
     </div>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- TASK 2: Kiro 설치                        -->
-    <!-- ════════════════════════════════════════ -->
-    <div id="task2" class="task-card">
-      <div class="task-card-header">
-        <div class="task-num">2</div>
-        <div class="task-title">Kiro 설치</div>
-      </div>
-      <div class="task-divider"></div>
+    <!-- 5.1 -->
+    <h3 class="th">5.1 Kiro 대화창에 다음 프롬프트 입력</h3>
+    <p>Kiro 채팅 입력창에 아래 프롬프트를 붙여넣고 보냅니다. Kiro가 요구사항을 해석해 애플리케이션 전체를 생성합니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">세 개의 웹 페이지로 구성된 간단한 이커머스 웹사이트를 만들어줘. 다음을 포함해줘:
+1. 홈 페이지: 20개의 샘플 상품 목록 (상품 사진은 이모지로 대체)
+2. 상품 페이지: 상품 설명, 가격, 수량, 장바구니 담기 버튼, 그리고 샘플 사용자 리뷰
+3. 장바구니 페이지: 구매할 상품 목록, 총 결제 금액, 그리고 수량 변경·항목 삭제 같은 동작 버튼
 
-      <div class="task-overview">
-        kiro.dev에서 Kiro IDE를 다운로드하고 설치합니다.
-      </div>
+웹 애플리케이션은 3-tier 아키텍처를 기반으로 해줘:
+- UI 렌더링을 담당하는 React 기반 프론트엔드
+- 장바구니 담기·삭제 등 애플리케이션 로직을 담당하는 Node.js 기반 백엔드
+- 상품과 장바구니 항목을 저장하는 SQL 기반 데이터베이스</div>
+    </div>
+    <div class="note">생성에는 수 분이 걸릴 수 있습니다. Kiro가 파일을 만들고 의존성을 설치하는 동안 진행 상황을 지켜보세요. 중간에 승인·실행을 묻는 창이 뜨면 안내에 따라 허용합니다.</div>
 
-      <div class="step-num">공통 단계 1 — 다운로드 페이지 접속</div>
-      <p>브라우저에서 <a href="https://kiro.dev" target="_blank" rel="noopener"><strong>https://kiro.dev</strong></a>에 접속합니다.</p>
-
-      <div class="step-num">공통 단계 2 — 운영체제에 맞는 설치 파일 다운로드</div>
-
-      <!-- macOS -->
-      <div class="os-mac">
-        <p>페이지에서 <strong>macOS</strong>용 다운로드 버튼을 클릭합니다 (<code>.dmg</code> 파일).</p>
-
-        <div class="step-num">macOS 설치 절차</div>
-        <ol style="padding-left:22px;line-height:2;">
-          <li>다운로드된 <code>.dmg</code> 파일을 더블클릭하여 마운트합니다.</li>
-          <li><strong>Kiro</strong> 아이콘을 <strong>/Applications</strong> 폴더로 드래그합니다.</li>
-          <li>마운트된 디스크 이미지를 꺼냅니다(선택 사항).</li>
-          <li><strong>Launchpad</strong> 또는 <strong>Spotlight</strong>(<kbd>⌘</kbd>+<kbd>Space</kbd> → "Kiro")로 실행합니다.</li>
-        </ol>
-
-        <div class="alert-box warning">
-          <span class="alert-icon">⚠️</span>
-          <span>macOS 보안 정책으로 인해 "개발자를 확인할 수 없습니다" 경고가 뜰 수 있습니다. <strong>시스템 환경설정 → 보안 및 개인정보 보호</strong>에서 "허용"을 클릭하면 실행됩니다.</span>
-        </div>
-      </div>
-
-      <!-- Windows -->
-      <div class="os-win">
-        <p>페이지에서 <strong>Windows</strong>용 다운로드 버튼을 클릭합니다 (<code>.exe</code> 설치 파일).</p>
-
-        <div class="step-num">Windows 설치 절차</div>
-        <ol style="padding-left:22px;line-height:2;">
-          <li>다운로드된 <code>.exe</code> 설치 파일을 더블클릭합니다.</li>
-          <li>설치 마법사의 안내를 따라 진행합니다.</li>
-          <li>설치가 완료되면 <strong>시작 메뉴</strong>에서 "Kiro"를 검색하여 실행합니다.</li>
-        </ol>
-
-        <div class="alert-box warning">
-          <span class="alert-icon">⚠️</span>
-          <span>Windows Defender SmartScreen이 실행을 차단할 수 있습니다. <strong>"추가 정보" → "실행"</strong>을 클릭하면 설치가 진행됩니다.</span>
-        </div>
-      </div>
-
-      <div class="step-num">설치 확인</div>
-      <ul class="checklist">
-        <li>Kiro 아이콘을 클릭하면 IDE 창이 실행됩니다.</li>
-        <li>버전 확인: 메뉴 <strong>Help &gt; About Kiro</strong> 에서 버전 정보를 확인할 수 있습니다.</li>
-      </ul>
+    <!-- 5.2 -->
+    <h3 class="th">5.2 애플리케이션 실행</h3>
+    <p>생성이 끝나면 아래 프롬프트를 보내 이커머스 웹사이트를 실행합니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">애플리케이션을 실행해줘</div>
     </div>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- TASK 3: Kiro 로그인                      -->
-    <!-- ════════════════════════════════════════ -->
-    <div id="task3" class="task-card">
-      <div class="task-card-header">
-        <div class="task-num">3</div>
-        <div class="task-title">Kiro 로그인</div>
-      </div>
-      <div class="task-divider"></div>
+    <!-- 5.3 -->
+    <h3 class="th">5.3 브라우저에서 확인</h3>
+    <p>이커머스 웹사이트가 웹 브라우저에서 자동으로 열립니다. 자동으로 열리지 않으면, 아무 브라우저나 열어 React 프론트엔드 주소로 접속하세요.</p>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os any">브라우저 주소</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>http://localhost:3000</pre>
+    </div>
+    <div class="muted">※ 포트가 3000이 아닐 수 있습니다. Kiro 출력이나 터미널에 표시된 포트 번호로 접속하세요.</div>
 
-      <div class="task-overview">
-        GitHub, Google, 또는 AWS Builder ID로 로그인합니다.
-      </div>
+    <!-- 5.4 -->
+    <h3 class="th">5.4 애플리케이션 테스트</h3>
+    <p>이커머스 웹사이트가 실행되면 핵심 기능을 하나씩 확인합니다.</p>
+    <ul class="check">
+      <li><b>상품 둘러보기</b> — 홈 페이지를 탐색하고 여러 상품을 클릭해 봅니다.</li>
+      <li><b>장바구니 담기</b> — 여러 상품을 장바구니에 담습니다.</li>
+      <li><b>장바구니 보기</b> — 장바구니 페이지로 이동해 담은 항목을 확인합니다.</li>
+      <li><b>수량 변경</b> — 항목 수량을 바꿔 봅니다.</li>
+      <li><b>항목 삭제</b> — 항목 삭제 기능을 테스트합니다.</li>
+    </ul>
+    <div class="note">기능이 제대로 동작하지 않으면, <b>문제 상황을 그대로 프롬프트로 적어 Kiro에게 보내면</b> 디버깅해 줍니다. 자주 발생하는 문제는 아래를 참고하세요.</div>
+  </section>
 
-      <div class="step-num">로그인 단계</div>
-      <ol style="padding-left:22px;line-height:2.1;">
-        <li>Kiro를 실행합니다.</li>
-        <li>시작 화면에서 <strong>"Sign in"</strong> 버튼을 클릭합니다.</li>
-        <li>로그인 방법을 선택합니다:
-          <ul style="margin-top:6px;padding-left:20px;line-height:1.9;">
-            <li><strong>GitHub</strong> (권장) — 개발자에게 친숙한 방식</li>
-            <li><strong>Google</strong> — Google 계정으로 빠른 로그인</li>
-            <li><strong>AWS Builder ID</strong> — AWS 기반 통합 인증</li>
-          </ul>
-        </li>
-        <li>브라우저가 자동으로 열리면 선택한 방법으로 인증을 완료합니다.</li>
-        <li>인증 완료 후 Kiro로 돌아와 로그인 상태를 확인합니다.</li>
-      </ol>
+  <!-- ================= Troubleshooting ================= -->
+  <section id="trouble">
+    <span class="sec-tag">Troubleshooting</span>
+    <h2 class="sh">자주 발생하는 문제 해결</h2>
+    <p class="lead">아래 상황별로 해당 프롬프트를 Kiro에 보내면 자동으로 원인을 찾아 고쳐 줍니다.</p>
 
-      <div class="step-num">확인 방법</div>
-      <ul class="checklist">
-        <li>Kiro IDE 좌측 하단에 사용자 아이콘 또는 이름이 표시되면 로그인 성공입니다.</li>
-        <li>Free 플랜으로 이번 실습의 모든 기능을 사용할 수 있습니다.</li>
-      </ul>
-
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span><strong>팁:</strong> GitHub 계정을 사용하면 Kiro와의 통합이 가장 원활합니다. 나중에 코드 저장소 연동 시에도 편리합니다.</span>
-      </div>
+    <h4>① 홈 페이지에 상품이 하나도 보이지 않을 때</h4>
+    <p class="muted">프론트엔드·백엔드·데이터베이스 간 통신 문제일 수 있습니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">홈 페이지에 상품이 하나도 표시되지 않아</div>
     </div>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- TASK 4: 개발 도구 설치 확인              -->
-    <!-- ════════════════════════════════════════ -->
-    <div id="task4" class="task-card">
-      <div class="task-card-header">
-        <div class="task-num">4</div>
-        <div class="task-title">개발 도구 설치 확인</div>
-      </div>
-      <div class="task-divider"></div>
-
-      <div class="task-overview">
-        이번 실습에 필요한 개발 도구가 설치되어 있는지 확인합니다.
-      </div>
-
-      <div class="step-num">확인할 도구</div>
-      <div class="tool-row">
-        <div class="tool-icon">🟢</div>
-        <div class="tool-info">
-          <div class="tool-name">Node.js 18+</div>
-          <div class="tool-ver">React 프론트엔드 및 Node.js 백엔드 실행에 필요</div>
-        </div>
-      </div>
-      <div class="tool-row">
-        <div class="tool-icon">🔷</div>
-        <div class="tool-info">
-          <div class="tool-name">Git</div>
-          <div class="tool-ver">소스 코드 버전 관리 도구</div>
-        </div>
-      </div>
-      <div class="tool-row">
-        <div class="tool-icon">🐍</div>
-        <div class="tool-info">
-          <div class="tool-name">Python 3.9+</div>
-          <div class="tool-ver">스크립트 및 데이터 처리 도구</div>
-        </div>
-      </div>
-
-      <!-- macOS 확인 -->
-      <div class="os-mac">
-        <div class="step-num">macOS — 설치 버전 확인 (bash)</div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>node --version      # v18.0.0 이상
-npm --version       # 9.0.0 이상
-git --version       # git version 2.x.x
-python3 --version   # Python 3.9.x 이상</code></pre>
-        </div>
-      </div>
-
-      <!-- Windows 확인 -->
-      <div class="os-win">
-        <div class="step-num">Windows — 설치 버전 확인 (PowerShell)</div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>node --version
-npm --version
-git --version
-python --version</code></pre>
-        </div>
-      </div>
-
-      <div class="step-num">설치가 필요한 경우</div>
-
-      <!-- macOS 설치 -->
-      <div class="os-mac">
-        <p><strong>Node.js (macOS)</strong></p>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash — Homebrew 사용</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>brew install node</code></pre>
-        </div>
-        <p style="margin-top:4px;font-size:14px;color:var(--t3);">Homebrew가 없으면 <a href="https://nodejs.org" target="_blank" rel="noopener">https://nodejs.org</a> 에서 LTS 버전을 다운로드합니다.</p>
-
-        <p><strong>Git (macOS)</strong></p>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>brew install git
-# 또는 Xcode Command Line Tools 설치
-xcode-select --install</code></pre>
-        </div>
-      </div>
-
-      <!-- Windows 설치 -->
-      <div class="os-win">
-        <p><strong>Node.js (Windows)</strong></p>
-        <p style="font-size:15px;"><a href="https://nodejs.org" target="_blank" rel="noopener">https://nodejs.org</a> 에서 <strong>LTS 버전</strong>을 다운로드 후 설치합니다.</p>
-
-        <p><strong>Git (Windows)</strong></p>
-        <p style="font-size:15px;"><a href="https://git-scm.com" target="_blank" rel="noopener">https://git-scm.com</a> 에서 다운로드 후 설치합니다.</p>
-      </div>
-
-      <div class="step-num">확인 방법</div>
-      <ul class="checklist">
-        <li>모든 버전 명령어가 오류 없이 버전 번호를 출력하면 성공입니다.</li>
-        <li>Node.js는 <strong>v18.0.0 이상</strong>이어야 합니다.</li>
-        <li>Python은 <strong>3.9.x 이상</strong>이어야 합니다.</li>
-      </ul>
-
-      <div class="alert-box warning">
-        <span class="alert-icon">⚠️</span>
-        <span><strong>Node.js 버전 문제:</strong> 이미 구버전 Node.js가 설치되어 있다면 <strong>nvm(Node Version Manager)</strong>을 사용하여 여러 버전을 병렬 관리하는 것을 권장합니다.</span>
-      </div>
-
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span><strong>Kiro의 도구 자동 감지:</strong> Kiro IDE는 시작 시 시스템에 설치된 Node.js, npm, Python 등의 도구를 자동으로 감지하여 인식합니다. Kiro 내부 터미널에서도 동일한 도구를 사용할 수 있습니다.</span>
-      </div>
+    <h4>② 장바구니 기능이 동작하지 않을 때</h4>
+    <p class="muted">예: 장바구니에서 항목 삭제가 안 되는 경우.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">장바구니의 항목 삭제 기능이 동작하지 않아</div>
     </div>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- TASK 5: Vibe Coding                      -->
-    <!-- ════════════════════════════════════════ -->
-    <div id="task5" class="task-card">
-      <div class="task-card-header">
-        <div class="task-num">5</div>
-        <div class="task-title">Vibe Coding으로 전자상거래 웹사이트 생성</div>
-      </div>
-      <div class="task-divider"></div>
-
-      <div class="task-overview">
-        Kiro Chat에 자연어 프롬프트를 입력하여 전자상거래 웹사이트를 생성합니다.
-      </div>
-
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span><strong>Vibe Coding이란?</strong> 코드 구조나 아키텍처를 직접 설계하지 않고, 자연어로 원하는 결과를 설명하면 AI가 즉시 코드를 생성하는 방식입니다. 빠른 프로토타이핑에 유용합니다.</span>
-      </div>
-
-      <!-- Step 1 -->
-      <div class="step-num">Step 1: 작업 폴더 열기</div>
-
-      <div class="os-mac">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash — macOS</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>mkdir -p ~/workshop/kiro-basic/ecommerce-vibe
-cd ~/workshop/kiro-basic/ecommerce-vibe</code></pre>
-        </div>
-      </div>
-
-      <div class="os-win">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell — Windows</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>New-Item -ItemType Directory -Path "$env:USERPROFILE\workshop\kiro-basic\ecommerce-vibe" -Force
-cd "$env:USERPROFILE\workshop\kiro-basic\ecommerce-vibe"</code></pre>
-        </div>
-      </div>
-
-      <p>그런 다음 Kiro에서 <strong>File &gt; Open Folder</strong>로 이 폴더를 엽니다.</p>
-
-      <!-- Step 2 -->
-      <div class="step-num">Step 2: Chat 패널에 프롬프트 입력</div>
-      <p>Kiro의 Chat 패널(사이드바에서 채팅 아이콘 클릭)을 열고 아래 프롬프트를 복사하여 입력합니다.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">Kiro Chat 프롬프트</span>
-          <button class="copy-btn" onclick="copyCode(this)">복사</button>
-        </div>
-        <pre><code>3개의 웹페이지로 구성된 간단한 전자상거래 웹사이트를 만들어줘.
-
-[페이지 구성]
-1. 홈페이지: 이모지로 상품 이미지를 표현한 20개의 샘플 상품 목록
-2. 상품 상세 페이지: 상품 설명, 가격, 수량 선택, 장바구니 담기 버튼, 샘플 사용자 리뷰 포함
-3. 장바구니 페이지: 구매 예정 상품 목록, 총 금액, 수량 변경 및 삭제 버튼 포함
-
-[아키텍처]
-3계층(3-tier) 아키텍처 기반으로 구성:
-- 프론트엔드: UI 렌더링을 담당하는 React 기반
-- 백엔드: 장바구니 추가·삭제 같은 애플리케이션 로직을 처리하는 Node.js 기반
-- 데이터베이스: 상품과 장바구니 항목을 저장하는 SQL 기반</code></pre>
-      </div>
-
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span>Kiro가 파일을 생성하기 시작하면 Chat 창에서 진행 상황을 확인할 수 있습니다. 생성이 완료될 때까지 기다립니다.</span>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="step-num">Step 3: 생성된 코드 확인 및 실행</div>
-
-      <div class="os-mac">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash — 백엔드 실행</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd backend && npm install && node server.js &</code></pre>
-        </div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash — 프론트엔드 실행</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd frontend && npm install && npm start</code></pre>
-        </div>
-      </div>
-
-      <div class="os-win">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell — 백엔드 실행</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd backend; npm install; node server.js</code></pre>
-        </div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell — 프론트엔드 실행 (새 창에서)</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd frontend; npm install; npm start</code></pre>
-        </div>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="step-num">Step 4: 브라우저에서 결과 확인</div>
-      <p>브라우저에서 <strong>http://localhost:3000</strong>에 접속하여 생성된 전자상거래 사이트를 확인합니다.</p>
-
-      <div class="step-num">Vibe Coding 특징 관찰</div>
-      <ul class="checklist">
-        <li>코드 구조를 사전에 설계하지 않고 결과가 나옵니다.</li>
-        <li>빠르지만 아키텍처가 최적화되지 않을 수 있습니다.</li>
-        <li>복잡한 요구사항에서 일관성이 떨어질 수 있습니다.</li>
-      </ul>
+    <h4>③ 애플리케이션이 아예 시작되지 않을 때</h4>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">애플리케이션이 정상적으로 실행되지 않아</div>
     </div>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- TASK 6: Spec 기반 개발                   -->
-    <!-- ════════════════════════════════════════ -->
-    <div id="task6" class="task-card">
-      <div class="task-card-header">
-        <div class="task-num">6</div>
-        <div class="task-title">Spec 기반으로 전자상거래 앱 생성</div>
-      </div>
-      <div class="task-divider"></div>
+    <div class="note">위 예시는 참고일 뿐입니다. 어떤 문제든 <b>증상을 구체적으로 한국어로 설명</b>해 Kiro에게 보내면 됩니다. 예: "상품 페이지에서 장바구니 담기 버튼을 눌러도 아무 반응이 없어."</div>
+  </section>
 
-      <div class="task-overview">
-        Kiro Spec 모드를 사용하여 체계적인 요구사항-설계-구현 프로세스로 동일한 전자상거래 앱을 만들어봅니다. Vibe Coding과 비교하여 품질 차이를 확인합니다.
-      </div>
+  <!-- ================= End ================= -->
+  <section id="end">
+    <span class="sec-tag">Lab 5 종료</span>
+    <h2 class="sh">Lab 5 종료 — 애플리케이션 중지</h2>
+    <p>애플리케이션 테스트가 끝나면, 아래 프롬프트를 보내 이커머스 웹사이트를 중지합니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">애플리케이션을 중지해줘</div>
+    </div>
+    <p style="margin-top:20px"><b>수고하셨습니다.</b> Vibe Coding으로 자연어 프롬프트만으로 3-tier 이커머스 웹 애플리케이션을 완성하고, 기본적인 디버깅까지 경험했습니다. 이어지는 <b>Lab 6</b>에서는 같은 애플리케이션을 <b>Spec-Driven Development</b> 방식으로 다시 만들어, 두 접근법의 차이를 체험합니다.</p>
+  </section>
 
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span><strong>Spec-Driven Development란?</strong> Requirements(요구사항) → Design(설계) → Tasks(구현 태스크)의 단계적 프로세스로 코드를 생성합니다. 대규모 프로젝트와 팀 협업에 적합합니다.</span>
-      </div>
+  <!-- ================= Lab 6 ================= -->
+  <section id="lab6">
+    <span class="sec-tag">Lab 6</span>
+    <h2 class="sh">Spec-Driven 방식으로 이커머스 웹 애플리케이션 만들기</h2>
+    <p class="lead">이 랩에서는 Kiro의 <b>Spec-Driven Development(명세 기반 개발)</b> 기능으로 복잡한 애플리케이션을 <b>구조적·체계적</b>으로 구축하는 방법을 배웁니다. 대화형인 Vibe Coding과 달리, 명확한 단계와 문서를 갖춘 <b>정식 소프트웨어 개발 수명주기(SDLC)</b>를 따릅니다.</p>
+    <p>Kiro의 Spec-Driven Development로 다음을 할 수 있습니다:</p>
+    <ul>
+      <li><b>EARS 표기법</b>으로 요구사항을 사용자 스토리와 수용 기준(acceptance criteria)으로 분해</li>
+      <li>시퀀스 다이어그램·아키텍처 계획을 담은 <b>종합 설계 문서</b> 작성</li>
+      <li>개별적이고 관리 가능한 <b>작업(task) 단위로 구현 진행 상황 추적</b></li>
+      <li>제품·엔지니어링 팀 간 <b>효과적인 협업</b></li>
+      <li>개발 전 과정에 걸친 <b>문서 유지·관리</b></li>
+    </ul>
 
-      <!-- Step 1 -->
-      <div class="step-num">Step 1: 새 작업 폴더 생성</div>
-
-      <div class="os-mac">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash — macOS</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>mkdir -p ~/workshop/kiro-basic/ecommerce-spec
-cd ~/workshop/kiro-basic/ecommerce-spec</code></pre>
-        </div>
-      </div>
-
-      <div class="os-win">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell — Windows</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>New-Item -ItemType Directory -Path "$env:USERPROFILE\workshop\kiro-basic\ecommerce-spec" -Force
-cd "$env:USERPROFILE\workshop\kiro-basic\ecommerce-spec"</code></pre>
-        </div>
-      </div>
-
-      <p>Kiro에서 <strong>File &gt; Open Folder</strong>로 이 폴더를 엽니다.</p>
-
-      <!-- Step 2 -->
-      <div class="step-num">Step 2: Kiro Spec 시작</div>
-      <ol style="padding-left:22px;line-height:2.1;">
-        <li>좌측 패널에서 <strong>Spec 아이콘</strong>을 클릭합니다.<br>
-            또는 <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <strong>"Kiro: New Spec"</strong> 실행
-            <span class="os-win" style="display:none;"> (Windows: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>)</span>
-        </li>
-        <li><strong>"New Spec"</strong> 버튼을 클릭합니다.</li>
-      </ol>
-
-      <!-- Step 3 -->
-      <div class="step-num">Step 3: Spec 프롬프트 입력</div>
-      <p>Task 5와 동일한 프롬프트를 입력합니다.</p>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">Kiro Spec 프롬프트</span>
-          <button class="copy-btn" onclick="copyCode(this)">복사</button>
-        </div>
-        <pre><code>3개의 웹페이지로 구성된 간단한 전자상거래 웹사이트를 만들어줘.
-
-[페이지 구성]
-1. 홈페이지: 이모지로 상품 이미지를 표현한 20개의 샘플 상품 목록
-2. 상품 상세 페이지: 상품 설명, 가격, 수량 선택, 장바구니 담기 버튼, 샘플 사용자 리뷰 포함
-3. 장바구니 페이지: 구매 예정 상품 목록, 총 금액, 수량 변경 및 삭제 버튼 포함
-
-[아키텍처]
-3계층(3-tier) 아키텍처 기반으로 구성:
-- 프론트엔드: UI 렌더링을 담당하는 React 기반
-- 백엔드: 장바구니 추가·삭제 같은 애플리케이션 로직을 처리하는 Node.js 기반
-- 데이터베이스: 상품과 장바구니 항목을 저장하는 SQL 기반</code></pre>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="step-num">Step 4: Requirements 검토</div>
-      <ol style="padding-left:22px;line-height:2.1;">
-        <li>Kiro가 자동으로 요구사항 문서(<code>requirements.md</code>)를 생성합니다.</li>
-        <li>내용을 읽고 필요하면 수정합니다.</li>
-        <li>검토 완료 후 <strong>"Approve"</strong> 버튼을 클릭합니다.</li>
-      </ol>
-
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span><strong>팁:</strong> Requirements 단계에서 누락된 기능이나 모호한 요구사항을 발견하면 직접 문서를 수정하여 명확하게 만들 수 있습니다. 이것이 Spec 기반 개발의 핵심 가치입니다.</span>
-      </div>
-
-      <!-- Step 5 -->
-      <div class="step-num">Step 5: Design 검토</div>
-      <ol style="padding-left:22px;line-height:2.1;">
-        <li>Kiro가 시스템 아키텍처, 데이터 모델, API 설계 문서를 자동 생성합니다.</li>
-        <li>설계 내용을 검토합니다.</li>
-        <li>확인 후 <strong>"Approve"</strong> 버튼을 클릭합니다.</li>
-      </ol>
-
-      <!-- Step 6 -->
-      <div class="step-num">Step 6: Tasks 실행</div>
-      <ol style="padding-left:22px;line-height:2.1;">
-        <li>Kiro가 구체적인 구현 태스크 목록을 생성합니다.</li>
-        <li><strong>"Run All Tasks"</strong>를 클릭하거나 각 태스크를 순서대로 실행합니다.</li>
-        <li>각 태스크가 완료될 때마다 코드가 생성됩니다.</li>
-      </ol>
-
-      <!-- Step 7 -->
-      <div class="step-num">Step 7: 결과 실행 및 확인</div>
-
-      <div class="os-mac">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash — 백엔드 실행</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd backend && npm install && node server.js &</code></pre>
-        </div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">bash — 프론트엔드 실행</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd frontend && npm install && npm start</code></pre>
-        </div>
-      </div>
-
-      <div class="os-win">
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell — 백엔드 실행</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd backend; npm install; Start-Process powershell { node server.js }</code></pre>
-        </div>
-        <div class="code-block">
-          <div class="code-header">
-            <span class="code-lang">PowerShell — 프론트엔드 실행</span>
-            <button class="copy-btn" onclick="copyCode(this)">복사</button>
-          </div>
-          <pre><code>cd frontend; npm install; npm start</code></pre>
-        </div>
-      </div>
-
-      <!-- Step 8: 비교 -->
-      <div class="step-num">Step 8: Vibe Coding 결과와 비교</div>
-      <p>두 방식의 결과를 비교하며 차이점을 확인합니다.</p>
-
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th>비교 항목</th>
-            <th>Vibe Coding</th>
-            <th>Spec-Driven</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>개발 속도</td>
-            <td class="good">빠름</td>
-            <td class="bad">상대적으로 느림</td>
-          </tr>
-          <tr>
-            <td>코드 구조</td>
-            <td class="bad">가변적</td>
-            <td class="good">체계적</td>
-          </tr>
-          <tr>
-            <td>요구사항 추적</td>
-            <td class="bad">없음</td>
-            <td class="good">문서화됨</td>
-          </tr>
-          <tr>
-            <td>대형 프로젝트 적합성</td>
-            <td class="bad">낮음</td>
-            <td class="good">높음</td>
-          </tr>
-          <tr>
-            <td>팀 협업</td>
-            <td class="bad">어려움</td>
-            <td class="good">용이</td>
-          </tr>
-          <tr>
-            <td>유지보수성</td>
-            <td class="bad">어려움(구조 파악 필요)</td>
-            <td class="good">용이(문서 기반 파악 가능)</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="alert-box tip">
-        <span class="alert-icon">💡</span>
-        <span><strong>결론:</strong> Vibe Coding은 빠른 프로토타이핑에, Spec-Driven Development는 복잡하고 장기적인 프로젝트에 적합합니다. Kiro는 두 방식을 모두 지원하여 상황에 따라 유연하게 선택할 수 있습니다.</span>
-      </div>
+    <!-- 6.1 -->
+    <h3 class="th">6.1 새 작업 폴더 생성 — <code class="inl">kiro-spec</code></h3>
+    <p>Lab 5와 구분되도록 새로운 빈 폴더 <code class="inl">kiro-spec</code>을 만듭니다.</p>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os mac">macOS</span><span class="os linux">Linux</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>mkdir ~/kiro-spec</pre>
+    </div>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os win">Windows (PowerShell)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>mkdir kiro-spec</pre>
     </div>
 
-    <!-- ════════════════════════════════════════ -->
-    <!-- 실습 완료                                -->
-    <!-- ════════════════════════════════════════ -->
-    <div style="background:linear-gradient(135deg,#059669 0%,#0891B2 100%);border-radius:14px;padding:28px 32px;margin-top:8px;margin-bottom:0;color:#fff;text-align:center;">
-      <div style="font-size:36px;margin-bottom:12px;">🎉</div>
-      <h2 style="font-size:22px;font-weight:800;color:#fff;margin:0 0 8px;">Workshop 1 완료!</h2>
-      <p style="font-size:15px;color:rgba(255,255,255,.88);margin:0 0 20px;line-height:1.7;">
-        Kiro 설치와 로그인을 마치고, Vibe Coding과 Spec 기반 개발로<br>
-        동일한 전자상거래 앱을 두 가지 방식으로 만들어봤습니다.
-      </p>
-      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
-        <div style="background:rgba(255,255,255,.15);border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;">
-          Task 1 ~ 6 완료
-        </div>
-        <a href="../../day1/m2/" style="background:rgba(255,255,255,.15);border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;color:#fff;text-decoration:none;border:1.5px solid rgba(255,255,255,.3);">
-          다음: M2 AI 이해하기 →
-        </a>
-      </div>
+    <!-- 6.2 -->
+    <h3 class="th">6.2 폴더 열기 — File → Open Folder</h3>
+    <p>Kiro 상단 메뉴에서 <b>File → Open Folder</b>를 선택하고 방금 만든 <code class="inl">kiro-spec</code> 폴더를 엽니다.</p>
+
+    <!-- 6.3 -->
+    <h3 class="th">6.3 Spec 에이전트 선택</h3>
+    <p>Kiro 채팅창의 <b>빌트인 에이전트 선택기</b>(채팅 입력창의 에이전트 이름, 예: "Default" 클릭)에서 <b>Spec</b> 에이전트를 선택합니다. 이렇게 하면 요구사항 → 설계 → 구현의 단계별 워크플로로 진행됩니다.</p>
+
+    <!-- 6.4 -->
+    <h3 class="th">6.4 Kiro 대화창에 다음 프롬프트 입력</h3>
+    <p>Lab 5와 동일한 요구사항을 입력합니다. 이번에는 Spec 에이전트가 이를 정식 명세 문서로 정리합니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">세 개의 웹 페이지로 구성된 간단한 이커머스 웹사이트를 만들어줘. 다음을 포함해줘:
+1. 홈 페이지: 20개의 샘플 상품 목록 (상품 사진은 이모지로 대체)
+2. 상품 페이지: 상품 설명, 가격, 수량, 장바구니 담기 버튼, 그리고 샘플 사용자 리뷰
+3. 장바구니 페이지: 구매할 상품 목록, 총 결제 금액, 그리고 수량 변경·항목 삭제 같은 동작 버튼
+
+웹 애플리케이션은 3-tier 아키텍처를 기반으로 해줘:
+- UI 렌더링을 담당하는 React 기반 프론트엔드
+- 장바구니 담기·삭제 등 애플리케이션 로직을 담당하는 Node.js 기반 백엔드
+- 상품과 장바구니 항목을 저장하는 SQL 기반 데이터베이스</div>
+    </div>
+    <p>Kiro는 <b>요구사항 → 설계 → 구현</b> 3단계 워크플로를 따르는 세 가지 핵심 파일을 생성하며, 이 파일들이 각 명세의 토대가 됩니다:</p>
+    <div class="build">
+      <div class="bcard"><b>requirements.md</b><span>사용자 스토리와 수용 기준을 구조화된 EARS 표기법으로 기록</span></div>
+      <div class="bcard"><b>design.md</b><span>기술 아키텍처·시퀀스 다이어그램·구현 고려사항 문서화</span></div>
+      <div class="bcard" style="grid-column:1/-1"><b>tasks.md</b><span>개별적이고 추적 가능한 작업으로 구성된 상세 구현 계획 제공</span></div>
     </div>
 
-  </main><!-- /main -->
+    <!-- 6.5 Requirements -->
+    <h3 class="th">6.5 Requirements — 요구사항 단계</h3>
+    <p><b>SDLC 계획(Planning) 단계</b>를 시뮬레이션합니다. 개발팀은 고객·사내외 전문가·관리자 등 여러 이해관계자로부터 요구사항을 수집해 <b>소프트웨어 요구사항 명세 문서</b>를 만듭니다.</p>
+    <div class="ears">
+      <div class="ears-h">EARS 표기법이란?</div>
+      <p style="margin:0 0 12px;font-size:13.5px;color:var(--ink-2)"><b>EARS</b>(Easy Approach to Requirements Syntax, 이어스)는 요구사항을 <b>모호하지 않게</b> 적기 위한 쉬운 문장 틀입니다. "시스템은 ~해야 한다(shall)"를 기본으로, 상황을 나타내는 키워드(WHEN·WHILE·IF·WHERE)를 앞에 붙여 <b>언제·어떤 조건에서</b> 무엇을 해야 하는지 분명히 합니다. 자연어의 애매함을 줄여, 개발자·기획자·검증자가 같은 의미로 읽게 됩니다.</p>
+      <div class="ears-row"><span class="ears-k">기본 (Ubiquitous)</span><span class="ears-d">항상 지켜야 하는 규칙<br><i>“시스템은 모든 가격을 원화로 표시<b>해야 한다</b>.”</i></span></div>
+      <div class="ears-row"><span class="ears-k">WHEN (이벤트)</span><span class="ears-d">어떤 일이 일어났을 때<br><i>“<b>WHEN</b> 사용자가 장바구니 담기를 누르면, 시스템은 해당 상품을 장바구니에 추가해야 한다.”</i></span></div>
+      <div class="ears-row"><span class="ears-k">WHILE (상태)</span><span class="ears-d">특정 상태가 지속되는 동안<br><i>“<b>WHILE</b> 장바구니가 비어 있는 동안, 시스템은 결제 버튼을 비활성화해야 한다.”</i></span></div>
+      <div class="ears-row"><span class="ears-k">IF…THEN (예외)</span><span class="ears-d">원치 않는/예외 상황에 대한 처리<br><i>“<b>IF</b> 재고가 0이면 <b>THEN</b> 시스템은 품절 표시를 해야 한다.”</i></span></div>
+      <div class="ears-row"><span class="ears-k">WHERE (선택)</span><span class="ears-d">특정 기능이 포함된 경우에만<br><i>“<b>WHERE</b> 리뷰 기능이 켜져 있으면, 시스템은 상품 페이지에 리뷰를 표시해야 한다.”</i></span></div>
+      <p style="margin:12px 0 0;font-size:12.5px;color:var(--muted)">※ 영어 원문에서는 <code class="inl">shall</code>·<code class="inl">WHEN</code>·<code class="inl">IF/THEN</code> 등을 그대로 사용합니다. Kiro가 생성한 <code class="inl">requirements.md</code>를 보면 이 형식으로 사용자 스토리와 수용 기준(acceptance criteria)이 적혀 있습니다.</p>
+    </div>
+    <div class="note">생성된 <b>requirements.md</b>를 검토하고 필요하면 수정하세요. 그런 다음 <b>Move to design phase</b>(설계 단계로 이동)를 클릭합니다.</div>
 
-</div><!-- /layout -->
+    <!-- 6.6 Design -->
+    <h3 class="th">6.6 Design — 설계 단계</h3>
+    <p><b>SDLC 설계(Design) 단계</b>를 시뮬레이션합니다. 소프트웨어 엔지니어는 요구사항을 분석해 최적의 해결책을 설계합니다. 예를 들어 기존 모듈 통합, 기술 선택, 개발 도구 식별 등을 고려합니다.</p>
+    <div class="note">생성된 <b>design.md</b>를 검토하고 필요하면 수정하세요. 그런 다음 <b>Move to implementation plan</b>(구현 계획으로 이동)을 클릭합니다.</div>
 
-<!-- 테마 토글 버튼 -->
-<button class="theme-btn" id="themeToggle" title="배경 전환">
-  <span class="icon-moon">🌙</span>
-  <span class="icon-sun">☀️</span>
-</button>
+    <!-- 6.7 Implementation -->
+    <h3 class="th">6.7 Implementation — 구현 단계</h3>
+    <p><b>SDLC 구현(Implement) 단계</b>를 시뮬레이션합니다. 개발팀은 요구사항을 분석해 매일 수행할 수 있는 작은 코딩 작업으로 나누어 제품을 구현합니다.</p>
+    <div class="note">생성된 <b>tasks.md</b>를 검토하고 필요하면 수정하세요. 일부 작업은 <b>선택(optional)</b>으로 표시됩니다(예: 단위 테스트·문서화). 핵심 기능에 먼저 집중하기 위한 것으로, 선택 작업을 그대로 두거나 전부 필수로 바꿀 수 있습니다.</p>
+
+    <h4>작업 실행 (Task Execution)</h4>
+    <p><code class="inl">tasks.md</code>에서 각 작업 위의 <b>⚡ Start task</b> 버튼을 눌러 작업을 하나씩 실행합니다. Kiro가 필요한 코드 변경과 명령 실행을 수행합니다. 또는 아래 프롬프트를 보내 모든 작업을 한 번에 실행할 수도 있습니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">스펙의 모든 작업을 실행해줘</div>
+    </div>
+    <div class="warn"><b>권장:</b> 모든 작업을 한꺼번에 실행하기보다 <b>작업 단위로 하나씩 실행</b>하는 것이 더 좋은 결과를 얻습니다. 전체 작업 완료에는 약 <b>20~30분</b>이 걸립니다.</div>
+
+    <!-- 6.8 실행 -->
+    <h3 class="th">6.8 애플리케이션 실행</h3>
+    <p>구현이 끝나면 아래 프롬프트를 보내 AI 에이전트 챗봇이 포함된 이커머스 웹사이트를 실행합니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">챗봇 서비스와 백엔드, 프론트엔드가 실행 중이 아니면 실행해줘</div>
+    </div>
+    <p>이커머스 웹사이트가 웹 브라우저에서 자동으로 열립니다. 자동으로 열리지 않으면 아무 브라우저나 열어 React 프론트엔드 주소로 접속하세요.</p>
+    <div class="cmd">
+      <div class="cmd-bar"><span class="os any">브라우저 주소</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+      <pre>http://localhost:3000</pre>
+    </div>
+    <div class="muted">※ 포트가 3000이 아닐 수 있습니다. Kiro 출력이나 터미널에 표시된 포트 번호로 접속하세요.</div>
+
+    <!-- 6.9 챗봇 테스트 -->
+    <h3 class="th">6.9 챗봇 테스트</h3>
+    <p>이커머스 웹사이트가 실행되면, 챗봇에 다음 질문을 하나씩 입력해 테스트합니다. (<code class="inl">&lt;상품명&gt;</code>은 실제 상품 이름으로 바꿔 입력하세요.)</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ 챗봇에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">안녕하세요
+어떤 상품들이 있나요?
+&lt;상품명&gt;을 장바구니에 담아줘
+장바구니를 보여줘
+장바구니를 비워줘
+등산할 때 살 만한 걸 추천해줘
+추천한 상품들을 모두 장바구니에 담아줘</div>
+    </div>
+    <div class="note">동작하지 않으면 <b>문제 상황을 그대로 한국어 프롬프트로 적어 Kiro에게 보내면</b> 디버깅해 줍니다.</div>
+
+    <!-- 6 End -->
+    <h3 class="th">실습 종료</h3>
+    <p>테스트가 끝나면 아래 프롬프트를 보내 이커머스 웹사이트를 중지합니다.</p>
+    <div class="prompt">
+      <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+      <div class="pbody">애플리케이션을 중지해줘</div>
+    </div>
+    <p style="margin-top:20px"><b>수고하셨습니다.</b> Vibe Coding(Lab 5)과 Spec-Driven Development(Lab 6) 두 방식으로 같은 애플리케이션을 만들어 보며, 빠른 프로토타이핑과 체계적 개발의 차이를 직접 경험했습니다.</p>
+  </section>
+
+  <footer>Agentic AI Workshop · Workshop 1 — Kiro Basic · 핸즈온 가이드</footer>
+</div>
 
 <script>
-/* ── 테마 토글 ── */
-(function(){
-  var saved = localStorage.getItem('courseTheme');
-  if (saved === 'dark') document.documentElement.classList.add('dark');
-  document.getElementById('themeToggle').addEventListener('click', function(){
-    var isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('courseTheme', isDark ? 'dark' : 'light');
-  });
-})();
+function flash(btn, txt){ const o=btn.textContent; btn.textContent=txt; btn.classList.add('done'); setTimeout(()=>{btn.textContent=o; btn.classList.remove('done');}, 1400); }
+function doCopy(text, btn, okLabel){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(()=>flash(btn, okLabel)).catch(()=>fallback(text, btn, okLabel));
+    } else { fallback(text, btn, okLabel); }
+  }catch(e){ fallback(text, btn, okLabel); }
+}
+function fallback(text, btn, okLabel){
+  try{
+    const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    flash(btn, okLabel);
+  }catch(e){ flash(btn, '복사 실패'); }
+}
+/* 명령 블록 복사: 주석(.cm)은 제외하고 실제 명령만 복사 */
+function cp(btn){
+  const pre = btn.closest('.cmd').querySelector('pre').cloneNode(true);
+  pre.querySelectorAll('.cm').forEach(e=>e.remove());
+  const text = pre.textContent.replace(/\n{2,}/g,'\n').trim();
+  doCopy(text, btn, '복사됨 ✓');
+}
+/* 프롬프트 복사 */
+function cpk(btn){
+  const text = btn.closest('.prompt').querySelector('.pbody').textContent.trim();
+  doCopy(text, btn, '복사됨 ✓');
+}
+</script>
+</body>
+</html>
 
-/* ── Day 내비게이션 토글 ── */
+      <!-- ========== Task 4 ========== -->
+      <section id="task4">
+        <span class="sec-tag">Task 4</span>
+        <h2 class="sh">실습 환경 준비하기</h2>
+        <p class="lead">실습을 진행하려면 아래 구성 요소를 설치 · 설정해야 합니다.</p>
+        <ul>
+          <li><b>Node.js 18.x 이상</b> — 이커머스 애플리케이션의 프론트엔드 · 백엔드 실행</li>
+          <li><b>Python 3.8 이상</b> — 개발 도구 및 백엔드 연동</li>
+          <li><b>uv</b> — MCP 서버용 고속 Python 패키지 관리자</li>
+        </ul>
+
+        <!-- 4.1 Node -->
+        <h3 class="th" id="node">4.1 Node.js 설치</h3>
+        <p>Node.js는 이커머스 애플리케이션의 백엔드 · 프론트엔드 실행에 필요합니다. <a href="https://nodejs.org" target="_blank" style="color:var(--primary-2)">nodejs.org</a>에서 <b>LTS 버전</b>(18.x 이상 권장)을 내려받거나 아래 명령으로 설치합니다.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os mac">macOS (Homebrew)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>brew install node</pre>
+        </div>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os linux">Linux (Debian · Ubuntu)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre><span class="cm"># NodeSource LTS 저장소를 통해 설치 (권장)</span>
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+sudo apt install -y nodejs</pre>
+        </div>
+        <div class="note">Windows는 <a href="https://nodejs.org" target="_blank" style="color:var(--primary-2)">nodejs.org</a>에서 받은 <code class="inl">.msi</code> 설치 파일을 실행해 마법사 안내를 따릅니다.</div>
+        <h4>설치 확인</h4>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os any">공통</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>node --version
+npm --version</pre>
+        </div>
+        <div class="verify">두 명령 모두 버전 번호가 출력되면 정상 설치된 것입니다.</div>
+
+        <!-- 4.2 Python -->
+        <h3 class="th" id="python">4.2 Python 설치</h3>
+        <p>Python은 여러 개발 도구와 백엔드 연동에 사용됩니다. <a href="https://python.org" target="_blank" style="color:var(--primary-2)">python.org</a>에서 3.8 이상을 내려받거나 아래 명령으로 설치합니다.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os mac">macOS (Homebrew)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>brew install python</pre>
+        </div>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os linux">Linux (Debian · Ubuntu)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>sudo apt install python3 python3-pip python-is-python3</pre>
+        </div>
+        <div class="warn"><b>Windows:</b> 설치 프로그램 실행 시 <b>"Add Python to PATH"</b> 체크박스를 반드시 선택하세요. 그래야 터미널에서 <code class="inl">python</code> 명령을 쓸 수 있습니다.</div>
+        <h4>설치 확인</h4>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os any">공통</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>python --version
+pip --version</pre>
+        </div>
+        <div class="note"><b>macOS 참고 —</b> <code class="inl">python</code> · <code class="inl">pip</code>가 아니라 <code class="inl">python3</code> · <code class="inl">pip3</code>만 된다면 셸 설정 파일에 별칭을 추가하세요.
+          <div class="cmd" style="margin-top:10px">
+            <div class="cmd-bar"><span class="os mac">macOS (zsh)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+            <pre>echo 'alias python="python3"' >> ~/.zshrc
+echo 'alias pip="pip3"' >> ~/.zshrc</pre>
+          </div>
+          적용 후 <b>현재 터미널 창을 닫고 새 터미널을 열면</b> 별칭이 반영됩니다.
+        </div>
+
+        <!-- 4.3 uv -->
+        <h3 class="th" id="uv">4.3 uv 설치</h3>
+        <p><b>uv</b>는 빠른 Python 패키지 설치 · 의존성 관리 도구로, Kiro가 Python 의존성과 MCP 서버를 관리할 때 사용합니다.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os win">Windows (PowerShell)</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</pre>
+        </div>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os mac">macOS</span><span class="os linux">Linux</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>curl -LsSf https://astral.sh/uv/install.sh | sh</pre>
+        </div>
+        <h4>설치 확인</h4>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os any">공통</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>uv --version</pre>
+        </div>
+        <div class="warn"><b>⚠️ uv 명령을 찾을 수 없다면,</b> 현재 터미널 창을 닫고 새 터미널을 연 뒤 다시 확인하세요 (PATH 갱신 필요).</div>
+      </section>
+
+      <!-- ========== Lab 5 ========== -->
+      <section id="lab5">
+        <span class="sec-tag">Lab 5</span>
+        <h2 class="sh">Vibe Coding으로 이커머스 웹 애플리케이션 만들기</h2>
+        <p class="lead">이 랩에서는 Kiro의 <b>Vibe Coding</b> 기능을 사용해, 자연어 프롬프트만으로 완전한 이커머스 웹사이트를 빠르게 구축합니다.</p>
+
+        <h4>Vibe Coding이란?</h4>
+        <p>Vibe Coding은 프로젝트 요구사항을 해석해 프론트엔드 · 백엔드 · 데이터베이스를 포함한 <b>전체 애플리케이션 아키텍처를 자동 생성</b>하는 Kiro의 AI 개발 모드입니다. 단순한 코드 생성 수준을 넘어, 비즈니스 로직 · 사용자 경험 패턴 · 기술 모범 사례까지 이해해 구현합니다.</p>
+
+        <h4>무엇을 만드나요?</h4>
+        <div class="build">
+          <div class="bcard"><b>3-tier 아키텍처</b><span>현대적 구조의 이커머스 웹 애플리케이션</span></div>
+          <div class="bcard"><b>React 프론트엔드</b><span>반응형 UI와 인터랙티브 컴포넌트</span></div>
+          <div class="bcard"><b>Node.js 백엔드</b><span>RESTful API와 비즈니스 로직</span></div>
+          <div class="bcard"><b>SQL 데이터베이스</b><span>스키마 설계와 데이터 관계</span></div>
+          <div class="bcard" style="grid-column:1/-1"><b>완전한 사용자 흐름</b><span>상품 둘러보기부터 장바구니 관리까지</span></div>
+        </div>
+
+        <!-- 5.1 -->
+        <h3 class="th">5.1 Kiro 대화창에 다음 프롬프트 입력</h3>
+        <p>Kiro 채팅 입력창에 아래 프롬프트를 붙여 넣고 보냅니다. Kiro가 요구사항을 해석해 애플리케이션 전체를 생성합니다.</p>
+        <div class="prompt">
+          <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+          <div class="pbody">세 개의 웹 페이지로 구성된 간단한 이커머스 웹사이트를 만들어줘. 다음을 포함해줘:
+1. 홈 페이지: 20개의 샘플 상품 목록 (상품 사진은 이모지로 대체)
+2. 상품 페이지: 상품 설명, 가격, 수량, 장바구니 담기 버튼, 그리고 샘플 사용자 리뷰
+3. 장바구니 페이지: 구매할 상품 목록, 총 결제 금액, 그리고 수량 변경·항목 삭제 같은 동작 버튼
+
+웹 애플리케이션은 3-tier 아키텍처를 기반으로 해줘:
+- UI 렌더링을 담당하는 React 기반 프론트엔드
+- 장바구니 담기·삭제 등 애플리케이션 로직을 담당하는 Node.js 기반 백엔드
+- 상품과 장바구니 항목을 저장하는 SQL 기반 데이터베이스</div>
+        </div>
+        <div class="note">생성에는 수 분이 걸릴 수 있습니다. Kiro가 파일을 만들고 의존성을 설치하는 동안 진행 상황을 지켜보세요. 중간에 승인 · 실행을 묻는 창이 뜨면 안내에 따라 허용합니다.</div>
+
+        <!-- 5.2 -->
+        <h3 class="th">5.2 애플리케이션 실행</h3>
+        <p>생성이 끝나면 아래 프롬프트를 보내 이커머스 웹사이트를 실행합니다.</p>
+        <div class="prompt">
+          <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+          <div class="pbody">애플리케이션을 실행해줘</div>
+        </div>
+
+        <!-- 5.3 -->
+        <h3 class="th">5.3 브라우저에서 확인</h3>
+        <p>이커머스 웹사이트가 웹 브라우저에서 자동으로 열립니다. 자동으로 열리지 않으면 아래 주소로 접속하세요.</p>
+        <div class="cmd">
+          <div class="cmd-bar"><span class="os any">브라우저 주소</span><span class="sp"></span><button class="copy" onclick="cp(this)">복사</button></div>
+          <pre>http://localhost:3000</pre>
+        </div>
+        <div class="muted">※ 포트가 3000이 아닐 수 있습니다. Kiro 출력이나 터미널에 표시된 포트 번호로 접속하세요.</div>
+
+        <!-- 5.4 -->
+        <h3 class="th">5.4 애플리케이션 테스트</h3>
+        <p>이커머스 웹사이트가 실행되면 핵심 기능을 하나씩 확인합니다.</p>
+        <ul class="check">
+          <li><b>상품 둘러보기</b> — 홈 페이지를 탐색하고 여러 상품을 클릭해 봅니다.</li>
+          <li><b>장바구니 담기</b> — 여러 상품을 장바구니에 담습니다.</li>
+          <li><b>장바구니 보기</b> — 장바구니 페이지로 이동해 담은 항목을 확인합니다.</li>
+          <li><b>수량 변경</b> — 항목 수량을 바꿔 봅니다.</li>
+          <li><b>항목 삭제</b> — 항목 삭제 기능을 테스트합니다.</li>
+        </ul>
+        <div class="note">기능이 제대로 동작하지 않으면, <b>문제 상황을 그대로 프롬프트로 적어 Kiro에게 보내면</b> 디버깅해 줍니다.</div>
+      </section>
+
+      <!-- ========== Troubleshooting ========== -->
+      <section id="trouble">
+        <span class="sec-tag">Troubleshooting</span>
+        <h2 class="sh">자주 발생하는 문제 해결</h2>
+        <p class="lead">아래 상황별로 해당 프롬프트를 Kiro에 보내면 자동으로 원인을 찾아 고쳐 줍니다.</p>
+
+        <h4>① 홈 페이지에 상품이 하나도 보이지 않을 때</h4>
+        <p class="muted">프론트엔드 · 백엔드 · 데이터베이스 간 통신 문제일 수 있습니다.</p>
+        <div class="prompt">
+          <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+          <div class="pbody">홈 페이지에 상품이 하나도 표시되지 않아</div>
+        </div>
+
+        <h4>② 장바구니 기능이 동작하지 않을 때</h4>
+        <div class="prompt">
+          <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+          <div class="pbody">장바구니의 항목 삭제 기능이 동작하지 않아</div>
+        </div>
+
+        <h4>③ 애플리케이션이 아예 시작되지 않을 때</h4>
+        <div class="prompt">
+          <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+          <div class="pbody">애플리케이션이 정상적으로 실행되지 않아</div>
+        </div>
+        <div class="note">위 예시는 참고일 뿐입니다. 어떤 문제든 <b>증상을 구체적으로 한국어로 설명</b>해 Kiro에게 보내면 됩니다. 예: "상품 페이지에서 장바구니 담기 버튼을 눌러도 아무 반응이 없어."</div>
+      </section>
+
+      <!-- ========== End ========== -->
+      <section id="end">
+        <span class="sec-tag">Lab 1 종료</span>
+        <h2 class="sh">실습 종료</h2>
+        <p>애플리케이션 테스트가 끝나면, 아래 프롬프트를 보내 이커머스 웹사이트를 중지합니다.</p>
+        <div class="prompt">
+          <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (한국어)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
+          <div class="pbody">애플리케이션을 중지해줘</div>
+        </div>
+        <p style="margin-top:18px"><b>수고하셨습니다.</b> 자연어 프롬프트만으로 3-tier 이커머스 웹 애플리케이션을 완성하고, 기본적인 디버깅까지 경험했습니다. 다음 워크숍에서는 여기에 AI 에이전트 챗봇을 더해 확장합니다.</p>
+      </section>
+
+      <footer>Agentic AI Workshop · Workshop 1 — Kiro Basic · 핸즈온 가이드</footer>
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* ── PIN 접근 제어 ── */
+if (!sessionStorage.getItem('aawClassAccess')
+    && location.hostname !== 'localhost'
+    && location.hostname !== '127.0.0.1') {
+  window.location.replace('../../AgenticAIWorkshop_gate_v1.html');
+}
+
+/* ── 사이드바 Day 토글 ── */
 function toggleDay(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
-/* ── OS 토글 ── */
-function setOS(os) {
-  localStorage.setItem('wsOS', os);
-  /* OS 버튼 활성화 상태 변경 */
-  document.querySelectorAll('.os-btn').forEach(function(b){
-    b.classList.toggle('active', b.dataset.os === os);
-  });
-  /* macOS 전용 요소 표시/숨김 */
-  document.querySelectorAll('.os-mac').forEach(function(el){
-    el.style.display = (os === 'mac') ? '' : 'none';
-  });
-  /* Windows 전용 요소 표시/숨김 */
-  document.querySelectorAll('.os-win').forEach(function(el){
-    el.style.display = (os === 'win') ? '' : 'none';
-  });
+/* ── 테마 토글 ── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtnHdr').textContent = isDark ? '🌙 다크' : '☀️ 라이트';
+  localStorage.setItem('aawTheme', isDark ? 'light' : 'dark');
 }
-
-/* ── 코드 복사 ── */
-function copyCode(btn) {
-  var code = btn.closest('.code-block').querySelector('code').textContent;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(code).then(function(){
-      btn.textContent = '✓ 복사됨';
-      setTimeout(function(){ btn.textContent = '복사'; }, 1500);
-    }).catch(function(){ fallbackCopy(btn, code); });
-  } else {
-    fallbackCopy(btn, code);
-  }
-}
-function fallbackCopy(btn, text) {
-  var ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.select();
-  try { document.execCommand('copy'); } catch(e){}
-  document.body.removeChild(ta);
-  btn.textContent = '✓ 복사됨';
-  setTimeout(function(){ btn.textContent = '복사'; }, 1500);
-}
-
-/* ── 진행 현황 추적 (IntersectionObserver) ── */
 (function(){
-  var taskIds = ['task1','task2','task3','task4','task5','task6'];
-  var TOTAL   = taskIds.length;
-  var seen    = {};
-
-  function updateProgress() {
-    var count = Object.keys(seen).length;
-    var pct   = Math.round(count / TOTAL * 100);
-    var progFill = document.getElementById('progFill');
-    var progText = document.getElementById('progText');
-    if (progFill) progFill.style.width = pct + '%';
-    if (progText) progText.textContent = count + ' / ' + TOTAL;
-    /* TOC 링크 활성화 */
-    taskIds.forEach(function(id){
-      var link = document.querySelector('.toc-link[href="#' + id + '"]');
-      if (link) link.classList.toggle('active', !!seen[id]);
-    });
-  }
-
-  if ('IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if (entry.isIntersecting) {
-          seen[entry.target.id] = true;
-          updateProgress();
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-
-    taskIds.forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+  const t = localStorage.getItem('aawTheme');
+  if (t) {
+    document.documentElement.setAttribute('data-theme', t);
+    const btn = document.getElementById('themeBtnHdr');
+    if (btn) btn.textContent = t === 'dark' ? '☀️ 라이트' : '🌙 다크';
   }
 })();
 
-/* ── 초기화: OS 토글 상태 복원 ── */
-document.addEventListener('DOMContentLoaded', function(){
-  var savedOS = localStorage.getItem('wsOS') || 'mac';
-  setOS(savedOS);
-});
-</script>
+/* ── 진행 현황 저장/복원 ── */
+function saveProg() {
+  const s = {};
+  for (let i = 0; i <= 5; i++) {
+    const el = document.getElementById('p' + i);
+    if (el) s['ws1_p' + i] = el.checked;
+  }
+  localStorage.setItem('ws1prog', JSON.stringify(s));
+}
+(function(){
+  try {
+    const s = JSON.parse(localStorage.getItem('ws1prog') || '{}');
+    for (let i = 0; i <= 5; i++) {
+      const el = document.getElementById('p' + i);
+      if (el && s['ws1_p' + i]) el.checked = true;
+    }
+  } catch(e) {}
+})();
 
+/* ── 복사 기능 ── */
+function flash(btn, txt){ const o=btn.textContent; btn.textContent=txt; btn.classList.add('done'); setTimeout(()=>{btn.textContent=o; btn.classList.remove('done');}, 1400); }
+function doCopy(text, btn, okLabel){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(()=>flash(btn, okLabel)).catch(()=>fallback(text, btn, okLabel));
+    } else { fallback(text, btn, okLabel); }
+  }catch(e){ fallback(text, btn, okLabel); }
+}
+function fallback(text, btn, okLabel){
+  try{
+    const ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    flash(btn, okLabel);
+  }catch(e){ flash(btn, '복사 실패'); }
+}
+/* 명령 블록 복사: 주석(.cm)은 제외 */
+function cp(btn){
+  const pre = btn.closest('.cmd').querySelector('pre').cloneNode(true);
+  pre.querySelectorAll('.cm').forEach(e=>e.remove());
+  const text = pre.textContent.replace(/\n{2,}/g,'\n').trim();
+  doCopy(text, btn, '복사됨 ✓');
+}
+/* 프롬프트 복사 */
+function cpk(btn){
+  const text = btn.closest('.prompt').querySelector('.pbody').textContent.trim();
+  doCopy(text, btn, '복사됨 ✓');
+}
+</script>
 </body>
 </html>
