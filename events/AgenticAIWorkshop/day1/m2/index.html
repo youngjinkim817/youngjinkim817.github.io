@@ -94,6 +94,10 @@ html.dark .sticknav{background:#0a0a0a;border-top-color:#3a3a6a;}
 .fs-close{height:28px;padding:0 12px;border-radius:7px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
 .fs-close:hover{background:rgba(255,255,255,.22);}
 #fsFrame{flex:1;width:100%;border:none;display:block;}
+.navday-toggle{background:transparent;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;flex-shrink:0;margin-top:1px;}
+.navday-link{flex:1;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:2px;}
+.navday-link:hover .navday-name{color:var(--primary);}
+html.dark .navday-link:hover .navday-name{color:var(--primary)!important;}
 html.dark *{--border:#3a3a6a!important;}
 html.dark body,html.dark aside,html.dark main,html.dark .sticknav{background-color:#0a0a0a;}
 html.dark .navday-name{color:#F1F5F9!important;}
@@ -115,11 +119,17 @@ if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhos
 </header>
 <div class="layout">
   <aside>
-    <div class="navday open" id="nd1">
-      <button class="navday-hd" onclick="toggleDay('nd1')">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div><div class="navday-badge">Day 1</div><div class="navday-name">Generative AI 이해하기</div></div>
-      </button>
+    <!-- Day 1 (펼침, M2 활성) -->
+    <div class="navday open" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')" aria-label="Day 1 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day1/" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Generative AI 이해하기</span>
+        </a>
+      </div>
       <div class="navday-body">
         <a class="nav-module" href="../../learn/day1/">Day 1 개요</a>
         <a class="nav-module" href="../m1/">M1. Kiro 소개</a>
@@ -127,41 +137,57 @@ if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhos
         <a class="nav-module" href="../../hol/ws1/">Workshop 1. Kiro Basic</a>
       </div>
     </div>
-    <div class="navday" id="nd2">
-      <button class="navday-hd" onclick="toggleDay('nd2')">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div><div class="navday-badge">Day 2</div><div class="navday-name">Developing GenAI App on AWS</div></div>
-      </button>
+
+    <!-- Day 2 (접힘) -->
+    <div class="navday" id="navday-2">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-2')" aria-label="Day 2 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day2/" class="navday-link">
+          <span class="navday-badge">Day 2</span>
+          <span class="navday-name">Developing GenAI App on AWS</span>
+        </a>
+      </div>
       <div class="navday-body">
         <a class="nav-module" href="../../learn/day2/">Day 2 개요</a>
         <a class="nav-module" href="../../day2/m3/">M3. Amazon Bedrock 활용</a>
         <a class="nav-module" href="../../day2/m4/">M4. Agentic AI &amp; MCP</a>
       </div>
     </div>
-    
+
     <!-- Day 3 (접힘) -->
-    <div class="navday" id="nd3">
-      <button class="navday-hd" onclick="toggleDay('nd3')">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div><div class="navday-badge">Day 3</div><div class="navday-name">Strands Agents &amp; AgentCore</div></div>
-      </button>
+    <div class="navday" id="navday-3">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-3')" aria-label="Day 3 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day3/" class="navday-link">
+          <span class="navday-badge">Day 3</span>
+          <span class="navday-name">Strands Agents &amp; AgentCore</span>
+        </a>
+      </div>
       <div class="navday-body">
         <a class="nav-module" href="../../learn/day3/">Day 3 개요</a>
         <a class="nav-module" href="../../day3/m5/">M5. Strands Agents SDK</a>
         <a class="nav-module" href="../../day3/m6/">M6. Amazon Bedrock AgentCore</a>
       </div>
     </div>
-    
+
     <!-- Day 4 (접힘) -->
-    <div class="navday" id="nd4">
-      <button class="navday-hd" onclick="toggleDay('nd4')">
-        <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        <div><div class="navday-badge">Day 4</div><div class="navday-name">Kiro 고급 기능</div></div>
-      </button>
+    <div class="navday" id="navday-4">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-4')" aria-label="Day 4 열기/닫기">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../../learn/day4/" class="navday-link">
+          <span class="navday-badge">Day 4</span>
+          <span class="navday-name">Kiro 고급 기능</span>
+        </a>
+      </div>
       <div class="navday-body">
         <a class="nav-module" href="../../learn/day4/">Day 4 개요</a>
         <a class="nav-module" href="../../day4/m7/">M7. Kiro 고급 기능</a>
-
         <a class="nav-module" href="../../hol/ws2/">Workshop 2. Kiro Advanced</a>
       </div>
     </div>
@@ -193,7 +219,7 @@ if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhos
 </div>
 <div id="fsOverlay">
   <div class="fs-bar">
-    <span class="fs-info" id="fsInfo">M2. AI 기술 이해 — 1 / 38</span>
+    <span class="fs-info" id="fsInfo">M2. AI 이해하기 — 1 / 38</span>
     <div class="fs-nav-btns">
       <button onclick="nav(-1)">← 이전</button>
       <span class="fs-cnt" id="fsCnt">1 / 38</span>
@@ -270,7 +296,7 @@ function goTo(n) {
   try { document.getElementById('progFill').style.width = ((cur+1)/N*100).toFixed(1)+'%'; } catch(e) {}
   try { document.getElementById('snCnt').textContent = d; } catch(e) {}
   try { document.getElementById('fsCnt').textContent = d; } catch(e) {}
-  try { document.getElementById('fsInfo').textContent = 'M2. AI 기술 이해 — ' + d; } catch(e) {}
+  try { document.getElementById('fsInfo').textContent = 'M2. AI 이해하기 — ' + d; } catch(e) {}
   try {
     document.getElementById('btnPrev').disabled = cur===0;
     document.getElementById('btnNext').disabled = cur===N-1;
@@ -399,17 +425,17 @@ var NOTES = [
   // [27] 파운데이션 모델 살펴보기
   {t:'파운데이션 모델 살펴보기',h:"<div class='note-section'><div class='note-section-title'>Amazon Bedrock FM 상세</div><ul><li><span class='note-kw'>Amazon Titan Text</span>: AWS 자체 개발. 영어 중심 범용 텍스트</li><li><span class='note-kw'>Amazon Nova</span>: 최신 AWS FM. 텍스트·이미지·비디오 멀티모달</li><li><span class='note-kw'>Anthropic Claude</span>: Haiku(속도), Sonnet(균형), Opus(성능). 긴 Context 처리 강점</li><li><span class='note-kw'>Meta Llama 3</span>: 오픈소스 계열. 온프레미스 배포 가능</li><li><span class='note-kw'>Mistral</span>: 유럽 기반. 효율적인 소형 모델 강점</li><li><span class='note-kw'>Stability AI</span>: Stable Diffusion. 이미지 생성 특화</li></ul></div><div class='note-section'><div class='note-section-title'>모델 선택 기준</div><ul><li><span class='note-kw'>태스크 유형</span>: 텍스트 생성 vs 이미지 생성 vs 임베딩</li><li><span class='note-kw'>비용·레이턴시</span>: Haiku(빠름·저가) vs Opus(느림·고가)</li><li><span class='note-kw'>컨텍스트 창 크기</span>: 긴 문서 처리 필요 시 200K 이상 모델</li><li><span class='note-kw'>데이터 거주지(Data Residency)</span>: 특정 리전에서만 처리 필요 시</li></ul></div>"},
 
-  // [28] (섹션 구분) AI를 잘 쓰는 법
-  {t:'AI를 잘 쓰는 법',h:"<div class='note-section'><div class='note-section-title'>섹션 개요</div><p>파운데이션 모델은 강력하지만 완벽하지 않습니다. 최신 정보가 없고, 특정 도메인 지식이 부족하며, 회사 내부 데이터를 알지 못합니다. <strong>AI를 잘 쓰는 법</strong>은 이 한계를 극복하는 전략입니다.</p></div><div class='note-section'><div class='note-section-title'>5가지 전략 개요 (비용·복잡도 순)</div><ol><li><span class='note-kw'>프롬프트 엔지니어링(Prompt Engineering)</span>: 즉시, 무료. 입력 텍스트 최적화</li><li><span class='note-kw'>컨텍스트 학습(In-Context Learning)</span>: 즉시, 낮음. 프롬프트에 예시 포함</li><li><span class='note-kw'>RAG(Retrieval-Augmented Generation)</span>: 중간 복잡도. 외부 지식 검색 후 주입</li><li><span class='note-kw'>파인튜닝(Fine-tuning)</span>: 높음. 도메인 데이터로 추가 학습</li><li><span class='note-kw'>사전훈련(Pre-training)</span>: 매우 높음. 새 모델 처음부터 훈련</li></ol></div><div class='note-case'><div class='note-case-label'>실무 조언</div><p><strong>대부분의 실용적 문제는 프롬프트 + RAG로 충분</strong>합니다. 파인튜닝은 특정 스타일·어투·전문 용어가 필요할 때 고려합니다.</p></div>"},
+  // [28] 모델 선택 기준
+  {t:'모델 선택 기준',h:"<div class='note-section'><div class='note-section-title'>모델 선택의 중요성</div><p>Amazon Bedrock은 여러 제공사의 <span class='note-kw'>파운데이션 모델(Foundation Model)</span>을 동일한 API로 호출할 수 있게 해줍니다. 모델마다 성능·비용·속도·특기 분야가 서로 다르기 때문에 작업 목적에 맞는 모델을 선택하는 것이 비용 효율과 품질 모두에서 중요합니다.</p></div><div class='note-section'><div class='note-section-title'>세 가지 핵심 선택 기준</div><ul><li><span class='note-kw'>작업 유형(Task Type)</span>: 텍스트 생성·요약·번역에는 LLM, 이미지 생성에는 Stable Diffusion·Titan Image, 코드 생성에는 Claude·Amazon Nova Pro가 적합합니다. 멀티모달 입력이 필요하면 이미지 이해 지원 모델을 선택합니다</li><li><span class='note-kw'>성능 vs 비용(Performance vs Cost)</span>: 고성능 모델(Claude Sonnet/Opus·Nova Pro)은 복잡한 추론에 뛰어나지만 토큰당 비용이 높습니다. 실시간 챗봇이나 단순 분류 작업에는 Claude Haiku·Nova Micro처럼 소형 모델이 비용 효율적입니다</li><li><span class='note-kw'>속도(Latency/Speed)</span>: 실시간 대화는 1~2초 이내 응답이 요구됩니다. 비동기 배치 처리(대량 문서 요약)는 지연을 허용할 수 있어 더 강력한 모델을 활용할 수 있습니다</li></ul></div><div class='note-section'><div class='note-section-title'>추가 고려 사항</div><ul><li><span class='note-kw'>컨텍스트 창 크기</span>: 긴 문서나 누적 대화 이력이 필요하면 200K 토큰 이상 모델 선택</li><li><span class='note-kw'>멀티모달 지원</span>: 이미지·문서 입력이 필요하면 멀티모달 지원 모델 선택 (Claude 3, Amazon Nova)</li><li><span class='note-kw'>데이터 거주지(Data Residency)</span>: 특정 AWS 리전에서만 처리해야 하는 규정 준수 요건을 반드시 확인합니다</li></ul></div><div class='note-case'><div class='note-case-label'>사용 사례: 모델 선택 시나리오</div><p>고객 지원 챗봇 → Claude Haiku(빠름·저가). 계약서 분석 시스템 → Claude Sonnet(균형). 복잡한 코드 아키텍처 리뷰 → Claude Opus(고성능). 배치 문서 요약 파이프라인 → <strong>Amazon Nova Lite(비용 최적화)</strong>. 같은 API로 모델만 교체하면 되므로 실험과 전환이 용이합니다.</p></div>"},
 
-  // [29] (섹션 구분) 커스터마이징 전략
-  {t:'커스터마이징 전략',h:"<div class='note-section'><div class='note-section-title'>올바른 도구 선택</div><p>과도한 커스터마이징은 비용 낭비입니다. 문제에 맞는 최소한의 전략을 선택하는 것이 핵심입니다.</p></div><div class='note-section'><div class='note-section-title'>전략 선택 순서</div><ol><li><span class='note-kw'>프롬프트 엔지니어링</span> → 명확한 지시만으로도 해결되는지 먼저 확인</li><li><span class='note-kw'>RAG</span> → 최신 데이터나 도메인 지식을 추가해야 하는 경우</li><li><span class='note-kw'>파인튜닝</span> → 특정 응답 스타일·어투·전문 용어를 모델에 내재화해야 하는 경우</li><li><span class='note-kw'>사전훈련</span> → 기존 모델로 커버되지 않는 완전히 새로운 도메인이 필요한 경우</li></ol></div><div class='note-case'><div class='note-case-label'>핵심 원칙</div><p>단계를 건너뛰지 마세요. <strong>프롬프트로 70% 해결 → RAG로 25% 보완 → 나머지 5%만 파인튜닝</strong>이 현실적인 분포입니다.</p></div>"},
+  // [29] 파운데이션 모델의 도전 과제
+  {t:'파운데이션 모델의 도전 과제',h:"<div class='note-section'><div class='note-section-title'>범용 모델의 한계</div><p>파운데이션 모델은 매우 강력하지만 실제 비즈니스 환경에 바로 적용하기에는 여섯 가지 근본적인 한계가 있습니다. 이 한계를 명확히 이해해야 적절한 보완 전략을 설계할 수 있습니다.</p></div><div class='note-section'><div class='note-section-title'>여섯 가지 도전 과제</div><ul><li><span class='note-kw'>환각(Hallucination)</span>: 모델이 사실이 아닌 정보를 그럴듯하게 생성합니다. 존재하지 않는 논문, 틀린 수치, 잘못된 법령 인용을 확신에 차서 출력하는 현상입니다. RAG로 출처 기반 답변을 강제해 크게 완화할 수 있습니다</li><li><span class='note-kw'>최신 정보 부재(Knowledge Cutoff)</span>: 훈련 데이터에는 특정 날짜 이후의 정보가 없습니다. 최신 법령 개정, 신제품 스펙, 최근 사건을 알지 못합니다. RAG로 최신 문서를 검색·주입해 해결합니다</li><li><span class='note-kw'>내부 데이터 접근 불가</span>: 사내 ERP, 고객 DB, 내부 문서에 접근할 수 없습니다. 회사 고유 지식과 절차를 모릅니다. RAG(Knowledge Bases) 또는 Function Calling으로 연결해 해결합니다</li><li><span class='note-kw'>일관성 부족(Inconsistency)</span>: 동일한 질문에도 매번 다른 답변이 나올 수 있습니다. Temperature 파라미터 조정과 명확한 시스템 프롬프트로 일관성을 높일 수 있습니다</li><li><span class='note-kw'>도메인 전문성 부족</span>: 법률·의료·금융 등 고도로 전문화된 영역의 지식과 판단이 부족합니다. 파인튜닝 또는 전문 도메인 문서 기반 RAG로 보강합니다</li><li><span class='note-kw'>비용·지연 최적화 필요</span>: 고성능 모델은 비용이 높고 응답이 느립니다. 태스크별 최적 모델 선택과 프롬프트 압축으로 비용과 응답 속도를 함께 관리해야 합니다</li></ul></div><div class='note-case'><div class='note-case-label'>해결책 매핑</div><p>환각·최신 정보·내부 데이터 부재 → <strong>RAG</strong>. 응답 스타일·어투·전문 용어 내재화 → <strong>Fine-tuning</strong>. 비용·속도 문제 → <strong>모델 선택 + 프롬프트 최적화</strong>. 이 세 전략이 FM 도전 과제의 90% 이상을 해결합니다.</p></div>"},
 
   // [30] 생성형 AI 커스터마이징
   {t:'생성형 AI 커스터마이징',h:"<div class='note-section'><div class='note-section-title'>5가지 커스터마이징 방법 비교</div><ul><li><span class='note-kw'>프롬프트 엔지니어링</span>: 구현 시간 즉시, 비용 최저, 범용 태스크에 적합</li><li><span class='note-kw'>컨텍스트 학습(In-Context)</span>: 구현 시간 즉시, 비용 낮음, 소수 예시 제공</li><li><span class='note-kw'>RAG</span>: 구현 시간 중간, 비용 중간, 최신 정보·도메인 지식 추가</li><li><span class='note-kw'>파인튜닝</span>: 구현 시간 높음, 비용 높음, 특화된 동작·스타일 변경</li><li><span class='note-kw'>사전훈련</span>: 구현 시간 매우 높음, 비용 매우 높음, 완전히 새로운 도메인</li></ul></div><div class='note-case'><div class='note-case-label'>Day 2 실습 예고</div><p>내일(Day 2)에는 <strong>RAG</strong>를 직접 구현합니다. Amazon Bedrock Knowledge Bases와 OpenSearch Serverless를 사용해 회사 문서로 질의응답 시스템을 구축합니다.</p></div>"},
 
-  // [31] (섹션 구분) 프롬프트 엔지니어링
-  {t:'프롬프트 엔지니어링',h:"<div class='note-section'><div class='note-section-title'>섹션 개요</div><p><span class='note-kw'>프롬프트 엔지니어링(Prompt Engineering)</span>은 LLM에게 전달하는 입력 텍스트(프롬프트)를 최적화하여 원하는 결과를 얻는 기술입니다.</p></div><div class='note-section'><div class='note-section-title'>왜 중요한가</div><p>같은 모델, 같은 질문이라도 프롬프트 품질에 따라 결과가 크게 달라집니다. 잘 설계된 프롬프트는 잘못된 프롬프트보다 <strong>10배 이상 더 유용한 결과</strong>를 만들어냅니다.</p></div><div class='note-case'><div class='note-case-label'>개발자 필수 역량</div><p>AI 시대의 개발자에게 프롬프트 엔지니어링은 기본 역량입니다. 코드를 직접 짜는 시간보다 <strong>AI에게 올바른 지시를 내리는 역량</strong>이 더 중요해지고 있습니다.</p></div>"},
+  // [31] 컨텍스트 개념
+  {t:'컨텍스트 개념',h:"<div class='note-section'><div class='note-section-title'>컨텍스트란 무엇인가</div><p><span class='note-kw'>컨텍스트(Context)</span>는 사용자의 질문과 함께 모델에게 전달되는 모든 추가 정보의 총칭입니다. 단순히 질문 한 줄이 아니라, 그 질문을 이해하고 답변하는 데 필요한 배경 정보·이전 대화·참조 문서·시스템 지시를 모두 포함하는 개념입니다.</p></div><div class='note-section'><div class='note-section-title'>컨텍스트의 네 가지 구성 요소</div><ul><li><span class='note-kw'>시스템 프롬프트(System Prompt)</span>: 모델의 역할, 행동 방침, 응답 형식을 미리 설정하는 지시입니다. 대화 전체에 일관되게 적용됩니다</li><li><span class='note-kw'>과거 대화 이력(Conversation History)</span>: 이전 질문-답변 쌍의 누적 기록입니다. LLM은 자체 상태(State)를 유지하지 않으므로 매 API 요청에 이력을 다시 포함해야 합니다</li><li><span class='note-kw'>RAG 검색 결과</span>: 벡터 DB에서 질문과 유사한 문서 청크를 검색해 주입합니다. 최신 정보와 도메인 특화 지식을 공급합니다</li><li><span class='note-kw'>파일·이미지</span>: 멀티모달 입력으로, 분석할 문서·이미지·표·코드 파일을 컨텍스트에 직접 포함시킵니다</li></ul></div><div class='note-section'><div class='note-section-title'>컨텍스트 흐름 (3단계)</div><p>사용자 요청이 들어오면 ① 시스템 프롬프트·이력·RAG 결과·파일을 모아 <span class='note-kw'>프롬프트(Prompt)</span>를 구성하고, ② 이를 모델에 전달하면, ③ 모델이 컨텍스트 창 내의 모든 정보를 참조해 <span class='note-kw'>응답(Response)</span>을 생성합니다. 컨텍스트가 풍부하고 정확할수록 응답의 품질이 높아집니다.</p></div><div class='note-case'><div class='note-case-label'>사용 사례: 고객 지원 봇</div><p>시스템 프롬프트(역할 지시·말투) + 고객 이전 구매·문의 이력(RAG) + 제품 매뉴얼 청크(RAG) + 현재 질문(사용자 프롬프트)을 함께 전달하면, 모델은 고객 맥락에 맞는 정확한 응대를 생성합니다. <strong>컨텍스트 설계 품질이 AI 응용의 완성도를 결정</strong>합니다.</p></div>"},
 
   // [32] 프롬프트란 무엇인가?
   {t:'프롬프트란 무엇인가?',h:"<div class='note-section'><div class='note-section-title'>프롬프트 정의</div><p><span class='note-kw'>프롬프트(Prompt)</span>는 LLM에게 전달하는 입력 텍스트 전체입니다. 사용자의 질문만이 아니라 시스템 지시, 맥락 문서, 예시까지 모두 포함합니다.</p></div><div class='note-section'><div class='note-section-title'>좋은 프롬프트의 특징</div><ul><li><span class='note-kw'>명확한 지시</span>: 무엇을 원하는지 구체적으로 명시</li><li><span class='note-kw'>충분한 맥락</span>: 필요한 배경 정보 제공</li><li><span class='note-kw'>출력 형식 지정</span>: JSON, 불렛 포인트, 3줄 이내 등 명시</li></ul></div><div class='note-section'><div class='note-section-title'>나쁜 예 vs 좋은 예</div><ul><li><strong>나쁜 예</strong>: <code>이거 설명해줘</code></li><li><strong>좋은 예</strong>: <code>AWS Lambda의 콜드 스타트 문제를 초보 개발자에게 설명해줘. 핵심만 3가지 불렛으로 정리해줘.</code></li></ul></div>"},
