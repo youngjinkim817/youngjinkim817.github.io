@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workshop. 개인 프로젝트 — Spec Driven Development with Kiro</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+:root{--bg:#ffffff;--bg-alt:#f0f9ff;--bg-soft:#e0f2fe;--primary:#1E40AF;--secondary:#7C3AED;--t1:#1e3a5f;--t2:#3730a3;--t3:#6B7280;--border:#bfdbfe;--tag:#dbeafe;}
+html.dark{--bg:#0a0a0f;--bg-alt:#0f172a;--bg-soft:#1e1b4b;--primary:#93C5FD;--secondary:#C4B5FD;--t1:#E0F2FE;--t2:#94A3B8;--t3:#64748B;--border:#1e3a5f;--tag:#1e1b4b;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--t1);font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;font-size:17px;line-height:1.75;transition:background .2s,color .2s;}
+body{display:flex;flex-direction:column;}
+header.top{position:sticky;top:0;z-index:200;height:64px;flex:none;display:flex;align-items:center;gap:16px;padding:0 24px;background:#fff;border-bottom:2px solid var(--border);transition:background .25s,border-color .25s;}
+html.dark header.top{background:#0a0a0f;border-bottom-color:#1e3a5f;}
+header.top .brand{font-weight:800;font-size:18px;color:var(--primary);letter-spacing:-.02em;}
+header.top .brand b{color:var(--secondary);}
+.themebtn{margin-left:auto;width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;}
+.themebtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;}.themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;}html.dark .themebtn .sun{display:block;}
+.layout{flex:1;display:grid;grid-template-columns:240px 1fr;overflow:hidden;}
+aside{border-right:1px solid var(--border);padding:18px 12px;overflow-y:auto;height:100%;background:var(--bg);display:flex;flex-direction:column;gap:4px;transition:background .25s;}
+html.dark aside{border-right-color:#1e3a5f;}
+.navday{margin-bottom:2px;}.navday-hd{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:8px;transition:background .15s;}.navday-hd:hover{background:var(--tag);}
+.navday-toggle{background:transparent;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;flex-shrink:0;margin-top:1px;}
+.navday-link{flex:1;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:2px;}
+.navday-arr{width:14px;height:14px;flex-shrink:0;margin-top:3px;color:var(--t3);transition:transform .22s ease;fill:none;stroke:currentColor;stroke-width:2.5;}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:12px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 6px 22px;border-left:2px solid var(--border);margin-left:13px;display:none;}
+.navday.open>.navday-body{display:block;}
+html.dark .navday-body{border-left-color:#1e3a5f;}
+.nav-module{display:block;padding:7px 10px;border-radius:6px;font-size:13px;font-weight:500;color:var(--t1);border-left:2px solid transparent;text-decoration:none;transition:background .15s;}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.prog-box{margin-top:16px;padding:10px 12px;background:var(--bg-alt);border-radius:10px;border:1px solid var(--border);}
+.prog-box-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.prog-check{display:flex;align-items:center;gap:8px;padding:4px 2px;font-size:12px;font-weight:500;color:var(--t1);cursor:pointer;user-select:none;}
+.prog-check input[type=checkbox]{accent-color:var(--primary);width:13px;height:13px;flex-shrink:0;}
+.exit-classroom-btn{display:flex;align-items:center;gap:8px;margin:12px 0 8px;padding:9px 12px;border-radius:8px;background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.25);color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s;}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+main{overflow:hidden;display:flex;flex-direction:column;}
+.guide-frame{flex:1;width:100%;border:none;display:block;}
+html.dark *{--border:#1e3a5f !important;}
+html.dark body,html.dark aside,html.dark main{background-color:#0a0a0f;}
+html.dark .navday-name,html.dark .nav-module{color:#E0F2FE !important;}
+html.dark .navday-badge{color:#C4B5FD !important;}
+html.dark .nav-module.active{background:rgba(147,197,253,.15) !important;color:#93C5FD !important;border-left-color:#93C5FD !important;}
+</style>
+</head>
+<body>
+<script>
+if(!sessionStorage.getItem('sddAccess')&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
+  window.location.replace('../gate.html');
+}
+</script>
+<header class="top">
+  <span class="brand">Spec Driven Development <b>with Kiro</b></span>
+  <button class="themebtn" id="themeToggle" aria-label="배경 전환">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+<div class="layout">
+  <aside>
+    <div class="navday open" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../learn/day1/" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Spec Driven Development with Kiro</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../learn/day1/">Day 1 개요</a>
+        <a class="nav-module" href="../m1/">M1. AWS Cloud &amp; AI 기초</a>
+        <a class="nav-module" href="../m2/">M2. Kiro &amp; 스펙 기반 개발</a>
+        <a class="nav-module active" href="#">Workshop. 개인 프로젝트</a>
+      </div>
+    </div>
+    <div class="prog-box" style="margin-top:16px;">
+      <div class="prog-box-label">태스크 진행</div>
+      <label class="prog-check"><input type="checkbox" id="p0" onchange="saveProg()"> 사전 준비</label>
+      <label class="prog-check"><input type="checkbox" id="p1" onchange="saveProg()"> Task 1</label>
+      <label class="prog-check"><input type="checkbox" id="p2" onchange="saveProg()"> Task 2</label>
+      <label class="prog-check"><input type="checkbox" id="p3" onchange="saveProg()"> Task 3</label>
+      <label class="prog-check"><input type="checkbox" id="p4" onchange="saveProg()"> Task 4</label>
+      <label class="prog-check"><input type="checkbox" id="p5" onchange="saveProg()"> Task 5</label>
+      <label class="prog-check"><input type="checkbox" id="p6" onchange="saveProg()"> Task 6</label>
+      <label class="prog-check"><input type="checkbox" id="p7" onchange="saveProg()"> Task 7</label>
+    </div>
+    <a href="../intro.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </aside>
+  <main>
+    <iframe class="guide-frame" src="./ws1guide.html" title="Workshop 핸즈온 가이드"></iframe>
+  </main>
+</div>
+<script>
+function toggleDay(id){document.getElementById(id).classList.toggle('open');}
+var html=document.documentElement,btn=document.getElementById('themeToggle');
+if(localStorage.getItem('sddThemeDark')==='1') html.classList.add('dark');
+btn.addEventListener('click',function(){
+  var dark=html.classList.toggle('dark');
+  localStorage.setItem('sddThemeDark',dark?'1':'0');
+});
+function saveProg(){
+  var s={};
+  for(var i=0;i<=7;i++){var el=document.getElementById('p'+i);if(el)s['sdd_p'+i]=el.checked;}
+  localStorage.setItem('sddprog',JSON.stringify(s));
+}
+(function(){
+  try{
+    var d=JSON.parse(localStorage.getItem('sddprog')||'{}');
+    for(var i=0;i<=7;i++){var el=document.getElementById('p'+i);if(el&&d['sdd_p'+i])el.checked=true;}
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

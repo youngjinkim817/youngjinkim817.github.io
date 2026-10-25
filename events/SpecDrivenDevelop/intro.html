@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spec Driven Development with Kiro</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;background:#0a0a1a;color:#fff;}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;background:linear-gradient(135deg,#0a0a1a 0%,#0d1b4b 50%,#1a0a3d 100%);}
+.kiro-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(147,197,253,.12);border:1px solid rgba(147,197,253,.3);border-radius:999px;padding:7px 18px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#93C5FD;margin-bottom:28px;}
+.kiro-badge .dot{width:7px;height:7px;border-radius:50%;background:#93C5FD;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+h1{font-size:clamp(28px,5vw,52px);font-weight:800;line-height:1.15;letter-spacing:-.03em;margin-bottom:16px;}
+h1 .blue{color:#93C5FD;}
+h1 .violet{color:#C4B5FD;}
+.subtitle{font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,.65);line-height:1.7;max-width:580px;margin-bottom:36px;}
+.cta{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#1E40AF,#7C3AED);color:#fff;font-family:'Pretendard',sans-serif;font-size:16px;font-weight:700;border:none;border-radius:14px;padding:16px 36px;cursor:pointer;transition:all .25s;text-decoration:none;box-shadow:0 8px 32px rgba(124,58,237,.35);}
+.cta:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(124,58,237,.5);}
+.highlights{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:48px;}
+.hl{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 22px;font-size:13px;color:rgba(255,255,255,.75);}
+.hl b{display:block;font-size:18px;color:#fff;font-weight:800;margin-bottom:2px;}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="kiro-badge"><span class="dot"></span> AWS Kiro 1-Day Workshop</div>
+  <h1><span class="blue">Spec Driven</span><br><span class="violet">Development</span><br>with Kiro</h1>
+  <p class="subtitle">AWS Kiro의 스펙 기반 개발 방식을 익히고,<br>하루 만에 작동하는 웹사이트를 직접 만들어 봅니다.</p>
+  <a class="cta" href="./gate.html">강의실 입장 →</a>
+  <div class="highlights">
+    <div class="hl"><b>1일</b>집중 과정</div>
+    <div class="hl"><b>M1 + M2</b>강의 모듈</div>
+    <div class="hl"><b>개인 프로젝트</b>산출물 제작</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Day 1 개요 — Spec Driven Development with Kiro</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+:root{--bg:#ffffff;--bg-alt:#f0f9ff;--bg-soft:#e0f2fe;--primary:#1E40AF;--secondary:#7C3AED;--accent:#D97706;--t1:#1e3a5f;--t2:#3730a3;--t3:#6B7280;--border:#bfdbfe;--tag:#dbeafe;--sh:0 2px 8px rgba(30,64,175,.08);}
+html.dark{--bg:#0a0a0f;--bg-alt:#0f172a;--bg-soft:#1e1b4b;--primary:#93C5FD;--secondary:#C4B5FD;--t1:#E0F2FE;--t2:#94A3B8;--t3:#64748B;--border:#1e3a5f;--tag:#1e1b4b;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--t1);font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;font-size:16px;line-height:1.75;transition:background .2s,color .2s;}
+header.top{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:center;gap:16px;padding:0 24px;background:#fff;border-bottom:2px solid var(--border);transition:background .25s;}
+html.dark header.top{background:#0a0a0f;border-bottom-color:#1e3a5f;}
+header.top .brand{font-weight:800;font-size:18px;color:var(--primary);}header.top .brand b{color:var(--secondary);}
+.themebtn{margin-left:auto;width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+.themebtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;}.themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;}html.dark .themebtn .sun{display:block;}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
+aside{border-right:1px solid var(--border);padding:18px 12px;overflow-y:auto;position:sticky;top:64px;height:calc(100vh - 64px);background:var(--bg);display:flex;flex-direction:column;gap:4px;}
+html.dark aside{border-right-color:#1e3a5f;}
+.navday{margin-bottom:2px;}.navday-hd{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:8px;transition:background .15s;}.navday-hd:hover{background:var(--tag);}
+.navday-toggle{background:transparent;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;flex-shrink:0;margin-top:1px;}
+.navday-link{flex:1;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:2px;}
+.navday-arr{width:14px;height:14px;flex-shrink:0;margin-top:3px;color:var(--t3);transition:transform .22s ease;fill:none;stroke:currentColor;stroke-width:2.5;}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:12px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 6px 22px;border-left:2px solid var(--border);margin-left:13px;display:none;}
+.navday.open>.navday-body{display:block;}
+.nav-module{display:block;padding:7px 10px;border-radius:6px;font-size:13px;font-weight:500;color:var(--t1);border-left:2px solid transparent;text-decoration:none;transition:background .15s;}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.exit-classroom-btn{display:flex;align-items:center;gap:8px;margin:12px 0 8px;padding:9px 12px;border-radius:8px;background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.25);color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s;}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+main{padding:32px 36px 60px;}
+.day-header{margin-bottom:28px;}
+.day-eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);margin-bottom:6px;}
+.day-title{font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-.02em;margin:0 0 8px;}
+.day-desc{font-size:15px;color:var(--t2);line-height:1.7;max-width:680px;}
+.section{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;padding:24px 28px;margin-bottom:24px;box-shadow:var(--sh);}
+.section-title{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin-bottom:16px;}
+.timetable{width:100%;border-collapse:collapse;font-size:14px;background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+html.dark .timetable{background:#111;}
+.timetable thead th{background:var(--bg-soft);text-align:left;padding:10px 14px;font-size:11.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);}
+.timetable tbody td{padding:10px 14px;border-top:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.timetable tbody tr:hover td{background:rgba(30,64,175,.03);}
+.tt-time{white-space:nowrap;font-weight:700;color:var(--secondary);font-size:13px;width:130px;}
+.tt-type{width:100px;}
+.tt-type span{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;}
+.tt-type .lec{background:rgba(30,64,175,.1);color:var(--primary);}
+.tt-type .lab{background:rgba(5,150,105,.12);color:#059669;}
+.tt-type .break{background:#f1f5f9;color:#64748B;}
+html.dark .tt-type .lec{background:rgba(147,197,253,.15);color:#93C5FD;}
+html.dark .tt-type .lab{background:rgba(52,211,153,.1);color:#34D399;}
+html.dark .tt-type .break{background:#1e293b;color:#64748B;}
+.tt-content{color:var(--t1);font-size:13.5px;}
+.tt-content .highlight{font-weight:700;color:var(--primary);}
+html.dark .tt-content .highlight{color:#93C5FD;}
+.module-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.module-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:18px 20px;text-decoration:none;color:inherit;transition:all .2s;display:flex;flex-direction:column;gap:6px;}
+.module-card:hover{border-color:var(--primary);box-shadow:0 4px 16px rgba(30,64,175,.1);transform:translateY(-2px);}
+.mc-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--secondary);}
+.mc-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--secondary);}
+.mc-title{font-size:15px;font-weight:700;color:var(--primary);line-height:1.3;}
+.mc-desc{font-size:12.5px;color:var(--t3);line-height:1.5;flex:1;}
+.mc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:12px;color:var(--t3);}
+.mc-arrow{font-size:14px;color:var(--primary);}
+.outcomes{list-style:none;padding:0;margin:0;}
+.outcomes li{padding:8px 0 8px 24px;position:relative;border-bottom:1px solid var(--border);font-size:14px;color:var(--t1);}
+.outcomes li:last-child{border-bottom:0;}
+.outcomes li::before{content:"✓";position:absolute;left:2px;color:var(--secondary);font-weight:800;}
+html.dark *{--border:#1e3a5f !important;}
+html.dark body,html.dark aside,html.dark main{background-color:#0a0a0f;}
+html.dark .navday-name,html.dark .nav-module{color:#E0F2FE !important;}
+html.dark .navday-badge{color:#C4B5FD !important;}
+html.dark .nav-module.active{background:rgba(147,197,253,.15) !important;color:#93C5FD !important;border-left-color:#93C5FD !important;}
+</style>
+</head>
+<body>
+<script>
+if(!sessionStorage.getItem('sddAccess')&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
+  window.location.replace('../../gate.html');
+}
+</script>
+<header class="top">
+  <span class="brand">Spec Driven Development <b>with Kiro</b></span>
+  <button class="themebtn" id="themeToggle">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+<div class="layout">
+  <aside>
+    <div class="navday open" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="#" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Spec Driven Development with Kiro</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module active" href="#">Day 1 개요</a>
+        <a class="nav-module" href="../../m1/">M1. AWS Cloud &amp; AI 기초</a>
+        <a class="nav-module" href="../../m2/">M2. Kiro &amp; 스펙 기반 개발</a>
+        <a class="nav-module" href="../../hol/">Workshop. 개인 프로젝트</a>
+      </div>
+    </div>
+    <a href="../../intro.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </aside>
+  <main>
+    <div class="day-header">
+      <div class="day-eyebrow">Day 1</div>
+      <h1 class="day-title">Spec Driven Development with Kiro</h1>
+      <p class="day-desc">오전에 AWS Kiro의 스펙 기반 개발 방식을 익히고, 오후에는 개인별로 Kiro를 활용해 작동하는 웹사이트 산출물을 제작하며, 마지막 시간에 프로젝트 피드백으로 마무리합니다.</p>
+    </div>
+
+    <!-- 타임테이블 -->
+    <div class="section">
+      <div class="section-title">일정표</div>
+      <table class="timetable">
+        <thead><tr><th>시간</th><th>유형</th><th>세션 / 내용</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="tt-time">09:00 – 10:00</td>
+            <td class="tt-type"><span class="lec">강의</span></td>
+            <td class="tt-content"><span class="highlight">M1. AWS Cloud &amp; AI 기초</span> — 클라우드 컴퓨팅과 생성형 AI 소개</td>
+          </tr>
+          <tr>
+            <td class="tt-time">10:00 – 12:00</td>
+            <td class="tt-type"><span class="lec">강의</span></td>
+            <td class="tt-content"><span class="highlight">M2. AWS Kiro &amp; 스펙 기반 개발</span> — Kiro 환경 설정 및 스펙 기반 개발 개념 · 자연어 명세 작성 · Steering·Context 제어로 코딩 정확도 향상</td>
+          </tr>
+          <tr>
+            <td class="tt-time">12:00 – 13:00</td>
+            <td class="tt-type"><span class="break">점심</span></td>
+            <td class="tt-content">점심시간</td>
+          </tr>
+          <tr>
+            <td class="tt-time">13:00 – 14:00</td>
+            <td class="tt-type"><span class="lab">실습</span></td>
+            <td class="tt-content"><span class="highlight">개인 프로젝트 — 아이디어 선정 &amp; 명세 작성</span> — 개인별 웹사이트 주제 선정 · 자연어 명세 및 메인 기능 설계</td>
+          </tr>
+          <tr>
+            <td class="tt-time">14:00 – 16:00</td>
+            <td class="tt-type"><span class="lab">실습</span></td>
+            <td class="tt-content"><span class="highlight">개인 프로젝트 — 웹사이트 개발</span> — Kiro 바이브코딩으로 작동하는 웹사이트 구현 · 강사 테크멘토링</td>
+          </tr>
+          <tr>
+            <td class="tt-time">16:00 – 17:00</td>
+            <td class="tt-type"><span class="lec">피드백</span></td>
+            <td class="tt-content"><span class="highlight">산출물 공유 &amp; 피드백</span> — 완성한 웹사이트 시연 및 발표 · 강사·수강생 상호 피드백 · 개선 포인트 정리 및 마무리</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 모듈 카드 -->
+    <div class="section">
+      <div class="section-title">모듈 &amp; 워크숍</div>
+      <div class="module-cards">
+        <a class="module-card" href="../../m1/">
+          <div class="mc-badge"><span class="dot"></span> Module 1</div>
+          <div class="mc-title">AWS Cloud &amp; AI 기초</div>
+          <div class="mc-desc">AWS 글로벌 인프라, 핵심 서비스, 생성형 AI와 파운데이션 모델, Amazon Bedrock 소개</div>
+          <div class="mc-footer"><span class="mc-count">슬라이드 20개</span><span class="mc-arrow">→</span></div>
+        </a>
+        <a class="module-card" href="../../m2/">
+          <div class="mc-badge"><span class="dot"></span> Module 2</div>
+          <div class="mc-title">Kiro &amp; 스펙 기반 개발</div>
+          <div class="mc-desc">Kiro IDE 설치·설정, Vibe vs Spec, Steering 활용, 3단계 스펙 워크플로우</div>
+          <div class="mc-footer"><span class="mc-count">슬라이드 19개</span><span class="mc-arrow">→</span></div>
+        </a>
+        <a class="module-card" href="../../hol/">
+          <div class="mc-badge"><span class="dot"></span> Workshop</div>
+          <div class="mc-title">개인 프로젝트</div>
+          <div class="mc-desc">Kiro로 나만의 작동하는 웹사이트 제작 — 아이디어 선정부터 완성까지</div>
+          <div class="mc-footer"><span class="mc-count">Task 1 ~ 7</span><span class="mc-arrow">→</span></div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 기대 성과 -->
+    <div class="section">
+      <div class="section-title">산출물 &amp; 기대 성과</div>
+      <ul class="outcomes">
+        <li>수강생 1인당 Kiro로 제작한 <strong>작동하는 웹사이트 1건</strong> (개인별 프로젝트)</li>
+        <li>AWS Kiro의 스펙 기반 개발을 직접 다뤄본 경험 — 아이디어를 결과물로</li>
+        <li>자연어 명세 → 코드 생성 → 디버깅 → 산출물 완성의 전 과정 실전 경험</li>
+        <li>프로젝트 피드백을 통한 결과물 점검 및 개선 경험</li>
+        <li>최신 클라우드·AI 도구에 대한 기술 적응도 강화</li>
+      </ul>
+      <p style="margin-top:14px;font-size:13px;color:var(--t3);">※ 수강생 1인 1 노트북(인터넷 브라우저 사용 가능)이 필요하며, 실습은 AWS Kiro 및 AWS가 제공하는 실습 환경에서 진행됩니다.</p>
+    </div>
+  </main>
+</div>
+<script>
+function toggleDay(id){document.getElementById(id).classList.toggle('open');}
+var html=document.documentElement,btn=document.getElementById('themeToggle');
+if(localStorage.getItem('sddThemeDark')==='1') html.classList.add('dark');
+btn.addEventListener('click',function(){
+  var dark=html.classList.toggle('dark');
+  localStorage.setItem('sddThemeDark',dark?'1':'0');
+});
+</script>
+</body>
+</html>

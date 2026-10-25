@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko" class="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강의실 — Spec Driven Development with Kiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1219;--bg-alt:#161618;--bg-soft:#1b1f27;--brand1:#00592D;--brand2:#0a7d42;--brand3:#17a95a;--t1:#dfdfd6;--t2:#98989f;--border:#3c3f44;}
+  html.light{--bg:#ffffff;--bg-alt:#f6f7f9;--bg-soft:#eef0f3;--t1:#1a1f29;--t2:#5b6678;--border:#e3e7ef;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;min-height:100%;background:var(--bg);color:var(--t1);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.6;}
+  .wrap{max-width:1000px;margin:0 auto;padding:46px 24px 70px;}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand2);}
+  .themebtn{margin-left:auto;width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+  .themebtn svg{width:17px;height:17px;}.themebtn .moon{display:none;}
+  html.light .themebtn .moon{display:block;}html.light .themebtn .sun{display:none;}
+  h1{font-size:30px;font-weight:800;margin:0 0 6px;letter-spacing:-.01em;}
+  .sub{font-size:15px;color:var(--t2);margin:0 0 30px;}
+  .sec{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin:28px 0 12px;}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .mod{display:block;background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.15s;color:inherit;text-decoration:none;}
+  .mod:hover{border-color:var(--brand1);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,89,45,.14);}
+  .mod .no{font-size:12px;font-weight:700;color:var(--brand3);letter-spacing:.04em;}
+  .mod h3{margin:6px 0 6px;font-size:19px;font-weight:800;}
+  .mod p{margin:0;font-size:14px;color:var(--t2);}
+  .mod.full{grid-column:1/-1;border-left:4px solid var(--brand1);}
+  a.back{display:inline-block;margin-top:30px;font-size:13px;color:var(--t2);text-decoration:underline;}
+</style>
+</head>
+<body>
+<script>
+  // PIN 접근 제어: 세션 토큰 없으면 게이트로 리다이렉트
+  if(!sessionStorage.getItem('sddClassAccess')){ window.location.replace('../SpecDrivenDevelop_gate_v1.html'); }
+</script>
+  <div class="wrap">
+    <div class="top">
+      <span class="eyebrow">Spec Driven Development with Kiro</span>
+      <button class="themebtn" id="themeToggle" aria-label="배경 전환"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+    <h1>강의실</h1>
+    <p class="sub">모듈 슬라이드와 실습 가이드를 선택하세요.</p>
+
+    <div class="sec">강의 슬라이드</div>
+    <div class="grid">
+      <a class="mod" href="../m1/m1_slide.html"><div class="no">MODULE 1</div><h3>AWS Cloud 소개</h3><p>AWS Cloud·글로벌 인프라·핵심 서비스 · 생성형 AI·파운데이션 모델·에이전트 · Amazon Bedrock</p></a>
+      <a class="mod" href="../m2/m2_slide.html"><div class="no">MODULE 2</div><h3>Kiro 소개</h3><p>AI 개발도구 진화 · Kiro IDE/CLI·화면·실행 모드 · Vibe · Spec-Driven Development · Steering</p></a>
+    </div>
+
+    <div class="sec">핸즈온 실습</div>
+    <div class="grid">
+      <a class="mod full" href="../hol/ws1/ws1guide.html"><div class="no">HANDS-ON</div><h3>Spec Driven Development 실습 가이드</h3><p>Kiro 설치·로그인 · Vibe 코딩으로 이커머스 앱 생성 · Steering 규칙 설정 · Spec-Driven으로 챗봇 기능 추가</p></a>
+    </div>
+
+    <a class="back" href="../SpecDrivenDevelop_intro_v1.html">← 강의 소개로</a>
+  </div>
+<script>
+  var tb=document.getElementById('themeToggle');if(tb)tb.addEventListener('click',function(){document.documentElement.classList.toggle('light');});
+</script>
+</body>
+</html>

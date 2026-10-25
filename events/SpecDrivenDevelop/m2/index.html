@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M2. Kiro &amp; 스펙 기반 개발 — Spec Driven Development with Kiro</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+:root{--bg:#ffffff;--bg-alt:#f0f9ff;--bg-soft:#e0f2fe;--primary:#1E40AF;--secondary:#7C3AED;--accent:#D97706;--t1:#1e3a5f;--t2:#3730a3;--t3:#6B7280;--border:#bfdbfe;--tag:#dbeafe;--sh:0 2px 8px rgba(30,64,175,.08);}
+html.dark{--bg:#0a0a0f;--bg-alt:#0f172a;--bg-soft:#1e1b4b;--primary:#93C5FD;--secondary:#C4B5FD;--t1:#E0F2FE;--t2:#94A3B8;--t3:#64748B;--border:#1e3a5f;--tag:#1e1b4b;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--t1);font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;font-size:17px;line-height:1.75;transition:background .2s,color .2s;}
+header.top{position:sticky;top:0;z-index:200;height:64px;display:flex;align-items:center;gap:16px;padding:0 24px;background:#fff;border-bottom:2px solid var(--border);transition:background .25s;}
+html.dark header.top{background:#0a0a0f;border-bottom-color:#1e3a5f;}
+header.top .brand{font-weight:800;font-size:18px;color:var(--primary);}header.top .brand b{color:var(--secondary);}
+.themebtn{margin-left:auto;width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;}
+.themebtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;}
+.themebtn .moon{display:block;}.themebtn .sun{display:none;}
+html.dark .themebtn .moon{display:none;}html.dark .themebtn .sun{display:block;}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px);}
+aside{border-right:1px solid var(--border);padding:18px 12px;overflow-y:auto;position:sticky;top:64px;height:calc(100vh - 64px);background:var(--bg);display:flex;flex-direction:column;gap:4px;}
+html.dark aside{border-right-color:#1e3a5f;}
+.navday{margin-bottom:2px;}.navday-hd{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:8px;transition:background .15s;}.navday-hd:hover{background:var(--tag);}
+.navday-toggle{background:transparent;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;flex-shrink:0;margin-top:1px;}
+.navday-link{flex:1;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:2px;}
+.navday-arr{width:14px;height:14px;flex-shrink:0;margin-top:3px;color:var(--t3);transition:transform .22s ease;fill:none;stroke:currentColor;stroke-width:2.5;}
+.navday.open>.navday-hd .navday-arr{transform:rotate(90deg);}
+.navday-badge{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary);}
+.navday-name{font-size:12px;font-weight:600;line-height:1.35;color:var(--t1);}
+.navday-body{padding:2px 0 6px 22px;border-left:2px solid var(--border);margin-left:13px;display:none;}
+.navday.open>.navday-body{display:block;}
+html.dark .navday-body{border-left-color:#1e3a5f;}
+.nav-module{display:block;padding:7px 10px;border-radius:6px;font-size:13px;font-weight:500;color:var(--t1);border-left:2px solid transparent;text-decoration:none;transition:background .15s;}
+.nav-module:hover{background:var(--tag);color:var(--primary);}
+.nav-module.active{background:var(--tag);border-left-color:var(--primary);color:var(--primary);font-weight:700;}
+.prog-box{margin-top:16px;padding:10px 12px;background:var(--bg-alt);border-radius:10px;border:1px solid var(--border);}
+.prog-box-label{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.prog-counts{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.prog-bar{height:4px;background:#e0e0e8;border-radius:2px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;transition:width .3s;}
+.exit-classroom-btn{display:flex;align-items:center;gap:8px;margin:12px 0 8px;padding:9px 12px;border-radius:8px;background:rgba(239,68,68,.07);border:1.5px solid rgba(239,68,68,.25);color:#b91c1c;font-size:12px;font-weight:700;text-decoration:none;transition:all .2s;}
+.exit-classroom-btn:hover{background:rgba(239,68,68,.15);border-color:#dc2626;}
+main{padding:20px 24px 80px;width:100%;}
+.svis{background:#0b1020;border:1px solid var(--border);border-radius:14px;box-shadow:var(--sh);position:relative;overflow:hidden;aspect-ratio:16/9;width:100%;}
+html.dark .svis{border-color:#1e3a5f;}
+.svis-btns{position:absolute;top:10px;right:10px;z-index:50;display:flex;gap:6px;}
+.svis-btn{height:30px;padding:0 12px;border-radius:8px;background:rgba(255,255,255,.85);border:1px solid var(--border);color:var(--primary);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;backdrop-filter:blur(6px);transition:all .15s;font-family:inherit;}
+.svis-btn:hover{background:var(--primary);color:#fff;}
+html.dark .svis-btn{background:rgba(10,10,15,.8);color:#E0F2FE;border-color:#1e3a5f;}
+.npanel{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--sh);margin-top:14px;font-size:15px;line-height:1.85;}
+html.dark .npanel{background:#0f172a;border-color:#1e3a5f;}
+.npanel-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border);flex-shrink:0;}
+html.dark .npanel-header{border-bottom-color:#1e3a5f;}
+.npanel-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--secondary);}
+.npanel-slide-title{font-size:15px;font-weight:700;color:var(--primary);}
+.note-section{margin-bottom:16px;}
+.note-section-title{font-size:12px;font-weight:700;color:var(--secondary);border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:10px;text-transform:uppercase;letter-spacing:.05em;}
+html.dark .note-section-title{border-bottom-color:#1e3a5f;}
+.note-kw{font-weight:700;color:var(--secondary);}
+.note-case{background:rgba(124,58,237,.07);border-left:3px solid var(--secondary);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;}
+.note-case-label{font-size:11px;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.note-tip{background:rgba(30,64,175,.06);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;}
+.note-tip-label{font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.npanel ul{padding-left:20px;}.npanel li{margin-bottom:6px;}.npanel p{margin-bottom:8px;}
+#fsOverlay{position:fixed;inset:0;z-index:900;background:#0b1020;flex-direction:column;}
+.fs-topbar{height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;background:rgba(0,0,0,.5);flex-shrink:0;}
+.fs-close{height:32px;padding:0 16px;border-radius:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.fs-close:hover{background:rgba(255,255,255,.25);}
+#fsFrame{flex:1;width:100%;border:none;display:block;}
+.fs-nav{height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:16px;background:rgba(0,0,0,.5);}
+.fs-nav button{height:34px;padding:0 20px;border-radius:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.fs-nav button:hover{background:rgba(255,255,255,.22);}
+#fsCnt{font-size:14px;font-weight:700;color:rgba(255,255,255,.8);min-width:60px;text-align:center;}
+.sticknav{position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--bg-alt);border-top:1px solid var(--border);padding:8px 24px;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 -4px 20px rgba(0,0,0,.08);}
+html.dark .sticknav{background:#0a0a0f;border-top-color:#1e3a5f;}
+.sticknav button{background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);padding:7px 20px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;font-family:inherit;}
+.sticknav button:hover:not(:disabled){background:var(--primary);border-color:var(--primary);color:#fff;}
+.sticknav button:disabled{opacity:.35;cursor:default;}
+.sticknav-cnt{font-size:15px;color:var(--secondary);min-width:56px;text-align:center;font-weight:700;}
+html.dark *{--border:#1e3a5f !important;}
+html.dark body,html.dark aside,html.dark main,html.dark .sticknav{background-color:#0a0a0f;}
+html.dark .navday-name,html.dark .nav-module{color:#E0F2FE !important;}
+html.dark .navday-badge{color:#C4B5FD !important;}
+html.dark .nav-module.active{background:rgba(147,197,253,.15) !important;color:#93C5FD !important;border-left-color:#93C5FD !important;}
+html.dark .sticknav-cnt{color:#C4B5FD !important;}
+</style>
+</head>
+<body>
+<script>
+if(!sessionStorage.getItem('sddAccess')&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){window.location.replace('../gate.html');}
+</script>
+<header class="top">
+  <span class="brand">Spec Driven Development <b>with Kiro</b></span>
+  <button class="themebtn" id="themeToggle" aria-label="배경 전환">
+    <svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</header>
+<div class="layout">
+  <aside>
+    <div class="navday open" id="navday-1">
+      <div class="navday-hd">
+        <button class="navday-toggle" onclick="toggleDay('navday-1')">
+          <svg class="navday-arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <a href="../learn/day1/" class="navday-link">
+          <span class="navday-badge">Day 1</span>
+          <span class="navday-name">Spec Driven Development with Kiro</span>
+        </a>
+      </div>
+      <div class="navday-body">
+        <a class="nav-module" href="../learn/day1/">Day 1 개요</a>
+        <a class="nav-module" href="../m1/">M1. AWS Cloud &amp; AI 기초</a>
+        <a class="nav-module active" href="#">M2. Kiro &amp; 스펙 기반 개발</a>
+        <a class="nav-module" href="../hol/">Workshop. 개인 프로젝트</a>
+      </div>
+    </div>
+    <div class="prog-box" style="margin-top:16px;">
+      <div class="prog-box-label">슬라이드 진행</div>
+      <div class="prog-counts"><span id="progText">1 / 19</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:5.3%"></div></div>
+    </div>
+    <a href="../intro.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
+  </aside>
+  <main>
+    <div class="svis" id="svis">
+      <iframe id="slideFrame" src="./slides.html" frameborder="0" style="width:100%;height:100%;border:none;display:block;" onload="frameReady=true;goTo(cur);"></iframe>
+      <div class="svis-btns"><button class="svis-btn" onclick="openFS()">전체화면</button></div>
+    </div>
+    <div class="npanel" id="notesPanel">
+      <div class="npanel-header">
+        <span class="npanel-label">슬라이드 노트</span>
+        <span class="npanel-slide-title" id="noteTitle"></span>
+      </div>
+      <div id="noteBody"></div>
+    </div>
+  </main>
+</div>
+<div class="sticknav">
+  <button id="btnPrev" onclick="goTo(cur-1)" disabled>← 이전</button>
+  <span class="sticknav-cnt" id="snCnt">1 / 19</span>
+  <button id="btnNext" onclick="goTo(cur+1)">다음 →</button>
+</div>
+<div id="fsOverlay" style="display:none;">
+  <div class="fs-topbar"><button class="fs-close" onclick="closeFS()">✕ 강의실로 돌아가기</button></div>
+  <iframe id="fsFrame" src="./slides.html" style="flex:1;width:100%;border:none;display:block;" onload="fsFrameReady=true;goFS(cur);"></iframe>
+  <div class="fs-nav">
+    <button onclick="goFS(fsCur-1)">← 이전</button>
+    <span id="fsCnt">1 / 19</span>
+    <button onclick="goFS(fsCur+1)">다음 →</button>
+  </div>
+</div>
+<script>
+var NOTES = [
+  {t:'Module 2 · Kiro — AI 개발도구의 진화', h:`
+<div class="note-section"><div class="note-section-title">AI 개발 도구의 진화 단계</div>
+<p>코딩을 돕는 AI 도구는 지난 5년간 급격히 진화했습니다. <span class="note-kw">자동완성 → 어시스턴트 → 에이전트 → 자율성</span>의 순서로 AI의 역할이 점점 커지고 있습니다.</p>
+<ul>
+  <li><strong>자동완성 시대 (2021~)</strong>: GitHub Copilot 등장. 현재 타이핑 중인 코드 다음 줄을 예측·완성. 개발자가 모든 의사결정 주도.</li>
+  <li><strong>어시스턴트 시대 (2022~)</strong>: ChatGPT·Claude 등 대화형 AI. 질문하면 코드 조각을 생성. 복사-붙여넣기 개발 방식.</li>
+  <li><strong>에이전트 시대 (2024~)</strong>: Cursor, Kiro 등 Agentic IDE. 파일을 직접 읽고 수정하며, 명령을 실행하고, 오류를 스스로 수정. 개발자는 검토자 역할.</li>
+  <li><strong>자율성 시대 (진행 중)</strong>: 사람의 개입 없이 전체 기능을 자율 구현하는 방향으로 진화 중.</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">자율성이 커질수록 중요해지는 것</div>
+<p>AI가 더 많은 코드를 작성할수록 <strong>통제(Control)와 품질(Quality)</strong>이 중요해집니다. 에이전트가 잘못된 방향으로 달리기 시작하면 큰 피해가 발생합니다. Kiro의 Spec 모드와 Supervised 모드는 이 통제 문제를 해결하기 위한 장치입니다.</p>
+</div>`},
+
+  {t:'Coding Agents — 다양한 코딩 에이전트', h:`
+<div class="note-section"><div class="note-section-title">주요 코딩 에이전트 생태계</div>
+<p>2024~2025년을 기점으로 다양한 코딩 에이전트가 등장했습니다. IDE 통합형과 터미널(CLI)형으로 구분됩니다.</p>
+<ul>
+  <li><strong>Cursor</strong>: VS Code 포크 기반 IDE. Tab 자동완성, 채팅, Composer(멀티 파일 편집) 기능. 월 $20 Pro 플랜. 스타트업 개발자들에게 인기.</li>
+  <li><strong>GitHub Copilot</strong>: GitHub 통합. VS Code·JetBrains 등 다양한 IDE 플러그인 지원. Microsoft·OpenAI 기술 활용.</li>
+  <li><strong>AWS Kiro</strong>: 2025년 7월 AWS 출시. VS Code 오픈소스(Code OSS) 기반. Spec 기반 개발과 에이전트 기능이 핵심 차별점.</li>
+  <li><strong>Claude Code (Anthropic)</strong>: 터미널 기반 CLI 에이전트. 자율적인 코드베이스 탐색·수정.</li>
+  <li><strong>Devin (Cognition)</strong>: 완전 자율 소프트웨어 엔지니어 컨셉. Jira 티켓을 읽고 PR까지 자동 생성.</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">Kiro의 차별점</div>
+<p>Kiro는 단순 코드 생성을 넘어 <strong>Spec 기반 개발 방법론</strong>을 IDE에 통합했다는 점이 독특합니다. 요구사항 작성 → AI 설계 → 태스크 실행의 구조화된 워크플로우를 제공하며, AWS 서비스(Bedrock, CodeWhisperer)와 긴밀하게 통합됩니다.</p>
+</div>`},
+
+  {t:'Kiro — AI 에이전트로 고품질 소프트웨어 출시', h:`
+<div class="note-section"><div class="note-section-title">Kiro 소개</div>
+<p><span class="note-kw">Kiro</span>는 AWS가 2025년 7월에 출시한 <span class="note-kw">AI 기반 Agentic IDE</span>입니다. <strong>VS Code 오픈소스(Code OSS)</strong> 기반으로 구축되어 친숙한 인터페이스를 제공하면서도, AI 에이전트 기능으로 개발 전 과정을 자동화합니다.</p>
+<p><em>"프로토타입에서 프로덕션까지"</em>가 Kiro의 슬로건입니다. 단순히 코드를 빠르게 만드는 것이 아니라, <strong>실제 운영 가능한 품질의 소프트웨어</strong>를 만드는 것이 목표입니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">Kiro의 핵심 기능</div>
+<ul>
+  <li><strong>Vibe Mode</strong>: 자유 대화형 코딩. "로그인 페이지 만들어줘" 같은 자연어 요청으로 즉시 코드 생성.</li>
+  <li><strong>Spec Mode</strong>: 요구사항→설계→태스크 3단계 구조화 개발. 복잡한 기능을 체계적으로 구현.</li>
+  <li><strong>Steering</strong>: 프로젝트 규칙·컨벤션을 .md 파일로 정의. Kiro가 항상 참조.</li>
+  <li><strong>MCP (Model Context Protocol)</strong>: Figma, GitHub, Jira, Slack 등 외부 도구 연동.</li>
+  <li><strong>Skills</strong>: 재사용 가능한 작업 절차 패키지.</li>
+  <li><strong>Agent Hooks</strong>: 파일 저장, 커밋 등 이벤트 기반 자동화.</li>
+  <li><strong>Powers</strong>: 기능 번들 (AWS 개발 도구, Strands SDK 등).</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">왜 Kiro인가 — AWS 생태계 통합</div>
+<p>Kiro는 Amazon Bedrock(Claude, Titan), AWS CodeWhisperer, Amazon Q와 긴밀히 통합됩니다. AWS 기반 서비스를 개발할 때 인프라 코드, CloudFormation 템플릿, Lambda 함수를 맥락을 이해하며 생성합니다.</p>
+</div>`},
+
+  {t:'IDE &amp; CLI — 두 얼굴의 Kiro', h:`
+<div class="note-section"><div class="note-section-title">Kiro IDE</div>
+<p><span class="note-kw">Kiro IDE</span>는 VS Code 기반의 그래픽 에디터입니다. 코드 편집, 파일 탐색, AI 채팅, 터미널이 하나의 화면에 통합되어 있습니다.</p>
+<ul>
+  <li>플랫폼: macOS, Windows, Linux 지원</li>
+  <li>설치: kiro.dev에서 설치 파일 다운로드</li>
+  <li>VS Code 확장(Extension) 호환: 기존 VS Code 플러그인 대부분 사용 가능</li>
+  <li>적합한 상황: 일반 개발 작업, GUI 필요 시, 초보자</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">Kiro CLI</div>
+<p><span class="note-kw">Kiro CLI</span>는 터미널에서 실행하는 명령줄 코딩 에이전트입니다. GUI 없이 터미널 명령으로 AI와 대화하며 코드를 생성·수정합니다.</p>
+<ul>
+  <li>설치: <code>npm install -g @aws/kiro-cli</code> 또는 Homebrew</li>
+  <li>사용: <code>kiro "React 앱 만들어줘"</code></li>
+  <li>적합한 상황: CI/CD 파이프라인, 서버 환경, 스크립팅, 배치 작업</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">동일한 .kiro 설정 공유</div>
+<p>IDE와 CLI 모두 동일한 <strong><code>.kiro/</code> 디렉토리</strong>를 읽습니다. Steering 규칙, MCP 설정, Skills가 IDE와 CLI에서 동일하게 적용됩니다. 팀원 A가 IDE로, 팀원 B가 CLI로 작업해도 같은 규칙이 적용됩니다.</p>
+</div>`},
+
+  {t:'Sign in — Kiro 로그인', h:`
+<div class="note-section"><div class="note-section-title">Kiro 로그인 방법</div>
+<p>Kiro는 4가지 방법으로 로그인할 수 있습니다.</p>
+<ul>
+  <li><strong>Google 계정</strong>: 개인 Google 계정으로 간편 로그인</li>
+  <li><strong>GitHub 계정</strong>: GitHub 계정 연동</li>
+  <li><strong>AWS Builder ID</strong>: AWS 개인 계정. re:Post, AWS Skill Builder 등 AWS 개인 서비스에 사용하는 무료 ID.</li>
+  <li><strong>IAM Identity Center(SSO)</strong>: 기업 조직의 SSO. 회사 AWS 계정으로 로그인. 팀 협업 및 권한 관리에 적합.</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">로그인 후 AI 기능 활성화</div>
+<p>로그인이 완료되면 Kiro의 AI 기능(Vibe, Spec, Steering 등)이 활성화됩니다. 내부적으로 Amazon Bedrock의 Claude 모델을 호출해 코드를 생성합니다. 무료 티어와 유료 플랜에 따라 사용 한도가 다릅니다.</p>
+</div>
+<div class="note-case"><div class="note-case-label">오늘 실습</div>
+<p>이미 Kiro를 설치하고 로그인하셨다면 준비 완료입니다. 로그인이 안 되셨다면 강사에게 문의하거나 kiro.dev에서 Google/GitHub으로 빠르게 로그인하세요. <strong>AWS Builder ID가 없어도</strong> Google이나 GitHub 계정으로 바로 시작할 수 있습니다.</p>
+</div>`},
+
+  {t:'.kiro 디렉토리 — 설정의 두 스코프', h:`
+<div class="note-section"><div class="note-section-title">.kiro 디렉토리의 역할</div>
+<p><span class="note-kw"><code>.kiro/</code></span> 디렉토리는 Kiro의 모든 설정이 저장되는 핵심 폴더입니다. Git으로 버전 관리할 수 있어 팀 전체가 동일한 설정을 공유합니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">두 가지 스코프</div>
+<ul>
+  <li><strong>Global(전역) 설정: <code>~/.kiro/</code></strong> — 홈 디렉토리에 위치. 모든 프로젝트에 공통 적용. 개인 선호도, 기본 코딩 스타일. 예) "나는 항상 TypeScript를 선호한다"</li>
+  <li><strong>Workspace(워크스페이스) 설정: <code>./.kiro/</code></strong> — 현재 프로젝트 루트에 위치. 해당 프로젝트에만 적용. 팀 규칙, 프로젝트별 기술 스택. 예) "이 프로젝트는 React + Tailwind 사용"</li>
+</ul>
+<p><strong>우선순위</strong>: Workspace 설정이 Global 설정보다 우선합니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">.kiro/ 폴더 구조</div>
+<ul>
+  <li><code>.kiro/steering/</code>: 규칙 파일 (.md) — "항상 ESLint 규칙 준수", "API 응답 형식 통일"</li>
+  <li><code>.kiro/specs/</code>: Spec 파일 — 요구사항, 설계, 태스크 체크리스트</li>
+  <li><code>.kiro/settings/mcp.json</code>: MCP 서버 설정</li>
+  <li><code>.kiro/hooks/</code>: 자동화 훅 파일</li>
+  <li><code>.kiro/agents/</code>: 커스텀 에이전트 정의</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">팀 협업 팁</div>
+<p>.kiro/steering/ 폴더를 Git에 커밋하면 팀원 모두가 동일한 규칙으로 Kiro를 사용합니다. 새 팀원이 합류하면 git clone 하는 순간 동일한 AI 코딩 환경이 설정됩니다.</p>
+</div>`},
+
+  {t:'Interface — Kiro 화면 구성', h:`
+<div class="note-section"><div class="note-section-title">Kiro IDE 화면 구성 요소</div>
+<p>Kiro의 인터페이스는 VS Code와 유사하지만, AI 기능을 위한 전용 패널이 추가되어 있습니다.</p>
+<ul>
+  <li><strong>파일 탐색기 (좌측)</strong>: 프로젝트 파일 트리. .kiro/ 폴더도 여기서 관리.</li>
+  <li><strong>코드 에디터 (중앙)</strong>: 코드 편집 영역. AI가 생성·수정한 내용이 diff(변경 사항) 형태로 표시됨. accept/reject 버튼으로 변경 승인.</li>
+  <li><strong>채팅 패널 (우측)</strong>: Vibe/Spec 모드 입력창. AI와 대화하는 공간. @파일명으로 특정 파일 참조, #으로 Steering 파일 참조.</li>
+  <li><strong>터미널 패널 (하단)</strong>: 명령 실행 결과. AI가 실행하는 npm install, git 명령 등이 여기 표시됨.</li>
+  <li><strong>Kiro 기능 패널 (좌측 아이콘)</strong>: Steering, MCP, Hooks, Powers, Spec 관리 전용 뷰.</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">생산성 팁 — 채팅에서 파일 참조</div>
+<p>채팅창에서 <strong><code>#파일명</code></strong>을 입력하면 해당 파일 내용을 컨텍스트로 포함합니다. "이 #package.json 파일을 보고 프로젝트 의존성을 설명해줘"처럼 사용합니다. 여러 파일을 동시에 참조할 수 있습니다.</p>
+</div>`},
+
+  {t:'Execution Mode — Autopilot vs Supervised', h:`
+<div class="note-section"><div class="note-section-title">두 가지 실행 모드</div>
+<p>Kiro의 실행 모드는 채팅 패널의 스위치로 전환합니다. AI가 파일을 수정할 때 사람의 승인을 요구하는지 여부가 핵심 차이입니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">Autopilot (자동 모드)</div>
+<p><span class="note-kw">Autopilot</span>은 기본 모드입니다. Kiro가 승인 없이 자율적으로 파일을 만들고, 수정하고, 명령을 실행합니다.</p>
+<ul>
+  <li>빠른 개발 속도 — 중간에 멈추지 않음</li>
+  <li>변경 완료 후 diff를 확인하고 되돌릴(revert) 수 있음</li>
+  <li>적합한 상황: 새 프로젝트, 빠른 프로토타이핑, 잘 아는 코드베이스</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">Supervised (감독 모드)</div>
+<p><span class="note-kw">Supervised</span>는 모든 변경을 단계별로 개발자가 승인합니다. 각 파일 변경 hunk를 accept 또는 reject 할 수 있습니다.</p>
+<ul>
+  <li>세밀한 제어 — 원치 않는 변경 즉시 거부 가능</li>
+  <li>속도는 느리지만 위험 최소화</li>
+  <li>적합한 상황: 프로덕션 코드베이스, 중요 보안 로직, 팀 코드 리뷰 과정</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">오늘 실습 추천</div>
+<p>오늘은 새 프로젝트를 빠르게 만드는 것이 목표이므로 <strong>Autopilot 모드</strong>를 사용합니다. Kiro가 파일을 만드는 동안 지켜보다가, 완료 후 생성된 파일들을 검토하는 방식으로 진행합니다.</p>
+</div>`},
+
+  {t:'Vibe Mode — 대화형 개발', h:`
+<div class="note-section"><div class="note-section-title">Vibe Mode란</div>
+<p><span class="note-kw">Vibe 모드</span>는 자유롭게 대화하듯 코드를 만드는 Kiro의 기본 개발 방식입니다. 명확한 계획 없이 아이디어를 바로 코드로 탐색합니다.</p>
+<p>예시: "간단한 HTML 스도쿠 웹 애플리케이션을 만들어서 파일로 저장해줘"</p>
+</div>
+<div class="note-section"><div class="note-section-title">Vibe 모드 동작 방식</div>
+<ul>
+  <li><strong>자연어 요청 입력</strong>: 채팅창에 원하는 것을 한국어 또는 영어로 입력</li>
+  <li><strong>Kiro의 계획 제시</strong>: 어떻게 만들지 계획을 먼저 설명</li>
+  <li><strong>자율 실행</strong>: 파일 탐색 → 코드 생성 → 파일 저장 → 의존성 설치 → 실행까지 자동</li>
+  <li><strong>결과 보고</strong>: 완료 후 무엇을 만들었는지 요약</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">Vibe 모드 효과적 사용법</div>
+<ul>
+  <li><strong>구체적인 요청</strong>: "버튼 추가해줘" 보다 "파란색 Submit 버튼을 폼 하단에 추가해줘" 가 더 정확</li>
+  <li><strong>맥락 제공</strong>: "이 프로젝트는 React + TypeScript를 사용해"처럼 배경 정보 포함</li>
+  <li><strong>반복 개선</strong>: 완벽하지 않아도 "이 부분을 수정해줘"로 반복 개선 가능</li>
+  <li><strong>파일 참조</strong>: #파일명으로 특정 파일을 컨텍스트로 제공</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">Vibe의 한계 — Spec이 필요한 순간</div>
+<p>Vibe는 대화 흐름대로 발전하므로, 큰 기능을 여러 번 나눠 만들다 보면 코드가 일관성을 잃을 수 있습니다. 또한 "왜 이렇게 설계했는가"의 추적이 어렵습니다. 이때 Spec이 필요합니다.</p>
+</div>`},
+
+  {t:'Spec-Driven Development — 프롬프트를 스펙으로', h:`
+<div class="note-section"><div class="note-section-title">스펙 기반 개발이란</div>
+<p><span class="note-kw">Spec-Driven Development(SDD)</span>는 구현 전에 <span class="note-kw">요구사항 → 설계 → 태스크</span>를 구조화된 문서로 작성하고, AI가 이를 기반으로 코드를 생성하는 방법론입니다.</p>
+<p>모호한 자연어 프롬프트를 <strong>명확하고 추적 가능한 명세서</strong>로 변환하는 과정이 핵심입니다. Kiro는 이 과정을 IDE에서 지원합니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">SDD가 필요한 이유</div>
+<ul>
+  <li><strong>복잡한 기능</strong>: 여러 파일과 컴포넌트에 걸친 기능은 즉흥적 Vibe로는 일관성 유지 어려움</li>
+  <li><strong>팀 협업</strong>: Spec 문서로 AI가 무엇을 만들지 팀이 사전에 합의 가능</li>
+  <li><strong>요구사항 추적</strong>: "이 코드가 왜 이렇게 생겼는가"를 Spec으로 추적 가능</li>
+  <li><strong>변경 관리</strong>: 요구사항이 바뀌면 Spec을 업데이트하고 재생성</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">Kiro에서 Spec 시작하기</div>
+<p>Kiro 채팅창에서 <code>/spec</code> 명령을 입력하거나, Kiro 기능 패널의 Specs 탭에서 새 Spec을 생성합니다. "사용자 인증 기능을 추가하고 싶어"라고 입력하면 Kiro가 Requirements 초안을 작성합니다.</p>
+</div>`},
+
+  {t:'3-Phase 워크플로우 — 단계마다 검토하고 병렬 실행', h:`
+<div class="note-section"><div class="note-section-title">3단계 Spec 워크플로우</div>
+<p>Kiro의 Spec은 세 단계로 진행되며, 각 단계 사이에 <span class="note-kw">사람의 검토(Human-in-the-Loop, HITL)</span> 게이트가 있습니다. 다음 단계로 넘어가기 전 반드시 확인·수정할 수 있습니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">Phase 1: Requirements (요구사항)</div>
+<p>"무엇을 만들 것인가"를 정의합니다.</p>
+<ul>
+  <li>사용자 스토리(User Story): "사용자로서 나는 ~을 할 수 있다"</li>
+  <li>기능 요구사항: 시스템이 무엇을 해야 하는가</li>
+  <li>비기능 요구사항: 성능, 보안, 확장성 등</li>
+  <li>Kiro가 초안 작성 → 사람이 검토·수정 → 승인</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">Phase 2: Design (설계)</div>
+<p>"어떻게 만들 것인가"를 정의합니다.</p>
+<ul>
+  <li>아키텍처 개요, 컴포넌트 다이어그램</li>
+  <li>데이터 모델(스키마), API 엔드포인트 설계</li>
+  <li>기술 선택(프레임워크, 라이브러리)</li>
+  <li>파일 구조</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">Phase 3: Tasks (태스크)</div>
+<p>"어떤 순서로 만들 것인가"를 정의합니다.</p>
+<ul>
+  <li>구현을 체크리스트 형태의 태스크로 분해</li>
+  <li>태스크 간 의존성을 고려한 순서 결정</li>
+  <li>독립적 태스크는 Kiro가 <strong>병렬(parallel)</strong>로 실행 가능</li>
+  <li>각 태스크 완료 시 체크박스 자동 업데이트</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">병렬 실행의 위력</div>
+<p>서로 의존성 없는 태스크 — 예를 들어 "프론트엔드 컴포넌트 생성"과 "API 엔드포인트 구현"을 동시에 실행합니다. 순차 실행 대비 <strong>2~3배 빠른 구현</strong>이 가능합니다.</p>
+</div>`},
+
+  {t:'Vibe vs Spec — 빠른 탐색 vs 제대로 만들기', h:`
+<div class="note-section"><div class="note-section-title">상황별 선택 가이드</div>
+<p>Vibe와 Spec 중 무엇을 선택할지는 <span class="note-kw">작업의 복잡도와 목적</span>에 따라 결정합니다. 둘 중 하나만 고집할 필요 없이, 상황에 맞게 조합하는 것이 실전 방식입니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">비교표</div>
+<ul>
+  <li><strong>개발 속도</strong>: Vibe 빠름(바로 시작) vs Spec 느림(계획 수립 시간)</li>
+  <li><strong>코드 일관성</strong>: Vibe 낮음 vs Spec 높음(명세 기반 생성)</li>
+  <li><strong>요구사항 추적</strong>: Vibe 불가 vs Spec 가능(문서화)</li>
+  <li><strong>대형 프로젝트</strong>: Vibe 부적합 vs Spec 적합</li>
+  <li><strong>팀 협업</strong>: Vibe 어려움 vs Spec 용이(공유 명세)</li>
+  <li><strong>탐색·실험</strong>: Vibe 최적 vs Spec 과도함</li>
+  <li><strong>디버깅</strong>: Vibe 즉시 vs Spec 태스크 단위</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">실전 조합 전략</div>
+<p><strong>Step 1 (Vibe)</strong>: "어떻게 될지" 빠르게 탐색. 30분 내로 프로토타입 완성.<br>
+<strong>Step 2 (Spec)</strong>: 프로토타입이 마음에 들면 Spec을 작성해 제대로 구현.<br>
+<strong>Step 3 (Vibe)</strong>: Spec 범위 밖의 작은 수정은 다시 Vibe로.<br>
+오늘 오후 실습에서도 이 순서를 따릅니다.</p>
+</div>`},
+
+  {t:'핵심 구성요소 — Kiro를 움직이는 다섯 가지 장치', h:`
+<div class="note-section"><div class="note-section-title">Kiro의 5가지 핵심 구성요소</div>
+<p>Kiro는 단순한 코드 생성기를 넘어 5가지 핵심 장치로 개발 전반을 제어합니다. 이 장치들을 조합하면 팀의 개발 표준을 AI에 내재화할 수 있습니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">5가지 장치</div>
+<ul>
+  <li><strong>Steering (프로젝트 규칙)</strong>: .kiro/steering/*.md 파일로 팀 규칙 정의. "TypeScript만 사용", "snake_case 금지" 등. Kiro가 코드 생성 시 자동 참조.</li>
+  <li><strong>MCP (외부 도구 연동)</strong>: Model Context Protocol. Figma 디자인, GitHub Issues, Jira 티켓, Slack 메시지 등 외부 시스템을 Kiro의 도구로 연동.</li>
+  <li><strong>Skills (작업 절차 패키지)</strong>: 자주 사용하는 복잡한 작업 절차를 패키지화. "Django 프로젝트 초기화 Skills", "AWS Lambda 배포 Skills" 등.</li>
+  <li><strong>Agent Hooks (이벤트 자동화)</strong>: 특정 이벤트(파일 저장, git commit, 테스트 실패 등)에 자동으로 Kiro 작업 실행.</li>
+  <li><strong>Powers (기능 번들)</strong>: 여러 구성요소를 묶은 번들 패키지. AWS 개발용 Power, Strands SDK Power 등.</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">오늘 실습 집중 영역</div>
+<p>이번 과정에서는 <strong>Steering</strong>을 중점적으로 다룹니다. Steering은 가장 즉각적인 효과를 보여주며, 오늘 만드는 프로젝트에 바로 적용할 수 있습니다.</p>
+</div>`},
+
+  {t:'Steering — 규칙 설정', h:`
+<div class="note-section"><div class="note-section-title">Steering이란</div>
+<p><span class="note-kw">Steering</span>은 Kiro에게 프로젝트의 규칙, 컨벤션, 배경 지식을 알려주는 마크다운 문서입니다. <code>.kiro/steering/</code> 폴더에 위치하며, Kiro는 코드를 생성할 때 이 파일들을 자동으로 읽고 반영합니다.</p>
+<p><em>"규칙이 없으면 그때그때 다르게, 규칙을 한 장 적어 두면 항상 같은 기준으로 동작합니다."</em></p>
+</div>
+<div class="note-section"><div class="note-section-title">Steering 없을 때 vs 있을 때</div>
+<ul>
+  <li><strong>Steering 없음</strong>: 같은 질문을 해도 매번 다른 스타일의 코드 생성. React 컴포넌트를 함수형으로 만들었다가 클래스형으로 만들었다가 중구난방.</li>
+  <li><strong>Steering 있음</strong>: "함수형 컴포넌트만 사용, TypeScript 필수, CSS Module 사용"이라고 적어두면 항상 동일한 스타일로 생성.</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">실무에서 Steering 활용</div>
+<p>신규 팀원이 합류하면 코딩 스타일 가이드를 읽히는 데 시간이 걸립니다. Steering에 팀 규칙을 정리해두면 Kiro가 자동으로 규칙을 적용해, 신규 팀원도 <strong>첫날부터 팀 표준에 맞는 코드</strong>를 작성할 수 있습니다.</p>
+</div>`},
+
+  {t:'Steering — Kiro가 항상 알고 있어야 할 내용', h:`
+<div class="note-section"><div class="note-section-title">Steering에 담을 내용</div>
+<p>Steering 파일은 <span class="note-kw">프로젝트를 열 때마다 Kiro가 먼저 읽는 메모</span>입니다. 매번 채팅에서 반복하기 번거로운 배경 지식과 규칙을 담습니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">좋은 Steering 내용 예시</div>
+<ul>
+  <li><strong>기술 스택</strong>: "이 프로젝트는 Next.js 14(App Router), TypeScript, Tailwind CSS, Prisma(PostgreSQL)를 사용한다"</li>
+  <li><strong>코딩 컨벤션</strong>: "컴포넌트는 PascalCase, 유틸 함수는 camelCase, 상수는 UPPER_SNAKE_CASE"</li>
+  <li><strong>아키텍처 원칙</strong>: "비즈니스 로직은 /lib에, API 핸들러는 /app/api에, 컴포넌트는 /components에"</li>
+  <li><strong>팀 용어</strong>: "User는 우리 서비스 가입자, Member는 팀 멤버를 의미한다"</li>
+  <li><strong>금지 사항</strong>: "any 타입 사용 금지, console.log는 commit 전 제거"</li>
+  <li><strong>API 규칙</strong>: "모든 API 응답은 {data, error, status} 형태로 반환"</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">Steering 작성 팁</div>
+<p><strong>짧고 명확하게</strong> 작성합니다. 너무 길고 복잡한 Steering은 오히려 효과가 감소합니다. 핵심 규칙 10~20개를 간결한 문장으로 작성하는 것이 가장 효과적입니다. 마크다운 헤더로 카테고리를 구분하면 관리가 쉽습니다.</p>
+</div>`},
+
+  {t:'Steering 적용 — .kiro/steering/ 폴더 사용', h:`
+<div class="note-section"><div class="note-section-title">Steering 파일 생성 방법</div>
+<p><code>.kiro/steering/</code> 폴더에 <code>.md</code> 파일을 만들면 규칙이 자동 적용됩니다. 파일 이름은 자유롭게 설정합니다.</p>
+<ul>
+  <li><code>project.md</code>: 전체 프로젝트 규칙</li>
+  <li><code>frontend.md</code>: 프론트엔드 전용 규칙</li>
+  <li><code>api.md</code>: API 설계 규칙</li>
+  <li><code>security.md</code>: 보안 관련 규칙</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">Steering 파일 예시</div>
+<p>파일: <code>.kiro/steering/project.md</code></p>
+<ul>
+  <li>프론트매터(front-matter): inclusion 모드 설정 가능 (없으면 기본값 always)</li>
+  <li>내용: 기술 스택, 코딩 규칙, 디렉토리 구조 등 마크다운으로 작성</li>
+  <li>다른 파일 참조: <code>#[[file:openapi.yaml]]</code>로 스펙 파일 포함 가능</li>
+</ul>
+</div>
+<div class="note-tip"><div class="note-tip-label">오늘 실습 적용</div>
+<p>오후 개인 프로젝트 시작 전, <code>.kiro/steering/project.md</code>에 프로젝트 규칙을 작성해보세요. "이 프로젝트는 HTML+CSS+JavaScript 바닐라로 만든다. 외부 라이브러리 사용 금지. 한국어 인터페이스." 이 정도만 적어도 Kiro가 일관성 있게 코드를 생성합니다.</p>
+</div>`},
+
+  {t:'inclusion — Steering 적용 시점', h:`
+<div class="note-section"><div class="note-section-title">inclusion이란</div>
+<p>Steering 파일 맨 위의 <span class="note-kw">프론트매터(front-matter)</span>에 <code>inclusion</code> 키를 설정해 해당 규칙이 언제 적용될지 제어합니다. 모든 Steering을 항상 적용하면 컨텍스트가 과부하될 수 있으므로, 적절히 분리하는 것이 중요합니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">4가지 inclusion 모드</div>
+<ul>
+  <li><strong>always (기본값)</strong>: 모든 AI 요청에 항상 포함. 핵심 규칙에 적합. 예) 기본 코딩 스타일.
+    <br><em>프론트매터 없이 파일 생성 시 기본값.</em></li>
+  <li><strong>fileMatch</strong>: 특정 파일 패턴과 매칭 시 포함. 예) <code>*.tsx</code> 파일 편집 시 React 규칙 자동 적용.
+    <br><code>fileMatchPattern: "**/*.tsx"</code></li>
+  <li><strong>manual</strong>: 채팅에서 <code>#Steering파일명</code>으로 직접 참조할 때만 포함. 자주 쓰지 않는 특수 규칙에 적합.</li>
+  <li><strong>auto</strong>: 요청 내용이 파일의 name/description과 매칭 시 자동 활성화. Kiro가 "이 요청에 관련 규칙이 있다"고 판단 시 적용.</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">실전 inclusion 전략</div>
+<p>핵심 규칙(<code>always</code>) → 언어별 규칙(<code>fileMatch</code>) → 특수 상황 규칙(<code>manual</code>) 순서로 계층화합니다. 예: 공통 스타일은 always, TypeScript 규칙은 *.ts 파일 매칭, 보안 체크리스트는 manual로 필요할 때만 불러옵니다.</p>
+</div>`},
+
+  {t:'Steering — Kiro에게 Steering 생성 요청', h:`
+<div class="note-section"><div class="note-section-title">Kiro가 Steering을 자동 생성</div>
+<p>Steering 파일을 직접 작성하기 어렵다면, <span class="note-kw">Kiro에게 Steering 파일 생성을 요청</span>할 수 있습니다. 원하는 규칙을 설명하면 Kiro가 <code>.kiro/steering/</code>에 적절한 마크다운 파일을 만들어 줍니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">Kiro에게 Steering 요청하는 방법</div>
+<ul>
+  <li>"이 프로젝트의 코딩 스타일 규칙을 Steering 파일로 만들어줘"</li>
+  <li>"이 코드베이스를 분석해서 사용 중인 패턴을 Steering으로 정리해줘"</li>
+  <li>"React + TypeScript 프로젝트용 기본 Steering 파일 만들어줘"</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">기존 코드베이스에서 Steering 추출</div>
+<p>이미 작성된 코드베이스가 있다면, Kiro에게 "이 프로젝트의 코드를 분석해서 사용 중인 패턴과 규칙을 Steering 파일로 정리해줘"라고 요청합니다. Kiro가 코드를 읽고 암묵적인 규칙들을 명시적 Steering으로 문서화합니다. <strong>레거시 코드베이스의 "암묵지"를 AI가 읽을 수 있는 "형식지"로</strong> 변환합니다.</p>
+</div>
+<div class="note-tip"><div class="note-tip-label">오늘 실습 — Steering 첫 시도</div>
+<p>오후 개인 프로젝트 시작 시, Kiro에게 <strong>"이 프로젝트에 맞는 Steering 파일을 만들어줘. 프로젝트는 [내 아이디어 설명]이고, 바닐라 JS로 만들 예정이야"</strong>라고 요청해보세요. Kiro가 맞춤형 Steering 초안을 만들어 줍니다.</p>
+</div>`},
+
+  {t:'효과와 한계 — Steering의 효과와 한계', h:`
+<div class="note-section"><div class="note-section-title">Steering의 효과</div>
+<p>Steering을 잘 작성하고 관리하면 다음과 같은 효과를 얻습니다.</p>
+<ul>
+  <li><strong>일관성</strong>: 같은 프로젝트의 코드가 파일마다, 대화마다 다른 스타일로 생성되는 문제 해소</li>
+  <li><strong>반복 설명 감소</strong>: "우리 프로젝트는 TypeScript야"를 매번 설명하지 않아도 됨</li>
+  <li><strong>팀 표준 자동 적용</strong>: 신규 팀원도 Steering 덕분에 즉시 팀 스타일로 코딩</li>
+  <li><strong>도메인 지식 내재화</strong>: "우리 회사에서 User는 외부 고객, Member는 내부 직원"처럼 비즈니스 언어를 AI에게 학습시킬 수 있음</li>
+  <li><strong>버전 관리</strong>: Git으로 규칙 변경 이력 관리</li>
+</ul>
+</div>
+<div class="note-section"><div class="note-section-title">Steering의 한계</div>
+<ul>
+  <li><strong>완벽하지 않음</strong>: Steering을 설정해도 AI가 항상 정확히 따르지 않을 수 있음. 특히 복잡한 규칙.</li>
+  <li><strong>컨텍스트 비용</strong>: Steering이 너무 많으면 컨텍스트 윈도우를 소비해 오히려 성능 저하. 필수 규칙만 always로.</li>
+  <li><strong>최종 확인은 사람</strong>: AI가 생성한 코드가 Steering을 따랐는지 반드시 사람이 검토. "AI가 만들었으니 괜찮겠지"는 금물.</li>
+  <li><strong>규칙 충돌</strong>: 여러 Steering 파일의 규칙이 충돌하면 AI가 혼란스러워할 수 있음</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">핵심 원칙 — AI를 파트너로</div>
+<p>Kiro와 Steering은 <strong>개발자의 생산성을 높이는 도구</strong>입니다. AI가 만든 코드는 반드시 이해하고 검토해야 합니다. "AI가 다 해줬으니 나는 몰라도 된다"가 아니라, "AI가 초안을 잡아줬으니 내가 빠르게 검토하고 개선한다"는 태도가 올바른 AI 개발 방식입니다.</p>
+</div>`}
+];
+
+var TOTAL=19, cur=0, frameReady=false, fsFrameReady=false, fsCur=0;
+var slideFrame=document.getElementById('slideFrame');
+var fsFrame=document.getElementById('fsFrame');
+function goTo(n){
+  n=((n%TOTAL)+TOTAL)%TOTAL; cur=n;
+  document.getElementById('snCnt').textContent=(cur+1)+' / '+TOTAL;
+  document.getElementById('progText').textContent=(cur+1)+' / '+TOTAL;
+  document.getElementById('progFill').style.width=((cur+1)/TOTAL*100)+'%';
+  document.getElementById('btnPrev').disabled=(cur===0);
+  document.getElementById('btnNext').disabled=(cur===TOTAL-1);
+  var note=NOTES[cur];
+  document.getElementById('noteTitle').textContent=note?note.t:'';
+  document.getElementById('noteBody').innerHTML=note?note.h:'';
+  if(frameReady) slideGo(cur);
+}
+function slideGo(n){
+  try{var fw=slideFrame.contentWindow;
+    if(typeof fw.kiroGo==='function') fw.kiroGo(n);
+    else if(typeof fw.go==='function') fw.go(n);
+  }catch(e){}
+}
+function openFS(){var ov=document.getElementById('fsOverlay');ov.style.display='flex';fsCur=cur;document.getElementById('fsCnt').textContent=(fsCur+1)+' / '+TOTAL;}
+function closeFS(){document.getElementById('fsOverlay').style.display='none';}
+function goFS(n){
+  n=((n%TOTAL)+TOTAL)%TOTAL; fsCur=n;
+  document.getElementById('fsCnt').textContent=(fsCur+1)+' / '+TOTAL;
+  try{var fw=fsFrame.contentWindow;if(typeof fw.kiroGo==='function') fw.kiroGo(n);else if(typeof fw.go==='function') fw.go(n);}catch(e){}
+}
+function toggleDay(id){document.getElementById(id).classList.toggle('open');}
+document.addEventListener('keydown',function(e){
+  if(document.getElementById('fsOverlay').style.display==='flex'){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') goFS(fsCur+1);
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp') goFS(fsCur-1);
+    else if(e.key==='Escape') closeFS();
+  } else {
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') goTo(cur+1);
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp') goTo(cur-1);
+  }
+});
+var html=document.documentElement,btn=document.getElementById('themeToggle');
+if(localStorage.getItem('sddThemeDark')==='1') html.classList.add('dark');
+btn.addEventListener('click',function(){var dark=html.classList.toggle('dark');localStorage.setItem('sddThemeDark',dark?'1':'0');});
+goTo(0);
+</script>
+</body>
+</html>
