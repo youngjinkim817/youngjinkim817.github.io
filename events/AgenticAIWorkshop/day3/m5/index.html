@@ -405,40 +405,49 @@ if (!sessionStorage.getItem('aawClassAccess') && location.hostname !== 'localhos
 var NOTES = [
   {t:'Strands Agents 소개', h:`
 <div class="note-section">
-  <div class="note-section-title">개요</div>
-  <p><span class="note-kw">Strands Agents</span>는 AWS가 오픈소스로 공개한 Python 기반 AI 에이전트 프레임워크입니다. 개발자가 단 몇 줄의 코드로 프로덕션 수준의 AI 에이전트를 구축할 수 있도록 설계되었습니다.</p>
+  <div class="note-section-title">Strands Agents란?</div>
+  <p><span class="note-kw">Strands Agents</span>는 AWS가 오픈소스로 공개한 Python 기반 AI 에이전트 프레임워크입니다. 개발자가 단 몇 줄의 코드로 프로덕션 수준의 AI 에이전트를 구축할 수 있도록 설계되었으며, Apache 2.0 라이선스로 GitHub에 공개되어 있습니다.</p>
 </div>
 <div class="note-section">
   <div class="note-section-title">핵심 철학</div>
   <ul>
+    <li><span class="note-kw">단순성(Simplicity)</span>: 복잡한 인프라 설정 없이 에이전트 로직에만 집중할 수 있는 최소한의 API를 제공합니다.</li>
     <li><span class="note-kw">모델 중립성(Model Agnostic)</span>: 특정 LLM에 종속되지 않고, Amazon Bedrock을 비롯한 다양한 모델을 교체 가능한 형태로 지원합니다.</li>
-    <li><span class="note-kw">오픈소스(Open Source)</span>: Apache 2.0 라이선스로 공개되어 누구나 자유롭게 사용하고 기여할 수 있습니다.</li>
-    <li>복잡한 인프라 설정 없이 에이전트 로직에만 집중할 수 있는 단순한 API를 제공합니다.</li>
+    <li><span class="note-kw">프로덕션 준비(Production-Ready)</span>: 프로토타입에서 시작하여 동일한 코드베이스로 프로덕션까지 확장할 수 있습니다.</li>
+    <li><span class="note-kw">오픈소스(Open Source)</span>: 커뮤니티 기여와 자유로운 수정이 가능하며, AWS가 장기 지원을 공식 선언했습니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">기존 프레임워크와의 차이</div>
+  <p>LangChain, CrewAI 등 기존 프레임워크와 달리 Strands Agents는 AWS 생태계(Bedrock, Lambda, S3, AgentCore)와 긴밀하게 통합되어 있습니다. AWS 자격 증명만 있으면 즉시 Claude, Nova 등 다양한 모델을 사용할 수 있습니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 왜 Strands Agents인가</div>
-  <p>LangChain, CrewAI 등 기존 프레임워크와 달리 Strands Agents는 AWS 생태계(Bedrock, Lambda, S3)와 긴밀하게 통합되어 있습니다. <strong>AWS 기반 에이전트 개발의 출발점</strong>으로 적합합니다.</p>
+  <p>AWS 기반 애플리케이션을 개발하는 팀이 에이전트를 빠르게 도입하려면, Strands Agents가 <strong>AWS 서비스와 가장 자연스럽게 통합되는 출발점</strong>입니다. 설치도 <code>pip install strands-agents strands-agents-tools</code> 한 줄이면 충분합니다.</p>
 </div>`},
-  {t:'SDK 핵심 기술 특징', h:`
+  {t:'Strands Agents SDK 핵심 기술 특징', h:`
 <div class="note-section">
-  <div class="note-section-title">주요 기술 특징</div>
-  <p><span class="note-kw">Strands Agents SDK</span>는 에이전트 구축에 필요한 핵심 기능을 내장하고 있습니다. 별도의 외부 의존성을 최소화하여 가볍고 실용적인 구조를 지향합니다.</p>
+  <div class="note-section-title">SDK 핵심 아키텍처</div>
+  <p><span class="note-kw">Strands Agents SDK</span>는 에이전트 구축에 필요한 핵심 기능을 내장하고 있습니다. 외부 의존성을 최소화하면서도 실전 에이전트에 필요한 기능은 모두 갖추고 있습니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">4가지 핵심 특징</div>
+  <div class="note-section-title">4가지 핵심 기술 특징</div>
   <ul>
-    <li><span class="note-kw">에이전틱 루프(Agentic Loop)</span>: 자체적인 추론-행동 루프를 내장하여 목표 달성까지 반복 실행합니다.</li>
-    <li><span class="note-kw">내장 도구(Built-in Tools)</span>: 파일 시스템, 웹 검색, 코드 실행 등 자주 사용하는 도구가 미리 준비되어 있습니다.</li>
-    <li><span class="note-kw">MCP 지원(MCP Support)</span>: Model Context Protocol을 기본 지원하여 다양한 외부 시스템과 표준화된 방식으로 연동합니다.</li>
-    <li><span class="note-kw">멀티 에이전트(Multi-Agent)</span>: 단일 에이전트를 넘어 여러 에이전트가 협력하는 복잡한 시스템을 구축할 수 있습니다.</li>
+    <li><span class="note-kw">에이전틱 루프(Agentic Loop)</span>: 자체적인 추론-행동 루프를 내장하여 목표 달성까지 반복 실행합니다. 개발자가 직접 루프를 구현할 필요가 없습니다.</li>
+    <li><span class="note-kw">내장 도구(Built-in Tools)</span>: 파일 시스템, 웹 검색, 코드 실행, AWS 서비스 연동 등 자주 사용하는 도구가 <code>strands-agents-tools</code> 패키지에 미리 준비되어 있습니다.</li>
+    <li><span class="note-kw">MCP 지원(MCP Support)</span>: Model Context Protocol을 기본 지원하여 다양한 외부 시스템과 표준화된 방식으로 연동합니다. 로컬(stdio)과 원격(HTTP) 모두 지원합니다.</li>
+    <li><span class="note-kw">멀티 에이전트(Multi-Agent)</span>: Orchestrator, Swarm, Graph, Workflow 4가지 모드로 복잡한 멀티 에이전트 시스템을 구축할 수 있습니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">설치 및 시작 방법</div>
+  <p>기본 설치는 <code>pip install strands-agents</code>이며, 내장 도구를 함께 사용하려면 <code>pip install strands-agents-tools</code>를 추가합니다. Python 3.10 이상과 AWS 자격 증명이 필요합니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 빠른 프로토타이핑</div>
-  <p>Strands Agents는 <code>pip install strands-agents</code> 한 줄로 설치하고, Agent 클래스와 도구 몇 개로 즉시 동작하는 에이전트를 만들 수 있습니다. <strong>프로토타입에서 프로덕션까지 동일한 코드베이스</strong>를 유지합니다.</p>
+  <p>단 10줄 미만의 코드로 동작하는 에이전트를 만들 수 있습니다. <strong>프로토타입에서 프로덕션까지 동일한 코드베이스</strong>를 유지하기 때문에, 초기에 만든 에이전트 로직을 그대로 배포할 수 있습니다.</p>
 </div>`},
-  {t:'3가지 구성요소', h:`
+  {t:'Strands Agents 3가지 구성요소', h:`
 <div class="note-section">
   <div class="note-section-title">에이전트의 3가지 핵심 구성요소</div>
   <p>Strands Agents로 만든 에이전트는 세 가지 핵심 요소로 구성됩니다. <span class="note-kw">모델(Model)</span>, <span class="note-kw">도구(Tools)</span>, <span class="note-kw">시스템 프롬프트(System Prompt)</span>가 유기적으로 결합하여 에이전트의 행동을 결정합니다.</p>
@@ -446,262 +455,329 @@ var NOTES = [
 <div class="note-section">
   <div class="note-section-title">각 구성요소 역할</div>
   <ul>
-    <li><span class="note-kw">모델(Model)</span>: 에이전트의 두뇌입니다. 주어진 상황을 이해하고, 도구를 언제 어떻게 사용할지 결정합니다.</li>
-    <li><span class="note-kw">도구(Tools)</span>: 에이전트가 실제 작업을 수행하는 손발입니다. Python 함수 하나가 곧 도구가 됩니다.</li>
-    <li><span class="note-kw">시스템 프롬프트(System Prompt)</span>: 에이전트의 역할과 행동 방침을 정의합니다. 에이전트의 '직업 설명서' 역할을 합니다.</li>
+    <li><span class="note-kw">모델(Model)</span>: 에이전트의 두뇌입니다. 주어진 상황을 이해하고, 도구를 언제 어떻게 사용할지 결정합니다. BedrockModel, AnthropicModel, OllamaModel 등 다양한 모델 클래스를 지원합니다.</li>
+    <li><span class="note-kw">도구(Tools)</span>: 에이전트가 실제 작업을 수행하는 손발입니다. Python 함수에 <code>@tool</code> 데코레이터만 붙이면 즉시 도구가 됩니다.</li>
+    <li><span class="note-kw">시스템 프롬프트(System Prompt)</span>: 에이전트의 역할과 행동 방침을 정의하는 지시문입니다. 에이전트의 직업 설명서 역할을 합니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">구성요소 조합 방식</div>
+  <p>세 가지 구성요소는 모두 독립적으로 교체 가능합니다. 모델을 Claude에서 Nova로 바꾸거나, 도구를 추가하거나, 시스템 프롬프트를 수정해도 나머지 코드에는 영향이 없습니다. 이 덕분에 A/B 테스트나 기능 확장이 쉽습니다.</p>
+  <p>코드로 표현하면: <code>agent = Agent(model=bedrock_model, tools=[tool1, tool2], system_prompt="...")</code></p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: HR 에이전트 구성</div>
   <p>HR 에이전트를 만들려면 Claude Sonnet(모델) + 연차 조회 함수(도구) + "당신은 HR 전문가입니다"(시스템 프롬프트)를 결합합니다. <strong>각 구성요소를 독립적으로 교체</strong>하여 다양한 에이전트를 만들 수 있습니다.</p>
 </div>`},
-  {t:'에이전틱 루프', h:`
+  {t:'Strands Agents를 활용한 에이전틱 루프', h:`
 <div class="note-section">
   <div class="note-section-title">에이전틱 루프 개념</div>
-  <p><span class="note-kw">에이전틱 루프(Agentic Loop)</span>는 에이전트가 목표를 달성하기 위해 반복적으로 추론하고 행동하는 핵심 실행 메커니즘입니다. Strands Agents의 내장 루프는 개발자가 직접 구현할 필요가 없습니다.</p>
+  <p><span class="note-kw">에이전틱 루프(Agentic Loop)</span>는 에이전트가 목표를 달성하기 위해 반복적으로 추론하고 행동하는 핵심 실행 메커니즘입니다. Strands Agents의 내장 루프는 개발자가 직접 구현할 필요가 없으며, 자동으로 관리됩니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">루프 단계</div>
+  <div class="note-section-title">루프 6단계 흐름</div>
   <ul>
-    <li><span class="note-kw">입력 수신(Input)</span>: 사용자의 요청이나 이전 도구 실행 결과를 받습니다.</li>
-    <li><span class="note-kw">LLM 추론(Reasoning)</span>: 모델이 현재 상황을 분석하고 다음 행동을 결정합니다.</li>
-    <li><span class="note-kw">도구 실행(Tool Execution)</span>: 선택한 도구를 호출하고 결과를 얻습니다.</li>
-    <li><span class="note-kw">종료 판단(Stop Condition)</span>: 목표 달성 여부를 판단하여 루프를 계속할지 종료할지 결정합니다.</li>
+    <li><span class="note-kw">1단계: 사용자 요청(User Query)</span>: 사용자가 에이전트에게 작업을 요청합니다.</li>
+    <li><span class="note-kw">2단계: 에이전트 초기화(Agent Init)</span>: 시스템 프롬프트와 사용 가능한 도구 목록이 모델에 전달됩니다.</li>
+    <li><span class="note-kw">3단계: LLM 처리(LLM Processing)</span>: 모델이 요청을 분석하고 필요한 도구 호출 계획을 수립합니다.</li>
+    <li><span class="note-kw">4단계: 도구 실행(Tool Execution)</span>: 선택된 도구가 호출되고 결과를 반환합니다.</li>
+    <li><span class="note-kw">5단계: 결과 분석(Result Analysis)</span>: 모델이 도구 결과를 분석하여 목표 달성 여부를 판단합니다.</li>
+    <li><span class="note-kw">6단계: 최종 응답(Final Response)</span>: 목표가 달성되면 사용자에게 최종 결과를 반환합니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">루프 종료 조건</div>
+  <p>에이전틱 루프는 다음 중 하나의 조건이 충족되면 종료합니다: ① 모델이 더 이상 도구 호출이 필요 없다고 판단할 때, ② 최대 반복 횟수(<code>max_iterations</code>)에 도달했을 때, ③ 에러가 발생하여 복구 불가능한 상태가 됐을 때.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 자율 데이터 분석</div>
   <p>에이전트에게 "올해 분기별 매출 분석 보고서를 작성해줘"를 요청하면, 루프를 통해 데이터 조회 → 분석 → 차트 생성 → 보고서 작성 과정을 <strong>사람 개입 없이 자율 완수</strong>합니다.</p>
 </div>`},
-  {t:'시작하기', h:`
+  {t:'Strands Agent 시작하기', h:`
 <div class="note-section">
   <div class="note-section-title">빠른 시작 가이드</div>
-  <p>Strands Agents를 시작하려면 패키지를 설치하고 기본 에이전트를 정의하면 됩니다. 필수 의존성은 <code>strands-agents</code>와 AWS 자격 증명입니다.</p>
+  <p>Strands Agents를 시작하려면 패키지를 설치하고 기본 에이전트를 정의하면 됩니다. 필수 의존성은 <code>strands-agents</code>와 AWS 자격 증명입니다. Python 3.10 이상 환경이 필요합니다.</p>
+</div>
+<div class="note-section">
+  <div class="note-section-title">설치 및 준비 단계</div>
+  <ul>
+    <li><span class="note-kw">패키지 설치</span>: <code>pip install strands-agents strands-agents-tools</code></li>
+    <li><span class="note-kw">AWS 자격 증명</span>: <code>aws configure</code>로 AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION(us-east-1 권장)을 설정합니다.</li>
+    <li><span class="note-kw">Bedrock 모델 활성화</span>: AWS 콘솔 → Amazon Bedrock → 모델 액세스에서 사용할 모델을 활성화합니다. Claude Sonnet 4 등을 미리 활성화해야 합니다.</li>
+  </ul>
 </div>
 <div class="note-section">
   <div class="note-section-title">기본 에이전트 생성 패턴</div>
   <ul>
-    <li><code>from strands import Agent</code>로 핵심 클래스를 불러옵니다.</li>
-    <li><code>@tool</code> 데코레이터로 Python 함수를 에이전트 도구로 등록합니다.</li>
-    <li><span class="note-kw">Agent 클래스(Agent Class)</span>: 모델, 도구, 시스템 프롬프트를 받아 에이전트 인스턴스를 생성합니다.</li>
-    <li>에이전트 호출은 <code>agent("질문 또는 작업 설명")</code>처럼 함수 호출 방식으로 단순합니다.</li>
+    <li><code>from strands import Agent, tool</code>으로 핵심 클래스를 불러옵니다.</li>
+    <li><code>@tool</code> 데코레이터로 Python 함수를 에이전트 도구로 등록합니다. 타입 힌트와 docstring이 모델에 전달됩니다.</li>
+    <li><span class="note-kw">Agent 클래스(Agent Class)</span>: <code>Agent(model=..., tools=[...], system_prompt="...")</code> 형태로 에이전트를 생성합니다.</li>
+    <li>에이전트 호출은 <code>response = agent("질문 또는 작업 설명")</code>처럼 함수 호출 방식으로 단순합니다.</li>
   </ul>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: Hello Agent</div>
   <p>날씨 조회 도구를 정의하고 Agent에 연결하면, "오늘 서울 날씨를 알려줘"라는 질문에 에이전트가 도구를 자동으로 선택하고 실행하여 <strong>10줄 미만의 코드로 동작하는 에이전트</strong>를 완성합니다.</p>
 </div>`},
-  {t:'Model Agnostic', h:`
+  {t:'다양한 모델 지원 — Model Agnostic', h:`
 <div class="note-section">
-  <div class="note-section-title">모델 중립 지원</div>
-  <p><span class="note-kw">모델 중립성(Model Agnostic)</span>은 Strands Agents의 핵심 설계 원칙입니다. 에이전트 코드를 변경하지 않고도 사용하는 LLM을 교체할 수 있습니다.</p>
+  <div class="note-section-title">모델 중립성이란?</div>
+  <p><span class="note-kw">모델 중립성(Model Agnostic)</span>은 Strands Agents의 핵심 설계 원칙입니다. 에이전트 코드를 변경하지 않고도 사용하는 LLM을 교체할 수 있어, 특정 공급자에 종속되지 않습니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">지원 모델 및 공급자</div>
+  <div class="note-section-title">지원 모델 공급자</div>
   <ul>
-    <li><span class="note-kw">Amazon Bedrock</span>: Claude, Llama, Titan 등 Bedrock에서 지원하는 모든 모델을 사용할 수 있습니다.</li>
-    <li><span class="note-kw">Anthropic API</span>: Bedrock을 거치지 않고 Anthropic의 API를 직접 호출할 수 있습니다.</li>
-    <li><span class="note-kw">로컬 모델(Local Model)</span>: Ollama를 통해 로컬에서 실행 중인 모델도 연결 가능합니다.</li>
-    <li><span class="note-kw">커스텀 공급자(Custom Provider)</span>: 표준 인터페이스를 구현하면 어떤 모델이든 연결할 수 있습니다.</li>
+    <li><span class="note-kw">Amazon Bedrock</span>: Claude Sonnet/Haiku, Amazon Nova, Llama, Mistral 등 Bedrock에서 지원하는 모든 Foundation Model을 사용할 수 있습니다. <code>BedrockModel(model_id="...")</code></li>
+    <li><span class="note-kw">Anthropic API</span>: Bedrock을 거치지 않고 Anthropic의 API를 직접 호출합니다. <code>AnthropicModel(model_id="claude-3-7-sonnet-latest")</code></li>
+    <li><span class="note-kw">OpenAI API</span>: GPT-4, o1 등 OpenAI 모델에 직접 연결합니다. <code>OpenAIModel(model_id="gpt-4o")</code></li>
+    <li><span class="note-kw">Ollama</span>: 로컬에서 실행 중인 오픈소스 모델(Llama, Mistral 등)을 연결합니다. 인터넷 없이 온프레미스에서 사용 가능합니다.</li>
+    <li><span class="note-kw">LiteLLM</span>: Azure, Gemini, Cohere 등 100개 이상의 모델에 대한 통합 게이트웨이입니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">모델 교체 방법</div>
+  <p>모델 교체는 단 한 줄의 변경으로 완료됩니다. <code>Agent(model=BedrockModel(...))</code>에서 <code>Agent(model=AnthropicModel(...))</code>으로 바꾸면 나머지 에이전트 코드는 전혀 변경할 필요가 없습니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 비용 최적화 전략</div>
-  <p>개발 단계에서는 저렴한 모델로 테스트하고, 프로덕션에서는 고성능 모델을 사용하는 전략이 가능합니다. <strong>모델 교체가 설정 한 줄로</strong> 완료됩니다.</p>
+  <p>개발 단계에서는 저렴한 Claude Haiku로 테스트하고, 프로덕션에서는 Claude Sonnet을 사용하는 전략이 가능합니다. <strong>모델 교체가 설정 한 줄로</strong> 완료되어 비용을 효율적으로 관리할 수 있습니다.</p>
 </div>`},
-  {t:'System Prompt', h:`
+  {t:'에이전트 동작 정의 — System Prompt', h:`
 <div class="note-section">
-  <div class="note-section-title">시스템 프롬프트 역할</div>
-  <p><span class="note-kw">시스템 프롬프트(System Prompt)</span>는 에이전트의 정체성, 목표, 제약 조건을 정의하는 지시문입니다. 모든 대화의 기반이 되며 에이전트 행동의 기준점이 됩니다.</p>
+  <div class="note-section-title">시스템 프롬프트의 역할</div>
+  <p><span class="note-kw">시스템 프롬프트(System Prompt)</span>는 에이전트의 정체성, 목표, 제약 조건, 동작 방식을 정의하는 핵심 지시문입니다. 모든 대화의 기반이 되며 에이전트 행동의 기준점이 됩니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">효과적인 시스템 프롬프트 작성</div>
+  <div class="note-section-title">시스템 프롬프트 4가지 구성 요소</div>
   <ul>
-    <li><span class="note-kw">역할 정의(Role Definition)</span>: 에이전트가 누구인지, 어떤 전문성을 가지는지 명확하게 정의합니다.</li>
-    <li><span class="note-kw">제약 조건(Constraints)</span>: 에이전트가 하면 안 되는 행동과 다루면 안 되는 주제를 명시합니다.</li>
-    <li><span class="note-kw">출력 형식(Output Format)</span>: 답변의 구조, 언어, 스타일을 지정하여 일관된 응답을 보장합니다.</li>
-    <li>간결하고 명확할수록 에이전트 행동이 예측 가능해집니다.</li>
+    <li><span class="note-kw">역할·페르소나(Role &amp; Persona)</span>: 에이전트가 누구인지, 어떤 전문성을 가지는지 명확하게 정의합니다. "너는 무엇을 하는 누구인가"를 설명합니다.</li>
+    <li><span class="note-kw">도구 사용 지침(Tool Usage Guidelines)</span>: 어떤 도구를 언제, 왜 사용해야 하는지 명시합니다. 추측 기반 도구 호출을 금지하는 규칙도 여기에 포함합니다.</li>
+    <li><span class="note-kw">응답 형식·범위(Response Format)</span>: 출력 구조, 길이, 포함/제외 조건을 지정하여 일관된 응답을 보장합니다.</li>
+    <li><span class="note-kw">태도·안전 가이드(Safety Guide)</span>: 응답 톤, 모를 때의 행동 방침, 절대 해서는 안 되는 것을 명시합니다.</li>
   </ul>
 </div>
-<div class="note-case">
-  <div class="note-case-label">사용 사례: 전문 에이전트 페르소나</div>
-  <p>"당신은 AWS 솔루션 아키텍트입니다. 고객의 요구사항을 분석하여 최적의 AWS 아키텍처를 추천하고, 항상 비용과 보안을 고려한 답변을 제공하세요." 같이 <strong>구체적인 역할과 기준을 명시</strong>할수록 효과적입니다.</p>
-</div>`},
-  {t:'사전 구축된 Tool 저장소', h:`
 <div class="note-section">
-  <div class="note-section-title">내장 도구 저장소</div>
-  <p>Strands Agents는 자주 사용하는 기능을 <span class="note-kw">사전 구축된 도구(Pre-built Tools)</span>로 제공합니다. 이 도구들은 바로 에이전트에 연결하여 사용할 수 있습니다.</p>
+  <div class="note-section-title">효과적인 시스템 프롬프트 작성 팁</div>
+  <p>간결하고 명확할수록 에이전트 행동이 예측 가능해집니다. 지나치게 긴 프롬프트는 오히려 혼란을 유발할 수 있습니다. 핵심 제약 조건은 목록 형태로 명확히 나열하는 것이 좋습니다.</p>
+</div>
+<div class="note-case">
+  <div class="note-case-label">사용 사례: AWS 솔루션 아키텍트 에이전트</div>
+  <p>"당신은 AWS 공인 솔루션 아키텍트입니다. 고객 요구사항을 분석하여 최적의 AWS 아키텍처를 추천하고, 항상 비용·보안·확장성을 함께 고려하세요. 모를 때는 추측하지 말고 명확화를 요청하세요." 처럼 <strong>구체적인 역할과 행동 기준</strong>을 명시할수록 효과적입니다.</p>
+</div>`},
+  {t:'Tools — 사전 구축된 Tool 저장소', h:`
+<div class="note-section">
+  <div class="note-section-title">내장 도구 저장소 개요</div>
+  <p>Strands Agents는 자주 사용하는 기능을 <span class="note-kw">사전 구축된 도구(Pre-built Tools)</span>로 <code>strands-agents-tools</code> 패키지에서 제공합니다. 설치 후 즉시 에이전트에 연결하여 사용할 수 있습니다.</p>
 </div>
 <div class="note-section">
   <div class="note-section-title">주요 내장 도구 카테고리</div>
   <ul>
-    <li><span class="note-kw">파일 시스템 도구(File System Tools)</span>: 파일 읽기, 쓰기, 디렉토리 탐색 기능을 제공합니다.</li>
-    <li><span class="note-kw">코드 실행 도구(Code Execution Tools)</span>: Python 코드를 실행하고 결과를 반환합니다. 데이터 분석 에이전트에 유용합니다.</li>
-    <li><span class="note-kw">HTTP 도구(HTTP Tools)</span>: 외부 API 호출과 웹 콘텐츠 조회 기능을 제공합니다.</li>
-    <li><span class="note-kw">AWS 도구(AWS Tools)</span>: S3, DynamoDB 등 AWS 서비스와 직접 연동하는 도구를 제공합니다.</li>
+    <li><span class="note-kw">RAG &amp; Memory</span>: <code>retrieve</code>, <code>memory</code>, <code>mem0</code> — 벡터 검색, 장기 메모리 관리</li>
+    <li><span class="note-kw">파일 작업</span>: <code>file_read</code>, <code>file_write</code>, <code>editor</code> — 파일 읽기·쓰기·편집</li>
+    <li><span class="note-kw">셸 &amp; 시스템</span>: <code>shell</code>, <code>cron</code>, <code>environment</code> — 명령어 실행, 스케줄, 환경 정보</li>
+    <li><span class="note-kw">코드 해석</span>: <code>python_repl</code>, <code>calculator</code> — Python 코드 실행, 수식 계산</li>
+    <li><span class="note-kw">웹 &amp; 네트워크</span>: <code>http_request</code>, <code>tavily</code>, <code>exa</code> — API 호출, 웹 검색</li>
+    <li><span class="note-kw">멀티모달</span>: <code>image</code>, <code>diagram</code>, <code>speak</code> — 이미지 처리, 다이어그램 생성, 음성</li>
+    <li><span class="note-kw">AWS 서비스</span>: <code>use_aws</code>, <code>aws_documentation</code> — AWS SDK 자동화, 문서 조회</li>
+    <li><span class="note-kw">에이전트 &amp; 워크플로</span>: <code>agent_graph</code>, <code>workflow</code>, <code>swarm</code> — 멀티 에이전트 조율</li>
   </ul>
 </div>
+<div class="note-section">
+  <div class="note-section-title">도구 사용 방법</div>
+  <p>사전 구축된 도구는 <code>from strands_tools import calculator, web_search</code>처럼 import하여 <code>Agent(tools=[calculator, web_search])</code>에 전달합니다. 커스텀 도구와 내장 도구를 함께 사용할 수 있습니다.</p>
+</div>
 <div class="note-case">
-  <div class="note-case-label">사용 사례: 즉시 활용 가능한 에이전트</div>
-  <p>내장 도구를 조합하면 코드 한 줄 없이 "S3에서 CSV를 읽고 Python으로 분석한 뒤 결과를 파일로 저장하는" 데이터 분석 에이전트를 <strong>선언적으로 구성</strong>할 수 있습니다.</p>
+  <div class="note-case-label">사용 사례: 즉시 활용 가능한 데이터 분석 에이전트</div>
+  <p><code>python_repl</code>과 <code>file_read</code> 도구를 조합하면, "CSV 파일을 읽어서 분기별 매출을 분석하고 요약해줘"라는 요청을 에이전트가 <strong>자율적으로 처리</strong>할 수 있습니다.</p>
 </div>`},
-  {t:'사용자 정의 Tool 생성', h:`
+  {t:'Tools — 손쉽게 사용자 정의 Tool 생성', h:`
 <div class="note-section">
   <div class="note-section-title">커스텀 도구 생성 방법</div>
-  <p>Strands Agents에서 <span class="note-kw">사용자 정의 도구(Custom Tool)</span>를 만드는 방법은 매우 간단합니다. 일반 Python 함수에 <code>@tool</code> 데코레이터를 붙이면 됩니다.</p>
+  <p>Strands Agents에서 <span class="note-kw">사용자 정의 도구(Custom Tool)</span>를 만드는 방법은 매우 간단합니다. 일반 Python 함수에 <code>@tool</code> 데코레이터를 붙이면 자동으로 에이전트 도구가 됩니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">도구 작성 핵심 규칙</div>
+  <div class="note-section-title">도구 생성 3단계 원칙</div>
   <ul>
-    <li><span class="note-kw">타입 힌트(Type Hint)</span>: 파라미터와 반환값에 타입을 명시하면 SDK가 자동으로 JSON 스키마를 생성합니다.</li>
-    <li><span class="note-kw">독스트링(Docstring)</span>: 함수 설명이 LLM에게 전달됩니다. 명확하게 작성할수록 에이전트가 도구를 올바르게 선택합니다.</li>
-    <li>함수 로직은 일반 Python 코드와 동일하게 작성합니다. 기존 코드를 도구로 전환하기 쉽습니다.</li>
+    <li><span class="note-kw">① 데코레이터만 붙이면 끝</span>: 일반 Python 함수에 <code>@tool</code>을 붙이면 자동으로 도구가 됩니다. 기존 코드를 도구로 전환하기 매우 쉽습니다.</li>
+    <li><span class="note-kw">② docstring = 도구 설명</span>: 함수의 <span class="note-kw">독스트링(Docstring)</span>과 <span class="note-kw">타입 힌트(Type Hint)</span>가 모델이 읽는 도구 명세가 됩니다. 명확할수록 에이전트의 도구 선택 정확도가 올라갑니다.</li>
+    <li><span class="note-kw">③ 그대로 장착</span>: <code>Agent(tools=[my_tool])</code>에 넣으면 모델이 필요할 때 자동으로 호출합니다.</li>
+  </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">도구 작성 모범 사례</div>
+  <ul>
+    <li>타입 힌트는 필수입니다. SDK가 자동으로 JSON 스키마를 생성하는 데 사용됩니다.</li>
     <li>에러 처리를 포함하면 에이전트가 실패 상황을 인식하고 대안을 선택할 수 있습니다.</li>
+    <li>도구 이름은 동사형(동사+명사)으로 작성하면 모델이 용도를 더 잘 이해합니다. 예: <code>search_products</code>, <code>send_email</code></li>
   </ul>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 사내 시스템 연동 도구</div>
   <p>기존 사내 HR 시스템 API 호출 코드를 <code>@tool</code> 데코레이터로 감싸기만 하면 에이전트가 연차 잔여일 조회, 휴가 신청 등 <strong>기존 비즈니스 로직을 그대로 활용</strong>할 수 있습니다.</p>
 </div>`},
-  {t:'워크플로 예제', h:`
+  {t:'Strands Agents 예제 — 워크플로', h:`
 <div class="note-section">
-  <div class="note-section-title">실전 워크플로 패턴</div>
-  <p>Strands Agents를 이용한 <span class="note-kw">워크플로(Workflow)</span> 예제는 에이전트가 여러 도구를 순서대로 또는 조건에 따라 실행하는 복잡한 작업 흐름을 보여줍니다.</p>
+  <div class="note-section-title">weather_forecast 에이전트 예제</div>
+  <p>Strands Agents의 워크플로를 이해하기 위한 대표적인 예제입니다. 사용자 요청에서 최종 응답까지 6단계 흐름을 보여줍니다. 이 예제는 날씨 예보 조회 기능을 가진 에이전트를 구현합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">워크플로 구성 패턴</div>
+  <div class="note-section-title">6단계 실행 흐름</div>
   <ul>
-    <li><span class="note-kw">순차 실행(Sequential Execution)</span>: 도구를 순서대로 실행하며 이전 단계의 결과를 다음 단계에 전달합니다.</li>
-    <li><span class="note-kw">조건 분기(Conditional Branching)</span>: 도구 실행 결과에 따라 다음 행동을 동적으로 결정합니다.</li>
-    <li><span class="note-kw">에러 복구(Error Recovery)</span>: 도구 실패 시 에이전트가 대안을 탐색하거나 사용자에게 명확화를 요청합니다.</li>
-    <li>복잡한 오케스트레이션 로직 없이도 에이전트의 추론 능력으로 자연스러운 워크플로가 구현됩니다.</li>
+    <li><span class="note-kw">① 쿼리(Query)</span>: 사용자가 "이번 주말 부산 날씨 알려줘"를 입력합니다.</li>
+    <li><span class="note-kw">② 에이전트 초기화(Init)</span>: system_prompt와 weather_forecast 도구가 모델에 전달됩니다.</li>
+    <li><span class="note-kw">③ LLM 처리(LLM Processing)</span>: Bedrock 모델이 요청을 분석하고, weather_forecast 도구 호출 계획을 수립합니다.</li>
+    <li><span class="note-kw">④ 도구 사용(Tool Use)</span>: <code>weather_forecast(city="부산", days=3)</code>가 호출되어 날씨 데이터를 반환합니다.</li>
+    <li><span class="note-kw">⑤ 결과 분석(Result)</span>: 모델이 도구 결과를 사용자 친화적인 형태로 가공합니다.</li>
+    <li><span class="note-kw">⑥ 최종 응답(Response)</span>: 완성된 날씨 정보가 사용자에게 반환됩니다.</li>
   </ul>
 </div>
+<div class="note-section">
+  <div class="note-section-title">구현 코드 핵심 포인트</div>
+  <p><code>BedrockModel(model_id="us.anthropic.claude-sonnet-4-...")</code>으로 모델을 지정하고, <code>@tool</code>로 도구를 정의한 뒤, <code>Agent(system_prompt=..., model=..., tools=[...])</code>로 에이전트를 생성합니다. 호출은 <code>agent("이번 주말 부산 날씨 알려줘")</code> 한 줄입니다.</p>
+</div>
 <div class="note-case">
-  <div class="note-case-label">사용 사례: 상품 추천 워크플로</div>
-  <p>고객 요청 접수 → 재고 조회 → 개인화 추천 → 가격 비교 → 결과 정리 순서의 워크플로를 에이전트가 자율 실행합니다. <strong>워크플로 코드를 따로 작성할 필요 없이</strong> 도구와 프롬프트만으로 구현됩니다.</p>
+  <div class="note-case-label">사용 사례: 실전 에이전트 패턴</div>
+  <p>weather_forecast 예제는 에이전트의 기본 패턴을 완벽하게 보여줍니다. 이 패턴을 이해하면 업무 자동화, 데이터 분석, 고객 응대 등 어떤 도메인에도 <strong>동일한 구조로 에이전트를 확장</strong>할 수 있습니다.</p>
 </div>`},
-  {t:'MCP 기본 지원', h:`
+  {t:'Tools — MCP를 위한 기본 지원', h:`
 <div class="note-section">
   <div class="note-section-title">MCP 개요</div>
-  <p><span class="note-kw">MCP(Model Context Protocol)</span>는 AI 에이전트와 외부 도구·데이터 소스 간 표준화된 연결 방식입니다. Strands Agents는 MCP를 기본 지원하여 MCP 서버에 연결된 모든 도구를 바로 사용할 수 있습니다.</p>
+  <p><span class="note-kw">MCP(Model Context Protocol)</span>는 AI 에이전트와 외부 도구·데이터 소스 간 표준화된 연결 방식입니다. Anthropic이 2024년 11월 공개하였으며, Strands Agents는 MCP를 기본 지원하여 MCP 서버에 연결된 모든 도구를 바로 사용할 수 있습니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">MCP 연동 방식</div>
+  <div class="note-section-title">두 가지 MCP 연결 방식</div>
   <ul>
-    <li><span class="note-kw">MCP 서버(MCP Server)</span>: 도구를 제공하는 서버입니다. 파일 시스템, GitHub, Slack 등 다양한 MCP 서버가 공개되어 있습니다.</li>
-    <li><span class="note-kw">MCP 클라이언트(MCP Client)</span>: Strands Agents가 MCP 클라이언트 역할을 하여 서버와 통신합니다.</li>
-    <li>MCP로 연결된 도구는 커스텀 도구와 동일하게 에이전트에서 사용됩니다. 개발자가 별도로 구현할 필요가 없습니다.</li>
-    <li><span class="note-kw">표준화된 인터페이스(Standardized Interface)</span>: 한 번 MCP 서버를 구현하면 MCP를 지원하는 모든 에이전트 프레임워크에서 재사용됩니다.</li>
+    <li><span class="note-kw">stdio — 로컬 프로세스</span>: <code>StdioServerParameters(command="uvx", args=["서버이름"])</code>으로 로컬에서 MCP 서버를 실행합니다. 내 PC의 파일 시스템, 패키지 등 로컬 자원에 접근할 때 사용합니다.</li>
+    <li><span class="note-kw">Streamable HTTP — 원격 서버</span>: <code>streamablehttp_client("https://mcp.example.com/mcp")</code>으로 원격 MCP 서버에 URL로 연결합니다. 팀이 공유하거나 클라우드에 배포된 서버에 접근할 때 사용합니다.</li>
   </ul>
 </div>
+<div class="note-section">
+  <div class="note-section-title">MCP 사용 코드 패턴</div>
+  <p>연결 방식만 다르고 나머지 사용법은 동일합니다: <code>with mcp_client: tools = mcp_client.list_tools_sync()</code>로 도구 목록을 가져온 뒤 <code>Agent(tools=tools)</code>에 전달합니다. MCP 서버가 제공하는 도구가 자동으로 에이전트에 등록됩니다.</p>
+</div>
 <div class="note-case">
-  <div class="note-case-label">사용 사례: GitHub MCP 서버 연동</div>
-  <p>GitHub MCP 서버에 연결하면 에이전트가 코드 리뷰 요청, 이슈 생성, PR 확인 등을 자연어로 처리합니다. <strong>GitHub API 문서를 읽을 필요 없이</strong> 에이전트가 알아서 적절한 도구를 선택합니다.</p>
+  <div class="note-case-label">사용 사례: AWS 문서 MCP 서버 연동</div>
+  <p><code>awslabs.aws-documentation-mcp-server</code>를 stdio로 연결하면 에이전트가 "Bedrock InvokeInlineAgent가 뭐야?" 같은 질문에 AWS 공식 문서를 실시간으로 검색하여 <strong>최신 정보를 기반으로 답변</strong>합니다.</p>
 </div>`},
   {t:'E-Commerce 상품추천 에이전트', h:`
 <div class="note-section">
-  <div class="note-section-title">실제 사용 사례 분석</div>
+  <div class="note-section-title">실제 사용 사례 — E-Commerce</div>
   <p>E-Commerce <span class="note-kw">상품 추천 에이전트(Product Recommendation Agent)</span>는 Strands Agents의 실전 활용을 보여주는 대표적인 예제입니다. 고객의 자연어 요청을 분석하여 맞춤형 상품을 추천합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">에이전트 구성 요소</div>
+  <div class="note-section-title">에이전트 구성 도구들</div>
   <ul>
-    <li><span class="note-kw">상품 검색 도구(Product Search Tool)</span>: 고객 요청 키워드로 상품 DB를 검색합니다.</li>
+    <li><span class="note-kw">상품 검색 도구(Product Search Tool)</span>: 고객 요청 키워드로 상품 데이터베이스를 검색합니다.</li>
     <li><span class="note-kw">재고 확인 도구(Inventory Check Tool)</span>: 검색된 상품의 재고 상태를 실시간으로 확인합니다.</li>
     <li><span class="note-kw">개인화 도구(Personalization Tool)</span>: 고객의 구매 이력과 선호도를 분석하여 추천 순위를 조정합니다.</li>
     <li><span class="note-kw">가격 비교 도구(Price Comparison Tool)</span>: 유사 상품의 가격을 비교하여 최적의 선택지를 제안합니다.</li>
   </ul>
 </div>
+<div class="note-section">
+  <div class="note-section-title">에이전트 실행 흐름</div>
+  <p>고객 요청 → 요청 분석(모델) → 상품 검색(도구) → 재고 확인(도구) → 개인화 필터링(도구) → 가격 비교(도구) → 추천 목록 생성(모델) → 최종 응답. 이 모든 과정이 에이전틱 루프로 자동 실행됩니다.</p>
+</div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 대화형 쇼핑 어시스턴트</div>
-  <p>"생일 선물로 40대 남성에게 어울리는 10만 원대 선물 추천해줘"라는 요청에 에이전트가 검색 → 재고 확인 → 개인화 → 가격 비교를 거쳐 <strong>맞춤형 상품 목록과 이유를 함께 제시</strong>합니다.</p>
+  <p>"생일 선물로 40대 남성에게 어울리는 10만 원대 선물 추천해줘"라는 요청에 에이전트가 검색 → 재고 확인 → 개인화 → 가격 비교를 거쳐 <strong>맞춤형 상품 목록과 추천 이유를 함께 제시</strong>합니다.</p>
 </div>`},
-  {t:'Multi-Agent 모드', h:`
+  {t:'다양한 Multi-Agent 구축 모드 지원', h:`
 <div class="note-section">
-  <div class="note-section-title">멀티 에이전트 지원</div>
-  <p>Strands Agents는 단일 에이전트를 넘어 여러 에이전트가 협력하는 <span class="note-kw">멀티 에이전트(Multi-Agent)</span> 시스템을 다양한 방식으로 지원합니다.</p>
+  <div class="note-section-title">멀티 에이전트 시스템이란?</div>
+  <p><span class="note-kw">멀티 에이전트 시스템(Multi-Agent System)</span>은 단일 에이전트로 처리하기 어려운 복잡한 작업을 여러 전문화된 에이전트가 협력하여 해결하는 구조입니다. Strands Agents는 4가지 멀티 에이전트 모드를 지원합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">4가지 멀티 에이전트 모드</div>
+  <div class="note-section-title">4가지 멀티 에이전트 모드 비교</div>
   <ul>
-    <li><span class="note-kw">오케스트레이터 모드(Orchestrator Mode)</span>: 한 에이전트가 다른 에이전트를 도구처럼 사용하는 계층적 구조입니다.</li>
-    <li><span class="note-kw">스웜 모드(Swarm Mode)</span>: 여러 에이전트가 동등하게 협력하며 공유 목표를 달성합니다.</li>
-    <li><span class="note-kw">에이전트 그래프 모드(Agent Graph Mode)</span>: 에이전트 간 관계를 그래프로 정의하여 복잡한 의존성을 처리합니다.</li>
-    <li><span class="note-kw">워크플로 모드(Workflow Mode)</span>: 에이전트를 순서대로 실행하는 파이프라인 구조입니다.</li>
+    <li><span class="note-kw">Orchestrator 모드</span>: 주 에이전트가 서브 에이전트를 도구처럼 호출하는 계층적 구조. 명확한 역할 분담이 필요할 때 적합합니다.</li>
+    <li><span class="note-kw">Swarm 모드</span>: 여러 에이전트가 동등하게 협력하는 수평적 구조. 병렬 처리와 다양한 관점이 필요할 때 적합합니다.</li>
+    <li><span class="note-kw">Agent Graph 모드</span>: 에이전트 간 관계를 DAG(방향성 비순환 그래프)로 정의하는 구조. 복잡한 의존성이 있을 때 적합합니다.</li>
+    <li><span class="note-kw">Workflow 모드</span>: 에이전트를 고정된 순서로 실행하는 순차적 파이프라인. 예측 가능한 프로세스가 필요할 때 적합합니다.</li>
   </ul>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 모드 선택 기준</div>
-  <p>단순한 위임 구조라면 오케스트레이터, 병렬 처리가 필요하다면 스웜, 복잡한 의존성이 있다면 그래프, 순서가 중요하다면 워크플로 모드를 선택합니다. <strong>문제 특성에 맞는 모드 선택이 핵심</strong>입니다.</p>
+  <p>단순한 위임 구조라면 Orchestrator, 병렬 처리가 필요하다면 Swarm, 복잡한 의존성이 있다면 Graph, 순서가 중요하다면 Workflow 모드를 선택합니다. <strong>문제 특성에 맞는 모드 선택이 전체 시스템 품질을 결정</strong>합니다.</p>
 </div>`},
-  {t:'Orchestrator 모드', h:`
+  {t:'Orchestrator 모드 (Agents as Tools)', h:`
 <div class="note-section">
-  <div class="note-section-title">오케스트레이터 패턴</div>
-  <p><span class="note-kw">오케스트레이터 모드(Orchestrator Mode)</span>는 하나의 주 에이전트(Orchestrator)가 전문화된 서브 에이전트들을 도구처럼 호출하는 계층적 구조입니다. "에이전트를 도구로(Agents as Tools)"라는 패턴으로 불립니다.</p>
+  <div class="note-section-title">Orchestrator 패턴 개념</div>
+  <p><span class="note-kw">Orchestrator 모드(Agents as Tools)</span>는 하나의 주 에이전트(Coordinator)가 전문화된 서브 에이전트들을 도구처럼 호출하는 계층적 구조입니다. "에이전트를 도구로" 사용하는 패턴으로, 복잡한 작업을 명확하게 분할·정복합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">구조 및 특징</div>
+  <div class="note-section-title">3가지 핵심 특징</div>
   <ul>
-    <li><span class="note-kw">주 에이전트(Main Agent)</span>: 사용자 요청을 분석하고 적합한 서브 에이전트에게 작업을 위임합니다.</li>
-    <li><span class="note-kw">서브 에이전트(Sub-Agent)</span>: 특정 도메인에 특화된 에이전트입니다. 주 에이전트의 관점에서는 도구처럼 보입니다.</li>
-    <li>서브 에이전트를 <code>@tool</code>로 감싸면 오케스트레이터가 자동으로 활용합니다.</li>
-    <li>각 서브 에이전트는 독립적으로 개발하고 테스트할 수 있습니다.</li>
+    <li><span class="note-kw">분할 정복(Divide &amp; Conquer)</span>: 각 전문가 에이전트가 명확한 책임 영역을 가져 시스템 이해와 유지보수가 쉽습니다.</li>
+    <li><span class="note-kw">계층적 위임(Hierarchical Delegation)</span>: Coordinator가 어떤 전문가 에이전트를 호출할지 결정합니다. 명확한 명령 체계가 형성됩니다.</li>
+    <li><span class="note-kw">모듈식 아키텍처(Modular Architecture)</span>: 전문가 에이전트를 독립적으로 최적화·추가·삭제·수정·재사용 가능합니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">구현 방법</div>
+  <p>서브 에이전트를 <code>@tool</code>로 감싸면 Orchestrator가 자동으로 활용합니다. 각 서브 에이전트는 독립적으로 개발하고 테스트할 수 있어, 팀 간 병렬 개발이 가능합니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 사내 AI 포털</div>
-  <p>HR 에이전트, IT 지원 에이전트, 재무 에이전트를 각 팀이 개발하고, 오케스트레이터가 질문을 분류하여 적합한 에이전트에게 위임합니다. <strong>팀 간 독립적인 개발과 배포</strong>가 가능합니다.</p>
+  <p>HR 에이전트, IT 지원 에이전트, 재무 에이전트를 각 팀이 개발하고, Coordinator가 사용자 질문을 분류하여 적합한 에이전트에게 위임합니다. <strong>팀 간 독립적인 개발과 배포</strong>가 가능합니다.</p>
 </div>`},
-  {t:'Swarm 모드', h:`
+  {t:'Swarm 모드 (Collaborative Agents)', h:`
 <div class="note-section">
-  <div class="note-section-title">스웜 모드 개념</div>
-  <p><span class="note-kw">스웜 모드(Swarm Mode)</span>는 여러 에이전트가 동등한 관계로 협력하여 공동 목표를 달성하는 패턴입니다. "Collaborative Agents" 패턴으로도 불립니다.</p>
+  <div class="note-section-title">Swarm 모드 개념</div>
+  <p><span class="note-kw">Swarm 모드(Collaborative Agents)</span>는 여러 에이전트가 동등한 관계로 협력하여 공동 목표를 달성하는 패턴입니다. 특정 에이전트가 지휘하지 않고 모든 에이전트가 대등하게 참여합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">스웜의 특징</div>
+  <div class="note-section-title">3가지 협업 메커니즘</div>
   <ul>
-    <li><span class="note-kw">동등한 협력(Peer Collaboration)</span>: 특정 에이전트가 지휘하지 않고 모든 에이전트가 대등하게 참여합니다.</li>
-    <li><span class="note-kw">공유 컨텍스트(Shared Context)</span>: 모든 에이전트가 동일한 대화 이력과 상태를 공유하여 일관성을 유지합니다.</li>
-    <li><span class="note-kw">역할 전환(Role Handoff)</span>: 현재 작업에 가장 적합한 에이전트가 주도권을 가져가는 유동적 구조입니다.</li>
-    <li>단일 에이전트보다 다양한 관점에서 문제를 분석할 수 있습니다.</li>
+    <li><span class="note-kw">협력(Collaborative)</span>: 각 에이전트가 자신의 전문 영역에서 기여하며 공동 목표를 달성합니다.</li>
+    <li><span class="note-kw">경쟁(Competitive)</span>: 여러 에이전트가 동일한 문제에 대해 각자 해결책을 제시하고 최선의 답을 선택합니다.</li>
+    <li><span class="note-kw">인계(Handoff)</span>: 현재 작업에 가장 적합한 에이전트가 주도권을 가져가는 유동적 역할 전환입니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">공유 컨텍스트</div>
+  <p><span class="note-kw">공유 컨텍스트(Shared Context)</span>는 Swarm의 핵심입니다. 모든 에이전트가 동일한 대화 이력과 상태를 공유하여 일관성을 유지합니다. 각 에이전트는 다른 에이전트의 입출력을 열람할 수 있습니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 코드 리뷰 스웜</div>
-  <p>보안 전문 에이전트, 성능 전문 에이전트, 가독성 전문 에이전트가 함께 코드를 검토합니다. 각자 전문 영역에서 피드백을 제공하고 <strong>통합된 리뷰 결과</strong>를 반환합니다.</p>
+  <p>보안 전문 에이전트, 성능 전문 에이전트, 가독성 전문 에이전트가 함께 코드를 검토합니다. 각자 전문 영역에서 피드백을 제공하고 <strong>통합된 종합 리뷰 결과</strong>를 반환합니다.</p>
 </div>`},
-  {t:'Agent Graph 모드', h:`
+  {t:'Agent Graph 모드 (Graph)', h:`
 <div class="note-section">
-  <div class="note-section-title">에이전트 그래프 모드</div>
-  <p><span class="note-kw">에이전트 그래프 모드(Agent Graph Mode)</span>는 에이전트 간의 관계와 실행 순서를 방향성 그래프(DAG)로 정의하는 고급 멀티 에이전트 패턴입니다.</p>
+  <div class="note-section-title">Agent Graph 모드 개념</div>
+  <p><span class="note-kw">Agent Graph 모드(Graph Mode)</span>는 에이전트들의 관계와 실행 순서를 <span class="note-kw">방향성 비순환 그래프(DAG, Directed Acyclic Graph)</span>로 정의하는 고급 멀티 에이전트 패턴입니다. 네트워크 토폴로지 구조로 에이전트들이 상호 연결됩니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">그래프 구조의 장점</div>
+  <div class="note-section-title">3가지 핵심 특성</div>
   <ul>
-    <li><span class="note-kw">명시적 의존성(Explicit Dependencies)</span>: 에이전트 간 선행 관계를 그래프로 명확하게 표현합니다.</li>
-    <li><span class="note-kw">병렬 실행(Parallel Execution)</span>: 의존 관계가 없는 에이전트들은 동시에 실행되어 전체 처리 시간을 단축합니다.</li>
-    <li><span class="note-kw">조건 분기(Conditional Edges)</span>: 에이전트 결과에 따라 실행 경로를 동적으로 변경합니다.</li>
-    <li>복잡한 비즈니스 프로세스를 시각적으로 모델링하기 용이합니다.</li>
+    <li><span class="note-kw">그래프 패턴(Graph Pattern)</span>: 구조화되고 결정적인 워크플로를 기반으로 실행합니다. 실행 경로가 그래프 구조에 의해 명확하게 정의됩니다.</li>
+    <li><span class="note-kw">구조화된 실행(Structured Execution)</span>: 노드(Node)는 에이전트 또는 멀티 에이전트 시스템, 엣지(Edge)는 종속성과 정보 흐름을 정의합니다.</li>
+    <li><span class="note-kw">결정적 워크플로(Deterministic Workflow)</span>: 한 노드의 출력이 다음 노드의 입력이 되며, 조건 함수(Condition Function)로 분기를 결정합니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">적합한 사용 시나리오</div>
+  <p>복잡하지만 경로와 조건이 <strong>사전에 정의된 결정적 프로세스</strong>에 적합합니다. 병렬 처리가 필요하지만 의존성 순서가 있는 경우, 그래프 모드가 의존성을 명시적으로 표현하고 자동으로 처리합니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 계약서 검토 파이프라인</div>
   <p>문서 파싱 에이전트 이후, 법률 검토 에이전트와 재무 검토 에이전트가 병렬 실행되고, 두 결과가 완료된 후 최종 승인 에이전트가 실행됩니다. <strong>그래프로 의존성과 병렬성을 한눈에 파악</strong>합니다.</p>
 </div>`},
-  {t:'Workflow 모드', h:`
+  {t:'Workflow 모드 (Sequential)', h:`
 <div class="note-section">
-  <div class="note-section-title">워크플로 모드 개념</div>
-  <p><span class="note-kw">워크플로 모드(Workflow Mode)</span>는 에이전트들을 미리 정의된 순서로 실행하는 순차적(Sequential) 파이프라인 패턴입니다. 각 단계의 출력이 다음 단계의 입력이 됩니다.</p>
+  <div class="note-section-title">Workflow 모드 개념</div>
+  <p><span class="note-kw">Workflow 모드(Sequential Mode)</span>는 에이전트들을 고정된 순서로 실행하는 순차적 파이프라인 패턴입니다. <strong>고정된 워크플로</strong>를 통해 에이전트의 정보와 실행 순서를 제어합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">워크플로의 특징</div>
+  <div class="note-section-title">3가지 핵심 특성</div>
   <ul>
-    <li><span class="note-kw">예측 가능성(Predictability)</span>: 실행 순서가 고정되어 있어 결과를 예측하고 디버깅하기 쉽습니다.</li>
-    <li><span class="note-kw">단계별 검증(Step Validation)</span>: 각 에이전트의 출력을 다음 단계로 전달하기 전에 검증할 수 있습니다.</li>
-    <li><span class="note-kw">재사용 가능한 파이프라인(Reusable Pipeline)</span>: 동일한 워크플로를 다른 입력에 반복 적용합니다.</li>
-    <li>에이전트의 자율성보다 프로세스의 일관성이 중요한 경우에 적합합니다.</li>
+    <li><span class="note-kw">순서·종속 실행(Sequential Execution)</span>: 순서와 종속 조건이 있는 다단계 작업을 실행합니다. 이전 에이전트의 출력이 다음 에이전트의 입력으로 전달됩니다.</li>
+    <li><span class="note-kw">병렬 분기·우선순위(Parallel Branching)</span>: 병렬 분기와 우선순위(1~5) 지정을 지원합니다. 일부 단계는 병렬로 처리하면서 전체 흐름은 순차적으로 관리합니다.</li>
+    <li><span class="note-kw">상태 제어(State Management)</span>: 워크플로 상태를 저장하고, 일시 중지하고, 재개할 수 있습니다. 중단된 작업을 처음부터 다시 시작할 필요가 없습니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">적합한 사용 시나리오</div>
+  <p>구조화된 실행과 <strong>명확한 종속성이 필요한 시나리오</strong>에 적합합니다. 에이전트의 자율성보다 프로세스의 일관성이 중요하거나, 각 단계의 결과를 검증하며 진행해야 할 때 Workflow 모드를 선택합니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 콘텐츠 생성 파이프라인</div>
@@ -709,56 +785,73 @@ var NOTES = [
 </div>`},
   {t:'에이전트-도구 vs 에이전트-에이전트 상호 운영성', h:`
 <div class="note-section">
-  <div class="note-section-title">두 가지 상호 운영성 패턴</div>
-  <p>AI 시스템에서 <span class="note-kw">상호 운영성(Interoperability)</span>은 서로 다른 시스템이 표준화된 방식으로 연동하는 능력입니다. Strands Agents는 에이전트-도구 연결과 에이전트-에이전트 연결 두 가지 패턴을 지원합니다.</p>
+  <div class="note-section-title">상호 운영성의 진화</div>
+  <p>AI 에이전트 생태계의 <span class="note-kw">상호 운영성(Interoperability)</span>은 세 단계로 발전했습니다. ① 단일 에이전트가 API로 도구 직접 호출 → ② 여러 에이전트가 각자 도구에 API 연결(N×M 복잡성) → ③ 에이전트끼리 직접 통신(Agent-to-Agent)으로 발전합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">비교 분석</div>
+  <div class="note-section-title">두 가지 상호 운영성 패턴</div>
   <ul>
-    <li><span class="note-kw">에이전트-도구 상호 운영성(Agent-Tool Interoperability)</span>: MCP 프로토콜을 통해 에이전트와 외부 도구·데이터 소스가 표준화된 방식으로 연동합니다.</li>
-    <li><span class="note-kw">에이전트-에이전트 상호 운영성(Agent-Agent Interoperability)</span>: A2A(Agent-to-Agent) 프로토콜을 통해 서로 다른 에이전트 프레임워크로 만든 에이전트들이 협력합니다.</li>
-    <li>두 프로토콜은 상호 보완적입니다. MCP는 도구와의 연결, A2A는 에이전트 간 통신에 초점을 맞춥니다.</li>
+    <li><span class="note-kw">에이전트-도구 상호 운영성(Agent-Tool Interoperability)</span>: MCP 프로토콜을 통해 에이전트와 외부 도구·데이터 소스가 표준화된 방식으로 연동합니다. "에이전트가 세상과 어떻게 연결되는가"를 정의합니다.</li>
+    <li><span class="note-kw">에이전트-에이전트 상호 운영성(Agent-Agent Interoperability)</span>: A2A(Agent-to-Agent) 프로토콜을 통해 서로 다른 프레임워크로 만든 에이전트들이 협력합니다. "에이전트들이 서로 어떻게 협력하는가"를 정의합니다.</li>
   </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">N×M 문제 해결</div>
+  <p>표준화 없이 여러 에이전트가 여러 도구에 연결되면 N개 에이전트 × M개 도구 = N×M개의 커스텀 통합이 필요합니다. MCP는 이 문제를 표준 인터페이스로 해결하고, A2A는 에이전트 간 통신도 표준화합니다.</p>
 </div>
 <div class="note-case">
   <div class="note-case-label">사용 사례: 이기종 시스템 통합</div>
-  <p>Strands Agents로 만든 에이전트가 LangChain으로 만든 에이전트, Bedrock Agent와 A2A 프로토콜로 협력하고, 각 에이전트는 MCP로 자신의 도구에 연결됩니다. <strong>벤더 종속 없이 최적의 도구를 선택</strong>할 수 있습니다.</p>
+  <p>Strands Agents로 만든 에이전트가 LangChain 에이전트, Bedrock Agent와 A2A 프로토콜로 협력하고, 각 에이전트는 MCP로 자신의 도구에 연결됩니다. <strong>벤더 종속 없이 최적의 도구를 선택</strong>할 수 있습니다.</p>
 </div>`},
   {t:'MCP vs A2A', h:`
 <div class="note-section">
-  <div class="note-section-title">MCP와 A2A 비교</div>
-  <p><span class="note-kw">MCP(Model Context Protocol)</span>와 <span class="note-kw">A2A(Agent-to-Agent Protocol)</span>는 AI 생태계의 두 핵심 표준 프로토콜입니다. 각각 다른 문제를 해결합니다.</p>
+  <div class="note-section-title">두 프로토콜 비교</div>
+  <p><span class="note-kw">MCP(Model Context Protocol)</span>와 <span class="note-kw">A2A(Agent to Agent Protocol)</span>는 AI 생태계의 두 핵심 표준 프로토콜입니다. 서로 다른 문제를 해결하며, 함께 사용될 때 완전한 에이전트 생태계를 형성합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">핵심 차이점</div>
+  <div class="note-section-title">MCP vs A2A 핵심 차이점</div>
   <ul>
-    <li><span class="note-kw">MCP 목적</span>: 에이전트와 외부 도구·컨텍스트 소스 간의 표준화된 연결. "에이전트가 세상과 어떻게 연결되는가"를 정의합니다.</li>
-    <li><span class="note-kw">A2A 목적</span>: 에이전트 간 작업 위임과 협력의 표준화. "에이전트들이 서로 어떻게 협력하는가"를 정의합니다.</li>
-    <li><span class="note-kw">통신 방향</span>: MCP는 에이전트가 도구를 호출하는 단방향, A2A는 에이전트 간 양방향 통신을 지원합니다.</li>
-    <li><span class="note-kw">공개 주체</span>: MCP는 Anthropic이, A2A는 Google이 주도하여 개발했으며 현재 업계 표준으로 자리잡고 있습니다.</li>
+    <li><span class="note-kw">MCP 공개 주체</span>: Anthropic이 2024년 11월 공개했습니다.</li>
+    <li><span class="note-kw">MCP 목적</span>: 에이전트 ↔ 도구·데이터 연결 표준(수직 통합). "AI의 USB-C"라고 불리며, 한 번 연결로 도구를 재사용합니다.</li>
+    <li><span class="note-kw">A2A 공개 주체</span>: Google이 2025년 4월 공개했습니다.</li>
+    <li><span class="note-kw">A2A 목적</span>: 에이전트 ↔ 에이전트 간 협업·통신 표준(수평 연결). 서로 다른 벤더의 에이전트가 상호 운용될 수 있게 합니다.</li>
+    <li><span class="note-kw">상호 보완</span>: MCP로 도구를 붙이고, A2A로 에이전트끼리 협업합니다. 두 프로토콜은 경쟁이 아니라 함께 사용됩니다.</li>
   </ul>
 </div>
+<div class="note-section">
+  <div class="note-section-title">통신 방향 차이</div>
+  <p>MCP는 에이전트가 도구를 호출하는 단방향(클라이언트-서버) 구조입니다. A2A는 에이전트 간 양방향 통신을 지원하며, 작업 위임·상태 업데이트·결과 반환이 양방향으로 이루어집니다.</p>
+</div>
 <div class="note-case">
-  <div class="note-case-label">사용 사례: 협업 AI 시스템</div>
+  <div class="note-case-label">사용 사례: 협업 AI 시스템 구성</div>
   <p>연구 에이전트가 A2A로 분석 에이전트에게 작업을 위임하고, 분석 에이전트는 MCP로 데이터베이스 도구와 차트 생성 도구에 연결합니다. <strong>두 프로토콜을 함께 사용하면 완전한 에이전트 생태계</strong>를 구성합니다.</p>
 </div>`},
-  {t:'두 가지 옵션', h:`
+  {t:'Agent를 생성하는 두 가지 옵션', h:`
 <div class="note-section">
   <div class="note-section-title">에이전트 생성 두 가지 방식</div>
-  <p>Strands Agents에서 에이전트를 생성하는 방법은 크게 두 가지입니다. <span class="note-kw">코드 기반 방식(Code-Based)</span>과 <span class="note-kw">설정 기반 방식(Configuration-Based)</span>으로, 각각 다른 사용 시나리오에 적합합니다.</p>
+  <p>AI 에이전트를 생성하는 방법은 크게 두 가지입니다. <span class="note-kw">완전관리형 서비스(Fully Managed Service)</span>와 <span class="note-kw">에이전틱 프레임워크(Agentic Framework)</span>로, 각각 다른 요구사항에 적합합니다.</p>
 </div>
 <div class="note-section">
-  <div class="note-section-title">방식별 특징 비교</div>
+  <div class="note-section-title">① 완전관리형 서비스 — Amazon Bedrock Agent</div>
   <ul>
-    <li><span class="note-kw">코드 기반 방식</span>: Python 코드로 에이전트의 모든 구성 요소를 직접 정의합니다. 복잡한 로직, 조건 처리, 동적 도구 등록에 유리합니다.</li>
-    <li><span class="note-kw">설정 기반 방식</span>: YAML 또는 JSON 설정 파일로 에이전트를 선언적으로 정의합니다. 비개발자도 에이전트를 설정하고 관리하기 쉽습니다.</li>
-    <li>두 방식 모두 동일한 에이전틱 루프와 도구 시스템을 사용하므로 기능 차이는 없습니다.</li>
-    <li>프로젝트 규모와 팀 구성에 따라 적합한 방식을 선택하거나 혼합 사용도 가능합니다.</li>
+    <li>AWS Console에서 <strong>GUI로 손쉽게</strong> 에이전트를 생성합니다.</li>
+    <li>실행 환경의 <strong>구축·관리·운영이 불필요</strong>합니다. AWS가 인프라를 모두 관리합니다.</li>
+    <li>코딩 없이 설정만으로 에이전트를 구성할 수 있어 비개발자도 사용 가능합니다.</li>
+    <li>단, 커스터마이즈 범위가 제한됩니다. 복잡한 로직은 Lambda 연동으로 보완합니다.</li>
+  </ul>
+</div>
+<div class="note-section">
+  <div class="note-section-title">② 에이전틱 프레임워크 — Strands Agents SDK</div>
+  <ul>
+    <li><strong>코드로 직접</strong> 에이전트를 생성하여 유연성을 극대화합니다.</li>
+    <li>로컬 환경 또는 클라우드 어디서나 실행 가능합니다.</li>
+    <li>단, 실행 환경은 <strong>직접 배포·운영·관리</strong>해야 합니다. AgentCore를 활용하면 이 부담을 줄일 수 있습니다.</li>
+    <li>복잡한 멀티 에이전트 시스템, 커스텀 도구, 세밀한 프롬프트 제어가 필요할 때 선택합니다.</li>
   </ul>
 </div>
 <div class="note-case">
-  <div class="note-case-label">사용 사례: 팀별 선택 기준</div>
-  <p>개발팀은 코드 기반으로 복잡한 에이전트를 구축하고, 비즈니스팀은 설정 기반으로 간단한 에이전트를 배포합니다. <strong>동일한 플랫폼에서 서로 다른 팀이 자신에게 맞는 방식으로 에이전트를 관리</strong>합니다.</p>
+  <div class="note-case-label">사용 사례: 선택 기준</div>
+  <p>빠르고 운영 부담 없이 에이전트를 배포하려면 <strong>완전관리형</strong>, 세밀한 제어와 커스터마이즈가 필요하다면 <strong>프레임워크(Strands Agents)</strong>를 선택합니다. 다음 모듈(M6)에서는 Strands Agents로 만든 에이전트를 프로덕션에 올리는 AgentCore를 다룹니다.</p>
 </div>`}
 ];
 

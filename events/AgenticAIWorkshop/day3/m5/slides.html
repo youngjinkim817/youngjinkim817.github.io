@@ -753,7 +753,31 @@ html,body{height:100%;margin:0}
 /*BREATHE*/ .m3slide .stage .pad{padding:50px 72px !important;}
 
 
-  .topbar, .m3nav, .m3prog, #prog { display: none !important; }
+  /* nav 표시 */
+  html, body { overflow: hidden; }
+
+  /* ===== 텍스트 크기 표준 통일 (사용자 요청 2026-10-25, SDD m1/m2와 동일) ===== */
+  .h-sec{font-size:50px !important}
+  .sub-sec{font-size:23px !important}
+  .kicker{font-size:17px !important}
+  .note{font-size:20px !important;line-height:1.6 !important}
+  .card h3{font-size:25px !important}
+  .card p{font-size:20px !important;line-height:1.55 !important}
+  .bstat .v{font-size:64px !important}
+  .bstat .l{font-size:18px !important}
+  .tag{font-size:16px !important;padding:6px 14px !important}
+  .ch-list li{font-size:16px !important}
+  .ep-n{font-size:16px !important} .ep-r{font-size:13px !important}
+  .vs-col li{font-size:17px !important} .vs-col .vh{font-size:19px !important}
+  .pd-list li{font-size:15px !important}
+
+  /* slide20 — 겹침 방지(전역 1.5배 축소 조정) */
+  .s20tight .card h3{font-size:19px !important}
+  .s20tight .ch-list li{font-size:14px !important;line-height:1.5 !important}
+  .s20tight .note{font-size:14px !important;line-height:1.5 !important;margin-top:10px !important}
+  .s20tight .codeblk{font-size:11px !important}
+  .s20tight .card{overflow:hidden}
+  .topbar, .m3nav, .m3prog, #prog, #nav, #bar, #fs { display: none !important; }
   html, body { overflow: hidden; }
 </style></head>
 <body>
@@ -1095,8 +1119,8 @@ http_mcp = MCPClient(<span class="kw">lambda</span>: streamablehttp_client(
 <div class="m3slide"><div class="stage"><div class="pad" style="display:flex;flex-direction:column">
   <div class="kicker"><span class="bar"></span>Module 5 · 사례</div>
   <h2 class="h-sec" style="margin-bottom:10px"><span class="grad-a">E-Commerce 상품추천 에이전트</span></h2>
-  <div class="shot-frame" style="flex:1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:center;min-height:0">
-    <div style="height:100%;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 600 520" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,sans-serif" role="img" aria-label="상품추천 에이전트 구성도" preserveAspectRatio="xMidYMid meet">
+  <div class="shot-frame" style="flex:1;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:stretch;min-height:0">
+    <div style="height:100%;display:flex;align-items:flex-start;justify-content:center"><svg viewBox="0 48 600 418" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" font-family="Pretendard,sans-serif" role="img" aria-label="상품추천 에이전트 구성도" preserveAspectRatio="xMidYMid meet">
   <defs><marker id="j12" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/></marker></defs>
   <!-- Tools box (left) with list -->
   <rect x="8" y="60" width="172" height="130" rx="13" fill="#fff" stroke="#6366f1" stroke-width="2"/>
@@ -1275,7 +1299,7 @@ http_mcp = MCPClient(<span class="kw">lambda</span>: streamablehttp_client(
   </div>
 </div>
 <div class="pg">19 / 20</div></div></div>
-<div class="m3slide"><div class="stage"><div class="pad" style="display:flex;flex-direction:column">
+<div class="m3slide"><div class="stage"><div class="pad s20tight" style="display:flex;flex-direction:column">
   <div class="kicker"><span class="bar"></span>Module 5 · 생성 옵션</div>
   <h2 class="h-sec" style="margin-bottom:8px">Agent를 생성하는 <span class="grad-a">두 가지 옵션</span></h2>
   <div class="grid g2" style="flex:1;align-items:stretch;gap:20px;min-height:0">
