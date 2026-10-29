@@ -415,11 +415,11 @@ type $HOME\.kiro\powers\installed\strands\POWER.md</pre>
     <div class="warn"><b>중요 — Spec 기반 개발</b> 이 실습은 체계적인 Spec-Driven Development로 진행합니다. 채팅 입력창의 에이전트 선택기에서 반드시 <b>Default Agent가 아닌 Spec Agent</b>를 선택하세요. 그래야 요구사항 → 설계 → 구현 단계로 문서가 생성됩니다.</div>
     <div class="prompt">
       <div class="prompt-bar"><span class="pi">▶ Kiro에 입력 (Spec 에이전트)</span><span class="sp"></span><button class="copy-k" onclick="cpk(this)">프롬프트 복사</button></div>
-      <div class="pbody">Strands Agents SDK를 기반으로 하고, 기반 LLM으로 Amazon Bedrock Nova Pro를 사용하는 쇼핑 어시스턴트 챗봇 서비스를 만들어줘.
-Nova Pro 접근을 위한 AWS 자격 증명(액세스 키, 시크릿 키, 선택적 세션 토큰)은 환경변수로 지정해줘.
-
-파이썬 기반 Strands Agents SDK와 기반 LLM인 Bedrock Nova Pro로 챗봇 서비스를 만들고, 프론트엔드 팝업 챗봇의 API 요청을 받는 HTTP 서버도 함께 만들어줘.
-Bedrock Nova Pro 접근용 AWS 자격 증명(액세스 키, 시크릿 키, 선택적 세션 토큰)은 환경변수로 지정해줘. 또는 AWS_BEARER_TOKEN_BEDROCK 환경변수로 Bedrock API 키를 사용하는 방법도 있어.
+      <div class="pbody">기존에 생성한 이커머스 웹 애플리케이션에 다음 기능을 추가합니다.
+파이썬 기반 Strands Agents SDK와 기반 LLM인 Amazon Bedrock Nova Pro로 쇼핑 어시스턴트 챗봇 서비스를 만들고,
+프론트엔드 팝업 챗봇의 API 요청을 받는 HTTP 서버도 함께 만들어줘.
+Bedrock Nova Pro 접근용 AWS 자격 증명(액세스 키, 시크릿 키, 선택적 세션 토큰)은 환경변수로 지정해줘.
+또는 AWS_BEARER_TOKEN_BEDROCK 환경변수로 Bedrock API 키를 사용하는 방법도 있어.
 챗봇 서비스는 백엔드와 독립된 서비스로 만들되, 백엔드 기능과 상호작용하도록 API로 연동해줘.</div>
     </div>
     <p>Kiro가 요구사항 → 설계 → 구현 3단계 워크플로의 세 파일을 생성합니다:</p>
