@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko" class="light">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec Driven Development with Kiro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0f1219;--bg-alt:#161618;--bg-soft:#1b1f27;--brand1:#00592D;--brand2:#0a7d42;--brand3:#17a95a;--t1:#dfdfd6;--t2:#98989f;--border:#3c3f44;}
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--bg);color:var(--t1);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased;}
+  a{color:var(--brand3);text-decoration:none;}
+  .wrap{max-width:1152px;margin:0 auto;padding:0 24px;}
+  header.nav{position:sticky;top:0;z-index:40;height:64px;display:flex;align-items:center;background:rgba(15,18,25,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+  header.nav .wrap{display:flex;align-items:center;gap:20px;width:100%;}
+  .brand{font-weight:700;font-size:15px;color:var(--t1);white-space:nowrap;}
+  .brand b{color:var(--brand1);}
+  .navlinks{display:flex;gap:22px;align-items:center;margin-left:auto;}
+  .navlinks a{color:var(--t2);font-size:14px;font-weight:500;transition:color .15s;}
+  .navlinks a:hover{color:var(--t1);}
+  .navlinks .nav-enter{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff;font-weight:700;font-size:14px;transition:transform .1s, box-shadow .1s;}
+  .navlinks .nav-enter:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,89,45,.4);}
+  .hero{padding:84px 0 64px;position:relative;overflow:hidden;}
+  .hero::before{content:"";position:absolute;top:-30%;right:-10%;width:620px;height:620px;background:radial-gradient(circle,rgba(0,89,45,.20),transparent 62%);pointer-events:none;}
+  .hero h1{font-size:58px;line-height:1.05;font-weight:800;margin:0 0 10px;letter-spacing:-.02em;}
+  .hero h1 .o{color:var(--brand1);}
+  .hero .ko{font-size:24px;font-weight:800;margin:0 0 20px;}
+  .hero .sub{font-size:18px;color:var(--t2);max-width:680px;margin:0 0 24px;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px 24px;margin:0 0 20px;font-size:15px;}
+  .meta div{display:flex;align-items:center;gap:9px;}
+  .meta svg{width:18px;height:18px;color:var(--brand3);flex:none;}
+  .instructor{margin:0 0 28px;font-size:15px;color:var(--t2);line-height:1.6;}
+  .instructor .name{font-weight:700;color:var(--t1);}
+  .cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:10px;font-weight:700;font-size:16px;transition:transform .1s, box-shadow .1s;}
+  .btn.primary{background:linear-gradient(135deg,var(--brand1),var(--brand2));color:#fff;}
+  .btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,89,45,.4);}
+  .btn.ghost{background:var(--bg-soft);color:var(--t1);border:1px solid var(--border);}
+  .btn.ghost:hover{transform:translateY(-1px);border-color:var(--brand2);}
+  .btn svg{width:18px;height:18px;}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .card{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;padding:22px;transition:.15s;}
+  .card:hover{border-color:var(--brand1);transform:translateY(-2px);}
+  .card .ic{width:38px;height:38px;border-radius:10px;background:rgba(0,89,45,.14);display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+  .card .ic svg{width:20px;height:20px;color:var(--brand3);}
+  .card h3{margin:0 0 6px;font-size:16px;}
+  .card p{margin:0;font-size:14px;color:var(--t2);}
+  section.block{padding:46px 0;border-top:1px solid var(--border);}
+  section.block h2{font-size:24px;margin:0 0 18px;font-weight:700;}
+  p.lead{font-size:16px;color:var(--t2);margin:0 0 14px;}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .pill{background:var(--bg-alt);border:1px solid var(--border);border-radius:999px;padding:7px 15px;font-size:13.5px;color:var(--t1);}
+  table{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  thead th{background:var(--bg-soft);text-align:left;padding:12px 16px;font-size:13px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;}
+  td{padding:12px 16px;border-top:1px solid var(--border);vertical-align:top;}
+  td.t{white-space:nowrap;color:var(--brand3);font-weight:600;width:90px;}
+  td.s{font-weight:600;width:300px;}
+  td.d{color:var(--t2);}
+  .survey{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center;}
+  .survey p{font-size:16px;margin:0 0 18px;}
+  footer{border-top:1px solid var(--border);padding:28px 0 56px;color:var(--t2);font-size:13px;}
+  .themebtn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;background:var(--bg-soft);border:1px solid var(--border);color:var(--t1);cursor:pointer;padding:0;margin-right:10px;}
+  .themebtn svg{width:17px;height:17px;}
+  .themebtn .moon{display:none;}
+  html.light .themebtn .moon{display:block;}
+  html.light .themebtn .sun{display:none;}
+  html.light{--bg:#ffffff;--bg-alt:#f6f7f9;--bg-soft:#eef0f3;--t1:#1a1f29;--t2:#5b6678;--border:#e3e7ef;}
+  html.light header.nav{background:rgba(255,255,255,.9);}
+  @media(max-width:820px){.hero h1{font-size:40px;}.cards{grid-template-columns:1fr;}.navlinks .nav-enter-label{display:none;}td.s{width:auto;}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <span class="brand">Spec Driven Development <b>with Kiro</b></span>
+  <button class="themebtn" id="themeToggle" aria-label="배경 전환">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+  <nav class="navlinks">
+    <a href="#overview">강의 개요</a>
+    <a href="#agenda">아젠다</a>
+    <a href="#survey">Survey</a>
+    <a class="nav-enter" href="./SpecDrivenDevelop_gate_v1.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      <span class="nav-enter-label">강의실 입장</span>
+    </a>
+  </nav>
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <h1>Spec Driven<br><span class="o">Development</span> with Kiro</h1>
+  <p class="ko">Kiro로 Vibe 코딩부터 Spec 기반 개발까지, 1일 핸즈온 과정</p>
+  <p class="sub">AWS Cloud와 생성형 AI의 기본 개념을 이해하고, AI 개발 환경 Kiro로 Vibe 코딩·Steering·Spec 기반 개발을 직접 실습하는 1일 과정입니다.</p>
+  <div class="meta">
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>1일 과정</div>
+    <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>AWS Training &amp; Certification · AWS 공인 강사</div>
+  </div>
+  <div class="instructor">
+    <div class="name">강사 김영진</div>
+    <div>yjkim@amazon.com</div>
+  </div>
+  <div class="cta">
+    <a class="btn primary" href="./SpecDrivenDevelop_gate_v1.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      강의실 입장
+    </a>
+    <a class="btn ghost" href="#agenda">아젠다 보기</a>
+  </div>
+</div></div>
+
+<div class="wrap">
+  <div class="cards" style="margin-top:8px;">
+    <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.4 2.3 7.2-6-4.5-6 4.5L8.6 13.8 2 9.4h7.6z"/></svg></div><h3>개념 먼저</h3><p>AWS Cloud와 생성형 AI·에이전트의 기본까지 차근차근 짚고 시작합니다.</p></div>
+    <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div><h3>직접 만들기</h3><p>Vibe 코딩으로 빠르게, Spec 기반으로 체계적으로 앱을 완성합니다.</p></div>
+    <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>강사 테크멘토링</h3><p>실습 과정에서 강사가 기술 방향과 문제 해결을 직접 지원합니다.</p></div>
+  </div>
+
+  <section class="block" id="overview">
+    <h2>강의 개요</h2>
+    <p class="lead">본 과정은 AWS Cloud와 생성형 AI의 기본 개념을 이해한 뒤, AI 기반 개발 환경인 Kiro로 Vibe 코딩·Steering·Spec 기반 개발을 직접 실습하는 1일 과정입니다. 모듈 1에서 AWS Cloud와 생성형 AI·에이전트·Amazon Bedrock의 기본을 익히고, 모듈 2에서 Kiro의 개념과 핵심 기능(Vibe·Spec·Steering)을 학습한 뒤, 실습에서 직접 애플리케이션을 만들어 봅니다.</p>
+    <div class="pills">
+      <span class="pill">AWS Cloud</span><span class="pill">Generative AI</span><span class="pill">Amazon Bedrock</span>
+      <span class="pill">Kiro</span><span class="pill">Vibe Coding</span><span class="pill">Spec-Driven Development</span><span class="pill">Steering</span>
+    </div>
+  </section>
+
+  <section class="block" id="agenda">
+    <h2>아젠다</h2>
+    <table>
+      <thead><tr><th>구분</th><th>과정</th><th>주요 내용</th></tr></thead>
+      <tbody>
+        <tr><td class="t">모듈 1</td><td class="s">AWS Cloud 소개</td><td class="d">AWS Cloud·글로벌 인프라·핵심 서비스 · 생성형 AI·파운데이션 모델·에이전트 개념 · Amazon Bedrock·모델 접근·액세스 키</td></tr>
+        <tr><td class="t">모듈 2</td><td class="s">Kiro 소개</td><td class="d">AI 개발도구 진화·코딩 에이전트 · Kiro IDE/CLI·화면 구성·실행 모드 · Vibe 모드 · Spec-Driven Development · Steering(규칙 설정)</td></tr>
+        <tr><td class="t">실습</td><td class="s">Spec Driven Development 핸즈온</td><td class="d">Kiro 설치·로그인 · Vibe 코딩으로 이커머스 앱 생성 · Steering으로 규칙 설정 · Spec-Driven으로 챗봇 기능 추가</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="block" id="survey">
+    <h2>Survey</h2>
+    <div class="survey">
+      <p>강의 종료 후 설문 조사에 참여 부탁드립니다.</p>
+      <img src="./survey.png" alt="설문 조사 QR 코드" style="max-width:780px;width:100%;height:auto;border-radius:12px;">
+    </div>
+  </section>
+</div>
+
+<footer><div class="wrap">© 2026 Spec Driven Development with Kiro · 본 페이지는 강의 안내용입니다.</div></footer>
+<script>
+  (function(){var btn=document.getElementById('themeToggle');if(btn){btn.addEventListener('click',function(){document.documentElement.classList.toggle('light');});}})();
+</script>
+</body>
+</html>
