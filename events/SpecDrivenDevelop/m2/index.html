@@ -83,6 +83,18 @@ html.dark .navday-name,html.dark .nav-module{color:#E0F2FE !important;}
 html.dark .navday-badge{color:#C4B5FD !important;}
 html.dark .nav-module.active{background:rgba(147,197,253,.15) !important;color:#93C5FD !important;border-left-color:#93C5FD !important;}
 html.dark .sticknav-cnt{color:#C4B5FD !important;}
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  aside { display: none; }
+  main { padding: 12px 12px 80px; }
+  .svis { border-radius: 8px; }
+  .sticknav { z-index: 1000; padding: 8px 12px; }
+  .sticknav button { touch-action: manipulation; padding: 10px 18px; font-size: 15px; min-height: 44px; }
+  .sticknav-cnt { font-size: 15px; }
+  #slideFrame { pointer-events: none; }
+  .svis-btns { z-index: 100; pointer-events: auto; }
+  .svis-btn { pointer-events: auto; }
+}
 </style>
 </head>
 <body>
@@ -117,14 +129,14 @@ if(!sessionStorage.getItem('sddAccess')&&location.hostname!=='localhost'&&locati
     </div>
     <div class="prog-box" style="margin-top:16px;">
       <div class="prog-box-label">슬라이드 진행</div>
-      <div class="prog-counts"><span id="progText">1 / 35</span></div>
-      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:5.3%"></div></div>
+      <div class="prog-counts"><span id="progText">1 / 36</span></div>
+      <div class="prog-bar"><div class="prog-bar-fill" id="progFill" style="width:2.8%"></div></div>
     </div>
     <a href="../intro.html" class="exit-classroom-btn">🚪 강의실 나가기</a>
   </aside>
   <main>
     <div class="svis" id="svis">
-      <iframe id="slideFrame" src="./slides.html" frameborder="0" style="width:100%;height:100%;border:none;display:block;" onload="frameReady=true;goTo(cur);"></iframe>
+      <iframe id="slideFrame" src="./m2_slide.html" frameborder="0" style="width:100%;height:100%;border:none;display:block;pointer-events:none;" onload="frameReady=true;goTo(cur);"></iframe>
       <div class="svis-btns"><button class="svis-btn" onclick="openFS()">전체화면</button></div>
     </div>
     <div class="npanel" id="notesPanel">
@@ -138,15 +150,15 @@ if(!sessionStorage.getItem('sddAccess')&&location.hostname!=='localhost'&&locati
 </div>
 <div class="sticknav">
   <button id="btnPrev" onclick="goTo(cur-1)" disabled>← 이전</button>
-  <span class="sticknav-cnt" id="snCnt">1 / 35</span>
+  <span class="sticknav-cnt" id="snCnt">1 / 36</span>
   <button id="btnNext" onclick="goTo(cur+1)">다음 →</button>
 </div>
 <div id="fsOverlay" style="display:none;">
   <div class="fs-topbar"><button class="fs-close" onclick="closeFS()">✕ 강의실로 돌아가기</button></div>
-  <iframe id="fsFrame" src="./slides.html" style="flex:1;width:100%;border:none;display:block;" onload="fsFrameReady=true;goFS(cur);"></iframe>
+  <iframe id="fsFrame" src="./m2_slide.html" style="flex:1;width:100%;border:none;display:block;" onload="fsFrameReady=true;goFS(cur);"></iframe>
   <div class="fs-nav">
     <button onclick="goFS(fsCur-1)">← 이전</button>
-    <span id="fsCnt">1 / 35</span>
+    <span id="fsCnt">1 / 36</span>
     <button onclick="goFS(fsCur+1)">다음 →</button>
   </div>
 </div>
@@ -552,7 +564,7 @@ var NOTES = [
 <div class="note-case">
   <div class="note-case-label">사용 사례: AWS 지식 MCP 서버</div>
   <p>AWS Knowledge MCP 서버(<code>https://knowledge-mcp.global.api.aws</code>)를 연결하면 Kiro가 AWS 공식 문서와 모범 사례를 직접 검색하면서 코드를 작성합니다. <strong>AWS 서비스를 활용하는 코드를 작성할 때 API 문서를 직접 찾아보지 않아도</strong> AI가 최신 AWS 정보를 참고합니다.</p>
-</div>`}
+</div>`},
 {t:'코딩 에이전트와 MCP', h:`
 <div class="note-section">
   <div class="note-section-title">에이전트가 MCP를 활용하는 방식</div>
@@ -573,7 +585,7 @@ var NOTES = [
 <div class="note-case">
   <div class="note-case-label">사용 사례: 자동화된 에이전트 코드 생성</div>
   <p>AWS Knowledge MCP와 사내 DB MCP를 모두 연결해 두면, Kiro 에이전트가 AWS 문서를 참고하면서 동시에 실제 사내 데이터 스키마를 확인하여 <strong>정확한 코드를 처음부터 작성</strong>합니다. 개발자는 방향만 제시하면 됩니다.</p>
-</div>`}
+</div>`},
 {t:'MCP 서버 연결 방법', h:`
 <div class="note-section">
   <div class="note-section-title">두 가지 연결 방식</div>
@@ -598,7 +610,7 @@ var NOTES = [
 <div class="note-case">
   <div class="note-case-label">사용 사례: 혼합 연결 구성</div>
   <p>AWS Knowledge MCP(원격 HTTP)와 사내 PostgreSQL MCP(로컬 stdio)를 동시에 연결하면, Kiro가 AWS 문서를 참고하면서 실제 사내 DB 스키마도 직접 조회하여 <strong>정확한 쿼리와 코드를 자동 생성</strong>합니다.</p>
-</div>`}
+</div>`},
 {t:'Agent Hook — 자동화', h:`
 <div class="note-section">
   <div class="note-section-title">Agent Hook이란</div>
@@ -619,7 +631,7 @@ var NOTES = [
 <div class="note-case">
   <div class="note-case-label">사용 사례: 개인정보 자동 감지</div>
   <p>TypeScript·React 파일(<code>.ts</code>, <code>.tsx</code>)이 저장될 때마다 "전화번호나 마스킹되지 않은 이름이 있으면 경고"하는 Hook을 설정하면, <strong>바쁜 개발자가 놓쳐도 자동으로 개인정보 보호 규칙이 지켜집니다.</strong></p>
-</div>`}
+</div>`},
 {t:'Hook 적용', h:`
 <div class="note-section">
   <div class="note-section-title">PostFileSave 트리거 활용</div>
@@ -641,7 +653,7 @@ var NOTES = [
 <div class="note-case">
   <div class="note-case-label">사용 사례: 저장 시 설명 주석 자동 추가</div>
   <p>JavaScript 파일이 저장될 때마다 "함수에 설명 주석이 없으면 자동으로 추가하라"는 Hook을 설정하면 <strong>코드베이스 전체의 문서화 수준이 일관되게 유지</strong>되며, 개발자가 별도로 확인하지 않아도 됩니다.</p>
-</div>`}
+</div>`},
 {t:'Hook 적용 시점 — 트리거 10가지', h:`
 <div class="note-section">
   <div class="note-section-title">10가지 트리거 타입 개요</div>
@@ -762,9 +774,26 @@ var NOTES = [
 <p>한 번 정한 기술 스택은 <code>.kiro/steering/tech.md</code> 같은 Steering 파일에 적어 두면, 매번 프롬프트에 쓰지 않아도 Kiro가 따릅니다. 요건 명세서는 Spec으로, 계속 지킬 규칙은 Steering으로 관리한다고 정리해 주세요.</p>
 </div>
 `}
+  ,{t:'Human in the Loop — 에이전트 시대 인간의 역할', h:`
+<div class="note-section"><div class="note-section-title">코딩 에이전트 시대의 인간 역할</div>
+<p>에이전트가 코드를 자동으로 작성할수록, 인간은 에이전트가 안전하고 정확하게 일하도록 규칙과 통제 장치를 설계하는 역할을 맡게 됩니다. 이것이 <span class="note-kw">Human in the Loop(인간의 감독)</span> 원칙입니다.</p>
+</div>
+<div class="note-section"><div class="note-section-title">다섯 가지 통제 원칙</div>
+<ul>
+<li><span class="note-kw">SPEC — 명확한 명세</span>: 요구사항, 설계 방식, 완료 기준을 명세서로 정의합니다. Kiro에서는 requirements.md, design.md, tasks.md가 이 역할을 합니다.</li>
+<li><span class="note-kw">SCOPE — 권한 제한</span>: 에이전트가 수행할 수 있는 작업 권한의 범위를 제한합니다. 신뢰 명령 설정과 Steering 금지 규칙으로 구현합니다.</li>
+<li><span class="note-kw">GATE — 승인 게이트(Approval Gate)</span>: 중요한 단계에서는 반드시 인간의 승인을 거쳐 결정합니다. Spec 단계별 검토와 Supervised 모드가 이 역할을 합니다.</li>
+<li><span class="note-kw">VERIFY — 자동 검증</span>: 매 단계 테스트, 린트, 보안 스캔을 자동으로 수행합니다. Agent Hooks가 저장·작업 완료 시 자동 실행됩니다.</li>
+<li><span class="note-kw">OBSERVE — 관찰가능성(Observability)</span>: 모든 진행 상황을 기록하고 확인할 수 있게 합니다. 태스크 진행 상태, 체크포인트, Git 이력이 이를 뒷받침합니다.</li>
+</ul>
+</div>
+<div class="note-case"><div class="note-case-label">핵심 변화: 코드 작성자에서 설계자·감독자로</div>
+<p>에이전트 시대에 인간의 역할은 <strong>코드를 직접 작성하는 작성자</strong>에서 <strong>에이전트가 일하는 방식을 설계하고 감독하는 설계자</strong>로 전환됩니다. SPEC으로 방향을 잡고, SCOPE로 범위를 제한하고, GATE에서 검토하고, VERIFY로 품질을 확인하고, OBSERVE로 전 과정을 추적합니다.</p>
+</div>
+`}
 ];
 
-var TOTAL=35, cur=0, frameReady=false, fsFrameReady=false, fsCur=0;
+var TOTAL=36, cur=0, frameReady=false, fsFrameReady=false, fsCur=0;
 var slideFrame=document.getElementById('slideFrame');
 var fsFrame=document.getElementById('fsFrame');
 function goTo(n){
@@ -780,17 +809,47 @@ function goTo(n){
   if(frameReady) slideGo(cur);
 }
 function slideGo(n){
-  try{var fw=slideFrame.contentWindow;
+  try{
+    var fw=slideFrame.contentWindow;
     if(typeof fw.kiroGo==='function') fw.kiroGo(n);
     else if(typeof fw.go==='function') fw.go(n);
+    else if(typeof fw.goToSlide==='function') fw.goToSlide(n);
+    else {
+      // fallback: m3slide DOM 직접 조작
+      var slides=fw.document.querySelectorAll('.m3slide');
+      if(slides.length>0){
+        slides.forEach(function(s){s.classList.remove('current');});
+        if(slides[n]) slides[n].classList.add('current');
+      }
+    }
   }catch(e){}
 }
-function openFS(){var ov=document.getElementById('fsOverlay');ov.style.display='flex';fsCur=cur;document.getElementById('fsCnt').textContent=(fsCur+1)+' / '+TOTAL;}
+function openFS(){
+  var ov=document.getElementById('fsOverlay');
+  ov.style.display='flex';
+  fsCur=cur;
+  document.getElementById('fsCnt').textContent=(fsCur+1)+' / '+TOTAL;
+  // 전체화면 iframe이 이미 로드된 경우 현재 슬라이드로 이동
+  if(fsFrameReady) goFS(fsCur);
+}
 function closeFS(){document.getElementById('fsOverlay').style.display='none';}
 function goFS(n){
   n=((n%TOTAL)+TOTAL)%TOTAL; fsCur=n;
   document.getElementById('fsCnt').textContent=(fsCur+1)+' / '+TOTAL;
-  try{var fw=fsFrame.contentWindow;if(typeof fw.kiroGo==='function') fw.kiroGo(n);else if(typeof fw.go==='function') fw.go(n);}catch(e){}
+  try{
+    var fw=fsFrame.contentWindow;
+    if(typeof fw.kiroGo==='function') fw.kiroGo(n);
+    else if(typeof fw.go==='function') fw.go(n);
+    else if(typeof fw.goToSlide==='function') fw.goToSlide(n);
+    else {
+      // fallback: m3slide DOM 직접 조작
+      var slides=fw.document.querySelectorAll('.m3slide');
+      if(slides.length>0){
+        slides.forEach(function(s){s.classList.remove('current');});
+        if(slides[n]) slides[n].classList.add('current');
+      }
+    }
+  }catch(e){}
 }
 function toggleDay(id){document.getElementById(id).classList.toggle('open');}
 document.addEventListener('keydown',function(e){
@@ -806,6 +865,27 @@ document.addEventListener('keydown',function(e){
 var html=document.documentElement,btn=document.getElementById('themeToggle');
 if(localStorage.getItem('sddThemeDark')==='1') html.classList.add('dark');
 btn.addEventListener('click',function(){var dark=html.classList.toggle('dark');localStorage.setItem('sddThemeDark',dark?'1':'0');});
+// 모바일 터치 지원 강화 — onclick 이 막히는 경우 touchstart 로 대체
+document.getElementById('btnPrev').addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  goTo(cur - 1);
+}, { passive: false });
+document.getElementById('btnNext').addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  goTo(cur + 1);
+}, { passive: false });
+document.querySelector('.svis-btns .svis-btn').addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  openFS();
+}, { passive: false });
+// 전체화면 내 버튼 터치 지원
+document.querySelector('.fs-topbar .fs-close').addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  closeFS();
+}, { passive: false });
+var fsBtns = document.querySelectorAll('.fs-nav button');
+if(fsBtns[0]) fsBtns[0].addEventListener('touchstart', function(e){e.preventDefault();goFS(fsCur-1);},{passive:false});
+if(fsBtns[1]) fsBtns[1].addEventListener('touchstart', function(e){e.preventDefault();goFS(fsCur+1);},{passive:false});
 goTo(0);
 </script>
 </body>
